@@ -23,6 +23,7 @@ RUN npx prisma generate
 # Build Next.js
 # Note: We rely on the "standalone" output mode in next.config.mjs (we need to configure it if not default!)
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV BUILD_MODE=true
 RUN DATABASE_URL="postgresql://postgres:postgres@localhost:5432/postgres" npm run build
 
 # Production image, copy all the files and run next

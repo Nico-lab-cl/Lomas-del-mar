@@ -1,9 +1,12 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET() {
+    await headers(); // Force dynamic
     try {
         const lots = await prisma.lot.findMany({
             orderBy: { id: 'asc' },
