@@ -12,8 +12,8 @@ export type LotStatusRow = {
   status: string;
 };
 
-// Always return false to force usage of internal API/Prisma path
-export const isSupabaseConfigured = (): boolean => false;
+// Always return true to use the internal API/Prisma path
+export const isSupabaseConfigured = (): boolean => true;
 
 export const fetchActiveLotLocks = async (): Promise<LotLockRow[]> => {
   return [];
