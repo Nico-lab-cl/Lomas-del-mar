@@ -6,12 +6,11 @@ const prisma = new PrismaClient();
 async function main() {
     console.log('Start fixing lot data...');
 
-    // Range of IDs to fix based on the shift from Stage 3 to Stage 4
-    // Previous logic: 132-137 were Stage 3
-    // New logic: 132-137 are Stage 4
-    // We should refresh these IDs, and potentially others in the Stage 4 range
+    // Range of IDs to fix
+    // 93-131 (Stage 3 remapping)
+    // 132-200 (Stage 4 remapping)
     const idsToFix = [];
-    for (let i = 132; i <= 200; i++) {
+    for (let i = 93; i <= 200; i++) {
         idsToFix.push(i);
     }
 

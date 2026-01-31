@@ -4,8 +4,8 @@ import { PrismaClient } from '@prisma/client';
 export const computeLotDetailsFromId = (lotId: number) => {
     const stageAndStageLotNumber = (() => {
         if (lotId >= 1 && lotId <= 47) return { stage: 1, stageLotNumber: lotId };
-        if (lotId >= 48 && lotId <= 94) return { stage: 2, stageLotNumber: lotId - 47 };
-        if (lotId >= 95 && lotId <= 131) return { stage: 3, stageLotNumber: lotId - 94 };
+        if (lotId >= 48 && lotId <= 92) return { stage: 2, stageLotNumber: lotId - 47 };
+        if (lotId >= 93 && lotId <= 131) return { stage: 3, stageLotNumber: lotId - 92 };
 
         if (lotId >= 132 && lotId <= 199) return { stage: 4, stageLotNumber: lotId - 131 };
         if (lotId >= 201 && lotId <= 203) return { stage: 4, stageLotNumber: 63 + (lotId - 201) };
