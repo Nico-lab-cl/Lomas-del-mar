@@ -102,7 +102,9 @@ export async function POST(req: NextRequest) {
         });
 
         const buyOrder = buildBuyOrder(lotId);
-        const amount = lot.reservation_amount_clp ?? RESERVATION_AMOUNT_CLP;
+
+        // TEMPORARY FOR PRODUCTION TEST: Force amount to $50 CLP for ALL lots
+        const amount = 50;
 
         await prisma.lot.update({
             where: { id: lotId },
