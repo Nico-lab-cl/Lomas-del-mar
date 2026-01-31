@@ -15,7 +15,7 @@ export const StarsBackground = () => {
   const { isDark } = useTheme();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const starsRef = useRef<Star[]>([]);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -116,7 +116,7 @@ export const StarsBackground = () => {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-0"
-      style={{ 
+      style={{
         background: 'transparent',
         willChange: 'transform'
       }}

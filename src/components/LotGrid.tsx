@@ -33,11 +33,11 @@ interface LotGridProps {
   isHydrating?: boolean;
 }
 
-export const LotGrid = ({ 
-  lots, 
-  onSelectLot, 
+export const LotGrid = ({
+  lots,
+  onSelectLot,
   onUpdateLots,
-  selectedLotId, 
+  selectedLotId,
   userReservation,
   isSessionActive,
   isHydrating = false,
@@ -45,7 +45,7 @@ export const LotGrid = ({
   const { isAdmin } = useAdminAuth();
   const [jumpingLotId, setJumpingLotId] = useState<number | null>(null);
   const [isEditorMode, setIsEditorMode] = useState(false);
-  const [positionHistory, setPositionHistory] = useState<{lotId: number, x: number, y: number, size?: number}[]>([]);
+  const [positionHistory, setPositionHistory] = useState<{ lotId: number, x: number, y: number, size?: number }[]>([]);
   const [originalLots, setOriginalLots] = useState<Lot[]>([]);
   const [mapError, setMapError] = useState(false);
   const [draggingLotId, setDraggingLotId] = useState<number | null>(null);
@@ -186,7 +186,7 @@ export const LotGrid = ({
     const lot = lots.find(l => l.id === lotId);
     if (lot) {
       setPositionHistory(prev => [...prev, { lotId: lot.id, x: lot.x, y: lot.y, size: lot.size || 1 }]);
-      const updatedLots = lots.map(l => 
+      const updatedLots = lots.map(l =>
         l.id === lotId ? { ...l, size: newSize } : l
       );
       onUpdateLots(updatedLots);
@@ -270,23 +270,23 @@ export const LotGrid = ({
   // Drag and drop handlers
   const handleDragStart = useCallback((e: React.MouseEvent | React.TouchEvent, lot: Lot) => {
     if (!isEditorMode || !containerRef.current) return;
-    
+
     e.stopPropagation();
     e.preventDefault();
-    
+
     const rect = containerRef.current.getBoundingClientRect();
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    
+
     // Calculate offset from lot center to mouse position
     const lotX = (lot.x / 100) * rect.width + rect.left;
     const lotY = (lot.y / 100) * rect.height + rect.top;
-    
+
     setDragOffset({
       x: clientX - lotX,
       y: clientY - lotY
     });
-    
+
     // Save position for undo
     setPositionHistory(prev => [...prev, { lotId: lot.id, x: lot.x, y: lot.y }]);
     setDraggingLotId(lot.id);
@@ -294,22 +294,22 @@ export const LotGrid = ({
 
   const handleDragMove = useCallback((e: MouseEvent | TouchEvent) => {
     if (draggingLotId === null || !containerRef.current) return;
-    
+
     e.preventDefault();
-    
+
     const rect = containerRef.current.getBoundingClientRect();
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    
+
     // Calculate new position as percentage
     let x = ((clientX - dragOffset.x - rect.left) / rect.width) * 100;
     let y = ((clientY - dragOffset.y - rect.top) / rect.height) * 100;
-    
+
     // Clamp values to keep lot within bounds
     x = Math.max(0, Math.min(100, x));
     y = Math.max(0, Math.min(100, y));
-    
-    const updatedLots = lots.map(lot => 
+
+    const updatedLots = lots.map(lot =>
       lot.id === draggingLotId ? { ...lot, x, y } : lot
     );
     onUpdateLots(updatedLots);
@@ -326,7 +326,7 @@ export const LotGrid = ({
       window.addEventListener('mouseup', handleDragEnd);
       window.addEventListener('touchmove', handleDragMove, { passive: false });
       window.addEventListener('touchend', handleDragEnd);
-      
+
       return () => {
         window.removeEventListener('mousemove', handleDragMove);
         window.removeEventListener('mouseup', handleDragEnd);
@@ -341,9 +341,9 @@ export const LotGrid = ({
     e.stopPropagation();
     e.preventDefault();
     if (positionHistory.length === 0) return;
-    
+
     const lastPosition = positionHistory[positionHistory.length - 1];
-    const updatedLots = lots.map(lot => 
+    const updatedLots = lots.map(lot =>
       lot.id === lastPosition.lotId ? { ...lot, x: lastPosition.x, y: lastPosition.y, size: lastPosition.size || 1 } : lot
     );
     onUpdateLots(updatedLots);
@@ -389,7 +389,7 @@ export const LotGrid = ({
       const parsed = JSON.parse(text) as unknown;
 
       const isBackup =
-        Boolean(parsed) &&
+        parsed !== null &&
         typeof parsed === 'object' &&
         'schema' in parsed &&
         (parsed as { schema?: unknown }).schema === 'lomas_map_backup_v1';
@@ -475,15 +475,15 @@ export const LotGrid = ({
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 flex-shrink-0">
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => window.open('/plano.svg', '_blank')}
             >
               Abrir SVG
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               size="sm"
               onClick={() => window.location.reload()}
             >
@@ -497,13 +497,13 @@ export const LotGrid = ({
       {/* Scrollable Map Wrapper for Mobile */}
       <div className="overflow-x-auto -mx-5 px-5 pb-2">
         {/* Map Container */}
-        <div 
+        <div
           ref={containerRef}
           className={`relative bg-white rounded-xl overflow-hidden border border-border ${isEditorMode ? 'cursor-move' : ''}`}
           style={{ aspectRatio: '4/3', minWidth: '420px' }}
         >
           {/* Background Map Image */}
-          <img 
+          <img
             src={'/plano.svg'}
             alt="Plano Maestro"
             className="absolute inset-0 w-full h-full object-contain pointer-events-none"
@@ -524,107 +524,106 @@ export const LotGrid = ({
             .slice()
             .sort((a, b) => a.id - b.id)
             .map((lot) => {
-            const isSmallLot = (lot.id >= 1 && lot.id <= 27) || (lot.id >= 51 && lot.id <= 74) || (lot.id >= 93 && lot.id <= 114) || (lot.id >= 147 && lot.id <= 192);
-            const isDragging = draggingLotId === lot.id;
-            const isSelectedForResize = selectedLotForResize === lot.id;
-            const isLocked = isLotLocked(lot);
-            const canJump = lot.status === 'available' && !isLocked && !isEditorMode;
-            const clickJumpOffsetPx = jumpingLotId === lot.id ? -10 : 0;
-            const autoSize = getAutoSizeForLot(lot);
-            const draftSize = draftSizes[String(lot.id)];
-            const manualSize = lot.size != null && lot.size !== 1 ? lot.size : undefined;
-            const lotSize = draftSize ?? manualSize ?? autoSize ?? 1;
-            const lotOverride = effectiveOverrides[String(lot.id)];
-            const markerText = (lotOverride?.label && lotOverride.label.trim())
-              ? lotOverride.label.trim()
-              : String(lot.displayLabel ?? lot.number);
-            return (
-              <Tooltip key={lot.id}>
-                <TooltipTrigger asChild>
-                  <button
-                    type="button"
-                    className={`lot-marker-responsive absolute ${isSmallLot ? 'lot-marker-small' : ''} ${getStatusClass(lot)} ${canJump ? 'lot-marker-jumpable' : ''} ${
-                      isDragging ? 'ring-4 ring-blue-400 scale-110 z-50' : ''
-                    } ${isSelectedForResize ? 'ring-4 ring-yellow-400 z-40' : ''} ${isEditorMode ? 'cursor-grab active:cursor-grabbing' : ''}`}
-                    style={{
-                      left: `${lot.x}%`,
-                      top: `${lot.y}%`,
-                      transition: isDragging ? 'none' : 'transform 0.1s ease-out',
-                      transform: `translate(-50%, -50%) translateY(calc(var(--lot-jump-y, 0px) + ${clickJumpOffsetPx}px)) scale(${lotSize})`,
-                    }}
-                    onMouseDown={(e) => {
-                      if (!isEditorMode) return;
-                      handleDragStart(e, lot);
-                    }}
-                    onTouchStart={(e) => {
-                      if (!isEditorMode) return;
-                      handleDragStart(e, lot);
-                    }}
-                    onClick={(e: React.MouseEvent) => {
-                      e.stopPropagation();
-                      e.preventDefault();
-                      if (canJump) {
-                        setJumpingLotId(lot.id);
-                        window.setTimeout(() => {
-                          setJumpingLotId((prev) => (prev === lot.id ? null : prev));
-                        }, 180);
-                      }
-                      if (isEditorMode) {
-                        // Save current draft before switching selection
-                        if (selectedLotForResize && selectedLotForResize !== lot.id) {
-                          const currentLotId = String(selectedLotForResize);
-                          const label = overrideLabel.trim();
-                          const stageNum = overrideStage.trim() ? Number(overrideStage.trim()) : undefined;
-                          const nextStage = Number.isFinite(stageNum) ? stageNum : undefined;
-
-                          setDraftOverrides((prev) => {
-                            const next = { ...prev };
-                            const cleanedLabel = label.length ? label : undefined;
-                            const cleanedStage =
-                              nextStage != null && nextStage >= 1 && nextStage <= 4 ? nextStage : undefined;
-
-                            if (!cleanedLabel && cleanedStage == null) {
-                              delete next[currentLotId];
-                            } else {
-                              next[currentLotId] = { label: cleanedLabel, stage: cleanedStage };
-                            }
-                            return next;
-                          });
+              const isSmallLot = (lot.id >= 1 && lot.id <= 27) || (lot.id >= 51 && lot.id <= 74) || (lot.id >= 93 && lot.id <= 114) || (lot.id >= 147 && lot.id <= 192);
+              const isDragging = draggingLotId === lot.id;
+              const isSelectedForResize = selectedLotForResize === lot.id;
+              const isLocked = isLotLocked(lot);
+              const canJump = lot.status === 'available' && !isLocked && !isEditorMode;
+              const clickJumpOffsetPx = jumpingLotId === lot.id ? -10 : 0;
+              const autoSize = getAutoSizeForLot(lot);
+              const draftSize = draftSizes[String(lot.id)];
+              const manualSize = lot.size != null && lot.size !== 1 ? lot.size : undefined;
+              const lotSize = draftSize ?? manualSize ?? autoSize ?? 1;
+              const lotOverride = effectiveOverrides[String(lot.id)];
+              const markerText = (lotOverride?.label && lotOverride.label.trim())
+                ? lotOverride.label.trim()
+                : String(lot.displayLabel ?? lot.number);
+              return (
+                <Tooltip key={lot.id}>
+                  <TooltipTrigger asChild>
+                    <button
+                      type="button"
+                      className={`lot-marker-responsive absolute ${isSmallLot ? 'lot-marker-small' : ''} ${getStatusClass(lot)} ${canJump ? 'lot-marker-jumpable' : ''} ${isDragging ? 'ring-4 ring-blue-400 scale-110 z-50' : ''
+                        } ${isSelectedForResize ? 'ring-4 ring-yellow-400 z-40' : ''} ${isEditorMode ? 'cursor-grab active:cursor-grabbing' : ''}`}
+                      style={{
+                        left: `${lot.x}%`,
+                        top: `${lot.y}%`,
+                        transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+                        transform: `translate(-50%, -50%) translateY(calc(var(--lot-jump-y, 0px) + ${clickJumpOffsetPx}px)) scale(${lotSize})`,
+                      }}
+                      onMouseDown={(e) => {
+                        if (!isEditorMode) return;
+                        handleDragStart(e, lot);
+                      }}
+                      onTouchStart={(e) => {
+                        if (!isEditorMode) return;
+                        handleDragStart(e, lot);
+                      }}
+                      onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        if (canJump) {
+                          setJumpingLotId(lot.id);
+                          window.setTimeout(() => {
+                            setJumpingLotId((prev) => (prev === lot.id ? null : prev));
+                          }, 180);
                         }
-                        setSelectedLotForResize(lot.id);
-                      }
-                      handleLotClick(lot);
-                    }}
-                  >
-                    {isEditorMode && (
-                      <GripVertical className="w-2 h-2 absolute -top-1 -right-1 text-white/70" />
-                    )}
-                    {markerText}
-                  </button>
-                </TooltipTrigger>
-                {!isEditorMode && (
-                  <TooltipContent>
-                    <div className="text-center">
-                      <p className="font-semibold">Lote L-{lot.displayLabel ?? lot.number}</p>
-                      {(lot.displayStage ?? lot.stage) && (
-                        <p className="text-xs text-muted-foreground">Etapa {lot.displayStage ?? lot.stage}</p>
+                        if (isEditorMode) {
+                          // Save current draft before switching selection
+                          if (selectedLotForResize && selectedLotForResize !== lot.id) {
+                            const currentLotId = String(selectedLotForResize);
+                            const label = overrideLabel.trim();
+                            const stageNum = overrideStage.trim() ? Number(overrideStage.trim()) : undefined;
+                            const nextStage = Number.isFinite(stageNum) ? stageNum : undefined;
+
+                            setDraftOverrides((prev) => {
+                              const next = { ...prev };
+                              const cleanedLabel = label.length ? label : undefined;
+                              const cleanedStage =
+                                nextStage != null && nextStage >= 1 && nextStage <= 4 ? nextStage : undefined;
+
+                              if (!cleanedLabel && cleanedStage == null) {
+                                delete next[currentLotId];
+                              } else {
+                                next[currentLotId] = { label: cleanedLabel, stage: cleanedStage };
+                              }
+                              return next;
+                            });
+                          }
+                          setSelectedLotForResize(lot.id);
+                        }
+                        handleLotClick(lot);
+                      }}
+                    >
+                      {isEditorMode && (
+                        <GripVertical className="w-2 h-2 absolute -top-1 -right-1 text-white/70" />
                       )}
-                      <p className="text-sm">{lot.area} m²</p>
-                      <p className={`font-bold ${lot.status === 'available' ? 'text-primary' : 'text-muted-foreground'}`}>
-                        {lot.totalPrice ? formatCurrency(lot.totalPrice) : 'Consultar'}
-                      </p>
-                      {lot.status === 'reserved' && (
-                        <p className="text-xs text-amber-600 mt-1">Reservado</p>
-                      )}
-                      {lot.status === 'sold' && (
-                        <p className="text-xs text-red-600 mt-1">Vendido</p>
-                      )}
-                    </div>
-                  </TooltipContent>
-                )}
-              </Tooltip>
-            );
-          })}
+                      {markerText}
+                    </button>
+                  </TooltipTrigger>
+                  {!isEditorMode && (
+                    <TooltipContent>
+                      <div className="text-center">
+                        <p className="font-semibold">Lote L-{lot.displayLabel ?? lot.number}</p>
+                        {(lot.displayStage ?? lot.stage) && (
+                          <p className="text-xs text-muted-foreground">Etapa {lot.displayStage ?? lot.stage}</p>
+                        )}
+                        <p className="text-sm">{lot.area} m²</p>
+                        <p className={`font-bold ${lot.status === 'available' ? 'text-primary' : 'text-muted-foreground'}`}>
+                          {lot.totalPrice ? formatCurrency(lot.totalPrice) : 'Consultar'}
+                        </p>
+                        {lot.status === 'reserved' && (
+                          <p className="text-xs text-amber-600 mt-1">Reservado</p>
+                        )}
+                        {lot.status === 'sold' && (
+                          <p className="text-xs text-red-600 mt-1">Vendido</p>
+                        )}
+                      </div>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              );
+            })}
 
           {/* Editor Mode Button - Only visible for admin */}
           {isAdmin && (
@@ -652,7 +651,7 @@ export const LotGrid = ({
 
       {/* Editor Panel - Outside map container to not block lots */}
       {isEditorMode && (
-        <div 
+        <div
           className="mt-4 bg-card border border-border rounded-lg p-4 shadow-lg animate-scale-in"
           onClick={(e) => {
             e.stopPropagation();
@@ -663,7 +662,7 @@ export const LotGrid = ({
             <GripVertical className="w-4 h-4" />
             Modo Editor - Arrastra los lotes
           </h3>
-          
+
           <p className="text-xs text-muted-foreground mb-3">
             Arrastra cualquier lote para posicionarlo. Haz clic en un lote para seleccionarlo y cambiar su tamaño.
           </p>
@@ -804,22 +803,22 @@ export const LotGrid = ({
               </div>
             </div>
           )}
-          
+
           <div className="flex flex-wrap gap-2">
-            <Button 
+            <Button
               type="button"
-              size="sm" 
-              variant="outline" 
-              onClick={handleUndo} 
+              size="sm"
+              variant="outline"
+              onClick={handleUndo}
               disabled={positionHistory.length === 0}
             >
               <Undo className="w-3 h-3 mr-1" />
               Deshacer ({positionHistory.length})
             </Button>
-            <Button 
+            <Button
               type="button"
-              size="sm" 
-              variant="outline" 
+              size="sm"
+              variant="outline"
               onClick={handleRestore}
             >
               <RotateCcw className="w-3 h-3 mr-1" />
@@ -883,10 +882,10 @@ export const LotGrid = ({
             >
               Exportar layout
             </Button>
-            <Button 
+            <Button
               type="button"
-              size="sm" 
-              variant="default" 
+              size="sm"
+              variant="default"
               onClick={handleSave}
             >
               <Save className="w-3 h-3 mr-1" />
