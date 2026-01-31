@@ -8,8 +8,8 @@ WORKDIR /app
 
 # Install dependencies based on the preferred package manager
 COPY package.json package-lock.json* ./
-# Omit --production so we can install devDependencies (like prisma) for build
-RUN npm ci --legacy-peer-deps
+# Use npm install instead of npm ci for better resilience in this environment
+RUN npm install --legacy-peer-deps
 
 # Rebuild the source code only when needed
 FROM base AS builder
