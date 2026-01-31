@@ -102,12 +102,10 @@ export async function POST(req: NextRequest) {
         });
 
         const buyOrder = buildBuyOrder(lotId);
-        let amount = lot.reservation_amount_clp ?? RESERVATION_AMOUNT_CLP;
 
-        // TEMPORARY: Lot 1 test price override ($50 CLP)
-        if (lotId === 1) {
-            amount = 50;
-        }
+        // TEMPORARY FOR PRODUCTION TEST: Force amount to $50 CLP for ALL lots
+        // This ensures the user can test automation even if there is an ID mismatch.
+        const amount = 50;
 
         await prisma.lot.update({
             where: { id: lotId },
