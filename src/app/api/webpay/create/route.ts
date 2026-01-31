@@ -101,9 +101,13 @@ export async function POST(req: NextRequest) {
             });
         });
 
-        // 4. Init Webpay
         const buyOrder = buildBuyOrder(lotId);
-        const amount = lot.reservation_amount_clp ?? RESERVATION_AMOUNT_CLP;
+        let amount = lot.reservation_amount_clp ?? RESERVATION_AMOUNT_CLP;
+
+        // TEMPORARY: Lot 1 test price override ($50 CLP)
+        if (lotId === 1) {
+            amount = 50;
+        }
 
         await prisma.lot.update({
             where: { id: lotId },
