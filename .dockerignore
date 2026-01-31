@@ -1,0 +1,11 @@
+terraform
+.git
+*.tf*
+*.tfvars
+.env
+*.key
+node_modules
+.next
+npm-debug.log
+README.md
+.vscode
