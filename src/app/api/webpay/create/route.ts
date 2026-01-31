@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-
-export const dynamic = 'force-dynamic';
 import { Prisma } from '@prisma/client';
 import { webpayCreate, WEBPAY_CONFIG } from '@/lib/transbank';
 import { buildBuyOrder, isValidRut } from '@/lib/logic';
 import { z } from 'zod';
 import crypto from 'node:crypto';
+
+export const dynamic = 'force-dynamic';
 
 const createSchema = z.object({
     lotId: z.number().int().positive(),
