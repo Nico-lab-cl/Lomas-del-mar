@@ -102,10 +102,7 @@ export async function POST(req: NextRequest) {
         });
 
         const buyOrder = buildBuyOrder(lotId);
-
-        // TEMPORARY FOR PRODUCTION TEST: Force amount to $50 CLP for ALL lots
-        // This ensures the user can test automation even if there is an ID mismatch.
-        const amount = 50;
+        const amount = lot.reservation_amount_clp ?? RESERVATION_AMOUNT_CLP;
 
         await prisma.lot.update({
             where: { id: lotId },
