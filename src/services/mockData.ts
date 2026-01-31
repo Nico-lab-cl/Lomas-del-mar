@@ -266,7 +266,7 @@ const generateInitialLots = (): Lot[] => {
 
     lots.push({
       id: lotNum,
-      number: String(lotNum),
+      number: stageLotNumber ? String(stageLotNumber) : String(lotNum),
       status: FORCE_ALL_AVAILABLE ? 'available' : status,
       area,
       pricePerM2: pricing.pricePerM2,
@@ -368,6 +368,8 @@ export const loadLots = (): Lot[] => {
       area,
       stage,
       stageLotNumber,
+      // Update number if stageLotNumber is available to fix display
+      number: stageLotNumber ? String(stageLotNumber) : lot.number,
       forceSold,
       dimensions,
       pricePerM2: pricing.pricePerM2,
