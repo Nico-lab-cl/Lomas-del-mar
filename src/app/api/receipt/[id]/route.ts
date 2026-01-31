@@ -29,7 +29,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
             data: {
                 reservation,
                 lot: reservation.lot,
-                transaction: tx
+                payment: tx
             }
         });
     } catch (error) {
