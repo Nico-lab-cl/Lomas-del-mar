@@ -134,9 +134,9 @@ const getStageAndIndexByLotId = (lotId: number): { stage: number; index: number 
   // Mapping by internal IDs to align with the provided PDF arrays (L-1.. per stage)
   if (lotId >= 1 && lotId <= 47) return { stage: 1, index: lotId - 1 };
   if (lotId >= 48 && lotId <= 94) return { stage: 2, index: lotId - 48 };
-  if (lotId >= 95 && lotId <= 137) return { stage: 3, index: lotId - 95 };
+  if (lotId >= 95 && lotId <= 131) return { stage: 3, index: lotId - 95 };
 
-  if (lotId >= 138 && lotId <= 199) return { stage: 4, index: lotId - 138 };
+  if (lotId >= 132 && lotId <= 199) return { stage: 4, index: lotId - 132 };
   // IDs internos restaurados: Etapa 3 lotes 43/42/41 (201/202/203)
   if (lotId === 201) return { stage: 3, index: 42 };
   if (lotId === 202) return { stage: 3, index: 41 };
