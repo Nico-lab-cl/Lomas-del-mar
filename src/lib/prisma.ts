@@ -13,7 +13,6 @@ export const prisma =
             }
         })
         : new (PrismaClient as any)({
-            datasourceUrl: process.env.DATABASE_URL,
             log: ['query'],
         }));
 
