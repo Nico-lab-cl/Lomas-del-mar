@@ -12,7 +12,7 @@ export const prisma =
                 throw new Error("Prisma accessed during build time. This should not happen for dynamic routes.");
             }
         })
-        : new PrismaClient({
+        : new (PrismaClient as any)({
             datasourceUrl: process.env.DATABASE_URL,
             log: ['query'],
         }));

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { Prisma } from '@prisma/client';
+
 import { webpayCreate, WEBPAY_CONFIG } from '@/lib/transbank';
 import { buildBuyOrder, isValidRut } from '@/lib/logic';
 import { z } from 'zod';
@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
         const folio = `BOL-${reservationId.slice(0, 8).toUpperCase()}`;
 
         // Transactional creation
-        await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+        await prisma.$transaction(async (tx: any) => {
             await tx.reservation.create({
                 data: {
                     id: reservationId,
