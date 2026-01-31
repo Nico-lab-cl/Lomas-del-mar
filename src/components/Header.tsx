@@ -12,9 +12,9 @@ export const Header = ({ projectName }: HeaderProps) => {
       <div className="container mx-auto px-4 h-full flex items-center">
         <div className="flex items-center justify-between w-full">
           <a
-            href="https://aliminlomasdelmar.com"
+            href="/"
             className="flex items-center gap-4 min-w-0 hover:opacity-90 transition-opacity"
-            aria-label="Ir a aliminlomasdelmar.com"
+            aria-label="Ir al inicio"
           >
             <img src={logo} alt="Logo" className="w-14 h-14 object-contain" />
             <div className="min-w-0">
