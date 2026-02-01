@@ -1,7 +1,6 @@
 
 import { PrismaClient } from '@prisma/client';
-import { computeLotDetailsFromId } from '../src/lib/logic'; // Uses the webhook logic file
-// We could also import from seed.ts, but logic.ts is what the detailed receipt uses.
+import { computeLotDetailsFromId } from '../prisma/seed'; // Used seed.ts as it works in prod environment
 // They should be identical.
 
 const prisma = new PrismaClient();
