@@ -131,19 +131,31 @@ export const getStageLotSpec = (stage: number, stageLotNumber: number): LotSpec 
 const NULL_DIMENSIONS: LotDimensions = { front_m: null, depth_m: null, width_m: null, other_side_m: null, notes: null };
 
 const getStageAndIndexByLotId = (lotId: number): { stage: number; index: number } | null => {
-  // Mapping by internal IDs to align with the provided PDF arrays (L-1.. per stage)
+  // Stage 1: 1-47 (Standard)
   if (lotId >= 1 && lotId <= 47) return { stage: 1, index: lotId - 1 };
-  if (lotId >= 48 && lotId <= 92) return { stage: 2, index: lotId - 48 };
+
+  // Stage 2: 48-131 range is mixed. Based on defaultMapOverrides.json:
+  // L1-L43 -> IDs 50-92
+  if (lotId >= 50 && lotId <= 92) return { stage: 2, index: lotId - 50 }; // 50->0(#1), 92->42(#43)
+
+  // S2 Special Cases (from overrides)
+  if (lotId === 199) return { stage: 2, index: 43 }; // #44
+  if (lotId === 198) return { stage: 2, index: 44 }; // #45
+  if (lotId === 197) return { stage: 2, index: 45 }; // #46
+  if (lotId === 48) return { stage: 2, index: 46 }; // #47
+
+  // Stage 3:
+  // L1-L39 -> IDs 93-131 (Standard-ish)
   if (lotId >= 93 && lotId <= 131) return { stage: 3, index: lotId - 93 };
 
-  if (lotId >= 132 && lotId <= 199) return { stage: 4, index: lotId - 132 };
-  // IDs internos restaurados: Etapa 2 (extras) y Etapa 3 (extras)
-  if (lotId === 201) return { stage: 2, index: 45 }; // #46
-  if (lotId === 202) return { stage: 2, index: 46 }; // #47
-  if (lotId === 203) return { stage: 3, index: 39 }; // #40
-  if (lotId === 204) return { stage: 3, index: 40 }; // #41
-  if (lotId === 205) return { stage: 3, index: 41 }; // #42
-  if (lotId === 206) return { stage: 3, index: 42 }; // #43
+  // S3 Special Cases
+  if (lotId === 49) return { stage: 3, index: 39 }; // #40
+  if (lotId === 203) return { stage: 3, index: 40 }; // #41
+  if (lotId === 202) return { stage: 3, index: 41 }; // #42
+  if (lotId === 201) return { stage: 3, index: 42 }; // #43
+
+  // Stage 4: 132-196 (Trimmed to avoid S2 special IDs 197-199)
+  if (lotId >= 132 && lotId <= 196) return { stage: 4, index: lotId - 132 };
 
   return null;
 };
