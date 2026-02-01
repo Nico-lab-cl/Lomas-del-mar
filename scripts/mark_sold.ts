@@ -68,11 +68,24 @@ async function main() {
     // Execute updates
     for (const lot of lotsToUpdate) {
         console.log(`Marking Lot ID ${lot.id} (Stage ${lot.stage} # ${lot.number}) as SOLD`);
-        await prisma.lot.update({
+
+        // Use upsert to create if not exists (critical for ids 201-206)
+        const lotData = computeLotDetailsFromId(lot.id);
+
+        await prisma.lot.upsert({
             where: { id: lot.id },
-            data: {
+            update: {
                 status: 'sold',
             },
+            create: {
+                id: lot.id,
+                number: lot.number,
+                stage: lot.stage,
+                area_m2: lotData.area_m2,
+                price_total_clp: lotData.price_total_clp,
+                status: 'sold',
+                reservation_amount_clp: 550000
+            }
         });
 
         // Clear any locks just in case (using LotLock model)

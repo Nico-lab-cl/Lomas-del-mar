@@ -137,10 +137,13 @@ const getStageAndIndexByLotId = (lotId: number): { stage: number; index: number 
   if (lotId >= 93 && lotId <= 131) return { stage: 3, index: lotId - 93 };
 
   if (lotId >= 132 && lotId <= 199) return { stage: 4, index: lotId - 132 };
-  // IDs internos restaurados: Etapa 3 lotes 43/42/41 (201/202/203)
-  if (lotId === 201) return { stage: 3, index: 42 };
-  if (lotId === 202) return { stage: 3, index: 41 };
-  if (lotId === 203) return { stage: 3, index: 40 };
+  // IDs internos restaurados: Etapa 2 (extras) y Etapa 3 (extras)
+  if (lotId === 201) return { stage: 2, index: 45 }; // #46
+  if (lotId === 202) return { stage: 2, index: 46 }; // #47
+  if (lotId === 203) return { stage: 3, index: 39 }; // #40
+  if (lotId === 204) return { stage: 3, index: 40 }; // #41
+  if (lotId === 205) return { stage: 3, index: 41 }; // #42
+  if (lotId === 206) return { stage: 3, index: 42 }; // #43
 
   return null;
 };

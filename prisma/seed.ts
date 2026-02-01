@@ -8,7 +8,14 @@ export const computeLotDetailsFromId = (lotId: number) => {
         if (lotId >= 93 && lotId <= 131) return { stage: 3, stageLotNumber: lotId - 92 };
 
         if (lotId >= 132 && lotId <= 199) return { stage: 4, stageLotNumber: lotId - 131 };
-        if (lotId >= 201 && lotId <= 203) return { stage: 4, stageLotNumber: 63 + (lotId - 201) };
+
+        // Mapeo de lotes "desbordaos" (que no caben en los rangos lineales)
+        if (lotId === 201) return { stage: 2, stageLotNumber: 46 };
+        if (lotId === 202) return { stage: 2, stageLotNumber: 47 };
+        if (lotId === 203) return { stage: 3, stageLotNumber: 40 };
+        if (lotId === 204) return { stage: 3, stageLotNumber: 41 };
+        if (lotId === 205) return { stage: 3, stageLotNumber: 42 };
+        if (lotId === 206) return { stage: 3, stageLotNumber: 43 };
         return null;
     })();
 
