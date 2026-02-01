@@ -3,13 +3,13 @@ import { Lot } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { 
-  MapPin, 
-  Ruler, 
-  X, 
-  Maximize, 
-  Home, 
-  CheckCircle2, 
+import {
+  MapPin,
+  Ruler,
+  X,
+  Maximize,
+  Home,
+  CheckCircle2,
   DollarSign,
   User,
   Mail,
@@ -25,8 +25,7 @@ import { RutInput } from '@/components/RutInput';
 import { z } from 'zod';
 import { validateRutRaw } from '@/lib/rut';
 
-// Webhook URL para N8N
-const WEBHOOK_URL = 'https://n8n-n8n.yszha2.easypanel.host/webhook-test/7b928d3b-2850-462d-87df-f6a87fe4108a';
+
 
 interface LotReservationPopupProps {
   lot: Lot | null;
@@ -77,19 +76,19 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
 
   const validateForm = (): boolean => {
     const newErrors: Partial<ContactFormData> = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'El nombre es requerido';
     } else if (formData.name.trim().length < 2) {
       newErrors.name = 'El nombre debe tener al menos 2 caracteres';
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'El correo electrónico es requerido';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Ingresa un correo electrónico válido';
     }
-    
+
     if (!formData.phone.trim()) {
       newErrors.phone = 'El número de teléfono es requerido';
     } else if (!/^[+]?[\d\s-]{8,15}$/.test(formData.phone.replace(/\s/g, ''))) {
@@ -107,7 +106,7 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
     } else if (formData.address.trim().length < 5) {
       newErrors.address = 'Ingresa una dirección válida';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -252,11 +251,11 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={handleClose}
       />
-      
+
       {/* Popup Content */}
       <div className="relative bg-card rounded-2xl shadow-2xl w-full max-w-lg animate-scale-in border border-border max-h-[90vh] overflow-hidden flex flex-col">
         {/* Close Button */}
@@ -281,12 +280,12 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
               <MapPin className="w-10 h-10 text-primary" />
             </div>
 
-          {isTemporarilyLocked && (
-            <div className="mb-4 p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-700 text-sm">
-              Este lote está temporalmente bloqueado por otra persona mientras procesa el pago.
-              Puedes ver la información, pero no puedes continuar al pago por ahora.
-            </div>
-          )}
+            {isTemporarilyLocked && (
+              <div className="mb-4 p-3 rounded-xl border border-amber-500/30 bg-amber-500/10 text-amber-700 text-sm">
+                Este lote está temporalmente bloqueado por otra persona mientras procesa el pago.
+                Puedes ver la información, pero no puedes continuar al pago por ahora.
+              </div>
+            )}
             <h2 className="text-3xl font-bold text-foreground">Lote {lotLabel}</h2>
             <p className="text-muted-foreground mt-1">Disponible para reserva</p>
             {lotStageLabel != null && (
@@ -396,18 +395,18 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
                       className="bg-[#25D366] hover:bg-[#1EBE5D] text-white h-auto px-6 py-2 text-sm rounded-full"
                     >
                       <span className="flex items-center justify-center gap-3 leading-none">
-                      <svg
-                        aria-hidden="true"
-                        viewBox="0 0 448 512"
-                        width="22"
-                        height="22"
-                        fill="currentColor"
-                        className="block shrink-0"
-                      >
-                        <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 222-99.6 222-222 0-59.3-25.2-115-65.1-157zm-157 341.6c-33.2 0-65.7-8.9-94.2-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.2 130.5 0 101.7-82.8 184.5-184.5 184.5zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 13.2 5.7 23.5 9.1 31.5 11.6 13.2 4.2 25.2 3.6 34.7 2.2 10.6-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.4-5-3.8-10.5-6.6z" />
-                      </svg>
-                      Consultar por WhatsApp
-                    </span>
+                        <svg
+                          aria-hidden="true"
+                          viewBox="0 0 448 512"
+                          width="22"
+                          height="22"
+                          fill="currentColor"
+                          className="block shrink-0"
+                        >
+                          <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 222-99.6 222-222 0-59.3-25.2-115-65.1-157zm-157 341.6c-33.2 0-65.7-8.9-94.2-25.7l-6.7-4-69.8 18.3 18.6-68.1-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.2 130.5 0 101.7-82.8 184.5-184.5 184.5zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 13.2 5.7 23.5 9.1 31.5 11.6 13.2 4.2 25.2 3.6 34.7 2.2 10.6-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.4-5-3.8-10.5-6.6z" />
+                        </svg>
+                        Consultar por WhatsApp
+                      </span>
                     </Button>
                   </a>
                 </div>
@@ -422,7 +421,7 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
               { icon: CheckCircle2, text: 'Rol individual' },
               { icon: Home, text: 'Terreno urbanizado a 8 min de la playa en auto' },
             ].map((feature, index) => (
-              <div 
+              <div
                 key={index}
                 className="group flex items-center gap-3 p-2 rounded-lg transition-all duration-200 hover:bg-muted/50 hover:translate-x-1"
               >
