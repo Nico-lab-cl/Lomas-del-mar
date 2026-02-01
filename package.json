@@ -9,7 +9,8 @@
     "lint": "eslint"
   },
   "prisma": {
-    "seed": "npx tsx prisma/seed.ts"
+    "seed": "npx tsx prisma/seed.ts",
+    "db:resync": "npx tsx scripts/resync_db_numbers.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
