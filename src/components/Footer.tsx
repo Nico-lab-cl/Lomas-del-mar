@@ -1,4 +1,5 @@
-import { MapPin, Phone, ExternalLink, Instagram, Facebook, Music } from 'lucide-react';
+import { MapPin, Phone, ExternalLink, Instagram, Facebook } from 'lucide-react';
+import { openLegalBasesModal } from '@/components/LegalBasesModal';
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -51,14 +52,13 @@ export const Footer = () => {
               >
                 Página Principal
               </a>
-              <a 
-                href="https://aliminspa.cl" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="block text-muted-foreground hover:text-primary transition-colors"
+              <button
+                type="button"
+                className="block text-left w-full text-muted-foreground hover:text-primary transition-colors"
+                onClick={() => openLegalBasesModal()}
               >
                 Términos y Condiciones
-              </a>
+              </button>
             </div>
           </div>
 
@@ -90,7 +90,15 @@ export const Footer = () => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
               >
-                <Music className="w-4 h-4 text-primary" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 text-primary"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.675h-3.725v15.804a3.286 3.286 0 1 1-3.286-3.286c.323 0 .636.047.935.13V10.87a7.02 7.02 0 0 0-.935-.062 7.075 7.075 0 1 0 7.075 7.075V9.022a8.47 8.47 0 0 0 4.252 1.144V6.686Z" />
+                </svg>
                 <span>TikTok</span>
               </a>
             </div>

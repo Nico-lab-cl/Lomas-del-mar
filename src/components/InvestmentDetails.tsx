@@ -18,12 +18,12 @@ export const InvestmentDetails = ({ selectedLot, onReserve, isSessionActive }: I
     }).format(amount);
   };
 
-  const lotDisplay = selectedLot?.displayLabel ?? selectedLot?.number ?? '';
   const lotStage = selectedLot?.displayStage ?? selectedLot?.stage;
+  const lotDisplay = selectedLot?.displayLabel ?? selectedLot?.number;
   const lotLabel = selectedLot ? `L-${lotDisplay}` : '';
   const lotStageLabel = lotStage ? `Etapa ${lotStage}` : '';
   const whatsappHref = selectedLot
-    ? `https://wa.me/56955231718?text=${encodeURIComponent(
+    ? `https://wa.me/56948822607?text=${encodeURIComponent(
         `${lotStageLabel ? `${lotStageLabel} - ` : ''}Quiero comprar mi terreno en Lomas del Mar, quiero consultar por el lote "${lotLabel}".`
       )}`
     : '';

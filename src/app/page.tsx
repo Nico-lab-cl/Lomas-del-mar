@@ -21,6 +21,7 @@ import { LotGrid } from '@/components/LotGrid';
 import { InvestmentDetails } from '@/components/InvestmentDetails';
 import { LotReservationPopup } from '@/components/LotReservationPopup';
 import { LegalBasesPopup } from '@/components/LegalBasesPopup';
+import { LegalBasesModal } from '@/components/LegalBasesModal';
 import { Footer } from '@/components/Footer';
 import { AdminLogin } from '@/components/AdminLogin';
 import { useToast } from '@/hooks/use-toast';
@@ -373,6 +374,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background relative z-10">
       <LegalBasesPopup />
+      <LegalBasesModal />
       {/* Header */}
       <Header projectName="Lomas Del Mar" />
 

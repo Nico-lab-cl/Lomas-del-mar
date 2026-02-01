@@ -22,6 +22,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Slider } from '@/components/ui/slider';
+import { PurchaseTutorial, openPurchaseTutorial } from '@/components/PurchaseTutorial';
 
 interface LotGridProps {
   lots: Lot[];
@@ -452,10 +453,22 @@ export const LotGrid = ({
 
   return (
     <div id="plano" className="status-card scroll-mt-32">
+      <PurchaseTutorial />
+
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <h2 className="text-xl font-bold text-foreground">Plano Maestro: Lomas Del Mar</h2>
-        <StatusLegend />
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => openPurchaseTutorial()}
+          >
+            ¿Cómo comprar?
+          </Button>
+          <StatusLegend />
+        </div>
       </div>
 
       {/* Mobile hint */}
@@ -548,7 +561,7 @@ export const LotGrid = ({
                       style={{
                         left: `${lot.x}%`,
                         top: `${lot.y}%`,
-                        transition: isDragging ? 'none' : 'transform 0.1s ease-out',
+                        transition: isDragging ? 'none' : 'transform 220ms cubic-bezier(0.22, 1, 0.36, 1)',
                         transform: `translate(-50%, -50%) translateY(calc(var(--lot-jump-y, 0px) + ${clickJumpOffsetPx}px)) scale(${lotSize})`,
                       }}
                       onMouseDown={(e) => {
