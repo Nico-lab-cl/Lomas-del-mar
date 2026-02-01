@@ -516,16 +516,13 @@ export const LotGrid = ({
           style={{ aspectRatio: '4/3', minWidth: '420px' }}
         >
           {/* Background Map Image */}
-          <img
-            src={'/plano.svg'}
-            alt="Plano Maestro"
+          <object
+            data={'/plano.svg'}
+            type="image/svg+xml"
+            aria-label="Plano Maestro"
             className="absolute inset-0 w-full h-full object-contain pointer-events-none"
-            onLoad={(e) => {
+            onLoad={() => {
               if (mapError) setMapError(false);
-              const img = e.currentTarget;
-              if (!img.naturalWidth || !img.naturalHeight) {
-                setMapError(true);
-              }
             }}
             onError={() => {
               setMapError(true);

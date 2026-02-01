@@ -5,6 +5,9 @@ import { Input } from '@/components/ui/input';
 import { Lock, LogOut } from 'lucide-react';
 
 export const AdminLogin = () => {
+  const shouldShowAdminLogin = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_SHOW_ADMIN === 'true';
+  if (!shouldShowAdminLogin) return null;
+
   const { isAdmin, login, logout } = useAdminAuth();
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);

@@ -12,8 +12,11 @@ const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefin
 const ADMIN_PASSWORD = 'admin2026';
 const ADMIN_KEY = 'lomas_admin_auth';
 
+const ADMIN_AUTH_ENABLED = process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_SHOW_ADMIN === 'true';
+
 export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState<boolean>(() => {
+    if (!ADMIN_AUTH_ENABLED) return false;
     try {
       const stored = localStorage.getItem(ADMIN_KEY);
       return stored === 'true';
@@ -23,6 +26,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
   });
 
   useEffect(() => {
+    if (!ADMIN_AUTH_ENABLED) return;
     try {
       localStorage.setItem(ADMIN_KEY, isAdmin.toString());
     } catch (e) {
@@ -31,6 +35,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
   }, [isAdmin]);
 
   const login = (password: string): boolean => {
+    if (!ADMIN_AUTH_ENABLED) return false;
     if (password === ADMIN_PASSWORD) {
       setIsAdmin(true);
       return true;
@@ -39,6 +44,7 @@ export const AdminAuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
+    if (!ADMIN_AUTH_ENABLED) return;
     setIsAdmin(false);
     localStorage.removeItem(ADMIN_KEY);
   };
