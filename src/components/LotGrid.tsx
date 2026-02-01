@@ -516,24 +516,21 @@ export const LotGrid = ({
           style={{ aspectRatio: '4/3', minWidth: '420px' }}
         >
           {/* Background Map Image */}
-          <object
-            data={'/plano.svg?v=2'}
-            type="image/svg+xml"
-            aria-label="Plano Maestro"
-            className="absolute inset-0 w-full h-full pointer-events-none"
+          <img
+            src={'/plano-banner.png'}
+            alt="Plano Maestro"
+            className="absolute inset-0 w-full h-full object-contain pointer-events-none"
             onLoad={(e) => {
               if (mapError) setMapError(false);
+              const img = e.currentTarget;
+              if (!img.naturalWidth || !img.naturalHeight) {
+                setMapError(true);
+              }
             }}
             onError={() => {
               setMapError(true);
             }}
-          >
-            <img
-              src="/plano-assets/plano-a062dd1825b1a339.png"
-              alt="Plano Maestro Fallback"
-              className="w-full h-full object-contain"
-            />
-          </object>
+          />
 
           {/* Lot Markers */}
           {lots
