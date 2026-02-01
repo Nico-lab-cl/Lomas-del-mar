@@ -240,9 +240,6 @@ const generateInitialLots = (): Lot[] => {
     201,
     202,
     203,
-    204,
-    205,
-    206,
   ];
 
   const totalLots = lotNumbers.length; // 202 lotes
