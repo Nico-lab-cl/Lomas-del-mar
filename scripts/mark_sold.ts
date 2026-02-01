@@ -72,11 +72,17 @@ async function main() {
             where: { id: lot.id },
             data: {
                 status: 'sold',
-                // Clear any locks just in case
-                lockedBy: null,
-                lockedUntil: null
             },
         });
+
+        // Clear any locks just in case (using LotLock model)
+        try {
+            await prisma.lotLock.delete({
+                where: { lot_id: lot.id }
+            });
+        } catch (e) {
+            // Ignore if lock doesn't exist
+        }
     }
 
     console.log('Updates complete.');
