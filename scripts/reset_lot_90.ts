@@ -26,15 +26,6 @@ async function main() {
         }
     }
 
-    // Double check for any lingering reservations for this lot not linked to a transaction
-    const lingeringReservations = await prisma.reservation.findMany({
-        where: { currentReservation: LOT_ID } // Assuming logic? Or maybe we can't search by lot easily if it's JSON?
-        // Actually reservation has 'lot_id' or similar? 
-        // In route.ts: txRow.reservation doesn't show lot_id on reservation.
-        // But session has currentReservation.
-        // Let's stick to cleaning via transactions first.
-    });
-
     // 2. Reset Lot Status
     await prisma.lot.update({
         where: { id: LOT_ID },
