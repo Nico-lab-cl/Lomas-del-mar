@@ -517,7 +517,7 @@ export const LotGrid = ({
         >
           {/* Background Map Image */}
           <img
-            src={'/plano-banner.png'}
+            src={'/plano-assets/plano-a062dd1825b1a339.png'}
             alt="Plano Maestro"
             className="absolute inset-0 w-full h-full object-contain pointer-events-none"
             onLoad={(e) => {
