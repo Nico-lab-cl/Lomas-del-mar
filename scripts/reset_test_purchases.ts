@@ -16,7 +16,8 @@ async function main() {
         97,  // S3
         29,  // S1
         132, // S4
-        90   // S2
+        90,   // S2
+        203   // S3 L41
     ];
 
     console.log(`🗑️  Starting Bulk Reset for ${TARGET_LOT_IDS.length} Lots...`);
