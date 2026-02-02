@@ -267,7 +267,7 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
         </button>
 
         {/* Scrollable Content - Only mobile needs scroll */}
-        <div className="overflow-y-auto md:overflow-y-visible flex-1 p-6 md:p-8">
+        <div className="overflow-y-auto flex-1 p-6 md:p-8">
           <div className="mb-4">
             <div className="relative w-full overflow-hidden rounded-xl bg-red-600 text-white px-4 py-2 text-sm font-semibold shadow-sm animate-urgent-pulse">
               <div className="pointer-events-none absolute inset-0 -skew-x-12 opacity-0.35 bg-gradient-to-r from-transparent via-white to-transparent animate-shine" />
