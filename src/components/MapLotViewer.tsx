@@ -121,30 +121,34 @@ export default function MapLotViewer({ lots, onSelectLot, selectedLotId }: MapLo
                                     draggable={false}
                                 />
 
-                                {lotsWithPositions.map((lot) => (
-                                    <button
-                                        key={lot.id}
-                                        onClick={() => onSelectLot && onSelectLot(lot)}
-                                        style={{
-                                            left: `${lot.x}%`,
-                                            top: `${lot.y}%`,
-                                            position: "absolute",
-                                            transform: "translate(-50%, -50%)",
-                                        }}
-                                        className={`
+                                {lotsWithPositions.map((lot) => {
+                                    const isClickable = lot.status === 'available';
+                                    return (
+                                        <button
+                                            key={lot.id}
+                                            onClick={() => isClickable && onSelectLot && onSelectLot(lot)}
+                                            disabled={!isClickable}
+                                            style={{
+                                                left: `${lot.x}%`,
+                                                top: `${lot.y}%`,
+                                                position: "absolute",
+                                                transform: "translate(-50%, -50%)",
+                                            }}
+                                            className={`
                       group relative
                       w-[6px] h-[6px] sm:w-2 sm:h-2 md:w-3 md:h-3 lg:w-4 lg:h-4
                       rounded-full border-[0.5px] text-white font-bold text-[4px] sm:text-[5px] md:text-[6px] lg:text-[8px] shadow-sm
                       flex items-center justify-center
-                      transition-transform hover:scale-150 hover:z-30
+                      transition-transform ${isClickable ? 'hover:scale-150 hover:z-30 cursor-pointer' : 'cursor-not-allowed opacity-90'}
                       ${getStatusColor(lot.status)}
                       ${lot.stage ? `ring-[0.5px] ${getStageBorderColor(lot.stage)}` : ''}
                       ${selectedLotId === lot.id ? 'ring-1 ring-white scale-125' : ''}
                     `}
-                                    >
-                                        {lot.number}
-                                    </button>
-                                ))}
+                                        >
+                                            {lot.number}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </TransformComponent>
                     </React.Fragment>
