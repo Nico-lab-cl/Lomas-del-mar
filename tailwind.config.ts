@@ -74,6 +74,9 @@ export default {
           DEFAULT: "hsl(var(--session-bg))",
           urgent: "hsl(var(--session-urgent))",
         },
+        // Alimin 4th Anniversary Branding
+        'alimin-gold': '#E0B457',
+        'alimin-green': '#36595F',
       },
       borderRadius: {
         lg: "var(--radius)",
