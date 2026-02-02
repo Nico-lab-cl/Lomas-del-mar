@@ -32,8 +32,6 @@ import { UserStatusMessage } from '@/components/UserStatusMessage';
 import { ProgressBar } from '@/components/ProgressBar';
 import { LotGrid } from '@/components/LotGrid';
 import { LotReservationPopup } from '@/components/LotReservationPopup';
-import { LegalBasesPopup } from '@/components/LegalBasesPopup';
-import { LegalBasesModal } from '@/components/LegalBasesModal';
 import { PlanoModal } from '@/components/PlanoModal';
 import { Hero } from '@/components/Hero';
 import { LegalDocumentsPopup } from '@/components/LegalDocumentsPopup';
@@ -397,8 +395,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background relative z-10">
-      <LegalBasesPopup />
-      <LegalBasesModal />
       <LegalDocumentsPopup />
       {/* Header */}
       <Header projectName="Lomas Del Mar" />
