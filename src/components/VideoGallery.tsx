@@ -1,4 +1,5 @@
-import { Play } from "lucide-react";
+import { Play, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const videos = [
     {
@@ -28,7 +29,11 @@ const videos = [
     },
 ];
 
-export const VideoGallery = () => {
+interface VideoGalleryProps {
+    onCtaClick?: () => void;
+}
+
+export const VideoGallery = ({ onCtaClick }: VideoGalleryProps) => {
     return (
         <section className="bg-background py-16 md:py-24 animate-in fade-in duration-700">
             <div className="container mx-auto px-4">
@@ -42,7 +47,7 @@ export const VideoGallery = () => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px] mb-12">
                     {videos.map((video, index) => (
                         <div
                             key={index}
@@ -71,6 +76,17 @@ export const VideoGallery = () => {
                             </div>
                         </div>
                     ))}
+                </div>
+
+                <div className="flex justify-center">
+                    <Button
+                        onClick={onCtaClick}
+                        size="lg"
+                        className="rounded-full text-lg h-14 px-8 shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all hover:scale-105"
+                    >
+                        Adquiere tu terreno ahora
+                        <ArrowRight className="ml-2 w-5 h-5" />
+                    </Button>
                 </div>
             </div>
         </section>

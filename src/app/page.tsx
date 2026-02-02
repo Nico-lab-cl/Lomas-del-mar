@@ -409,7 +409,7 @@ export default function Home() {
       <TrustBanner />
 
       {/* Video Gallery */}
-      <VideoGallery />
+      <VideoGallery onCtaClick={scrollToMap} />
 
       {/* Countdown Banner */}
       {!DISABLE_COUNTDOWN && (
@@ -424,7 +424,7 @@ export default function Home() {
       <main ref={mapSectionRef} className="w-full py-6 space-y-16">
         <div className="container mx-auto px-4 space-y-8">
           {/* Project Features - Premium Grid */}
-          <ProjectFeatures />
+          <ProjectFeatures onCtaClick={scrollToMap} />
 
 
           {/* Progress Bar */}
