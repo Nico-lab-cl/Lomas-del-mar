@@ -33,7 +33,7 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { LotGrid } from '@/components/LotGrid';
 import { LotReservationPopup } from '@/components/LotReservationPopup';
 import { PlanoModal } from '@/components/PlanoModal';
-import { NavigationSidebar } from '@/components/NavigationSidebar';
+
 import { Hero } from '@/components/Hero';
 import { TrustBanner } from '@/components/TrustBanner';
 import { InvestmentThesis } from '@/components/InvestmentThesis';
@@ -523,11 +523,7 @@ export default function Home() {
               </div>
 
               {/* Navigation Sidebar (Collapsible) */}
-              <NavigationSidebar
-                isOpen={isSidebarOpen}
-                setIsOpen={setIsSidebarOpen}
-                onOpenPlano={() => setIsPlanoModalOpen(true)}
-              />
+
             </div>
 
           </div>
