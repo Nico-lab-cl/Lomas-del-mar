@@ -22,7 +22,7 @@ const createSchema = z.object({
 });
 
 const LOT_LOCK_MINUTES = Number(process.env.LOT_LOCK_MINUTES) || 5;
-const RESERVATION_AMOUNT_CLP = Number(process.env.RESERVATION_AMOUNT_CLP) || 550000;
+const RESERVATION_AMOUNT_CLP = Number(process.env.RESERVATION_AMOUNT_CLP) || 50;
 
 export async function POST(req: NextRequest) {
     try {
