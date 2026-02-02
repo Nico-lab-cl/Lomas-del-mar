@@ -21,11 +21,14 @@ const createSchema = z.object({
     address: z.string().min(5),
 });
 
-const LOT_LOCK_MINUTES = Number(process.env.LOT_LOCK_MINUTES) || 5;
-const RESERVATION_AMOUNT_CLP = Number(process.env.RESERVATION_AMOUNT_CLP) || 50;
+// Constants moved inside handler to ensure runtime env vars are read correctly
 
 export async function POST(req: NextRequest) {
     try {
+        // Read env vars at runtime to avoid build-time inlining issues
+        const LOT_LOCK_MINUTES = Number(process.env.LOT_LOCK_MINUTES) || 5;
+        const RESERVATION_AMOUNT_CLP = Number(process.env.RESERVATION_AMOUNT_CLP) || 550000;
+
         const body = await req.json();
         const parsed = createSchema.safeParse(body);
 
