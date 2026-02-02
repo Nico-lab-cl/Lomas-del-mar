@@ -485,6 +485,52 @@ export default function Home() {
                     </div>
                   </div>
 
+                  {/* How to Purchase - Instructions */}
+                  <div className="pt-6 border-t border-border">
+                    <h3 className="text-sm font-black text-muted-foreground uppercase tracking-widest mb-4">Cómo Comprar</h3>
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50">
+                        <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 font-bold text-xs">
+                          1
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">Selecciona tu lote</p>
+                          <p className="text-xs text-muted-foreground mt-1">Haz clic en el terreno disponible (verde) en el mapa</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50">
+                        <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 font-bold text-xs">
+                          2
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">Revisa los detalles</p>
+                          <p className="text-xs text-muted-foreground mt-1">Verifica precio, superficie y características</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50">
+                        <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 font-bold text-xs">
+                          3
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">Completa tus datos</p>
+                          <p className="text-xs text-muted-foreground mt-1">Ingresa tu información personal en el formulario</p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50">
+                        <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 font-bold text-xs">
+                          4
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">Confirma tu reserva</p>
+                          <p className="text-xs text-muted-foreground mt-1">Presiona "Confirmar" para proceder al pago</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   {/* Legend Section */}
                   <div className="pt-6 border-t border-border">
                     <p className="text-sm font-black text-muted-foreground uppercase tracking-widest mb-4">Estado del Terreno</p>
