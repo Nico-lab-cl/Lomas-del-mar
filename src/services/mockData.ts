@@ -4,7 +4,7 @@ import layoutPositions from './layoutPositions.json';
 import defaultMapOverrides from './defaultMapOverrides.json';
 
 // CONTRATO DE STORAGE - NO MODIFICAR ESTAS KEYS SIN INSTRUCCIÓN EXPLÍCITA
-const STORAGE_KEY = 'alimin_lomas_del_mar_lots_v4';
+const STORAGE_KEY = 'alimin_lomas_del_mar_lots_v5';
 const SESSION_KEY = 'alimin_lomas_del_mar_session_v2';
 const POSITIONS_KEY = 'alimin_lomas_del_mar_positions_v1';
 const POSITIONS_VERSION_KEY = 'alimin_lomas_del_mar_positions_version_v1';
