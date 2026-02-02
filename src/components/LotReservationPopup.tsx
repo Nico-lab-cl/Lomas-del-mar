@@ -256,8 +256,8 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
         onClick={handleClose}
       />
 
-      {/* Popup Content */}
-      <div className="relative bg-card rounded-2xl shadow-2xl w-full max-w-lg animate-scale-in border border-border max-h-[90vh] overflow-hidden flex flex-col">
+      {/* Popup Content - Wider on tablets/desktops */}
+      <div className="relative bg-card rounded-2xl shadow-2xl w-full max-w-lg md:max-w-3xl lg:max-w-4xl animate-scale-in border border-border max-h-[90vh] overflow-hidden flex flex-col">
         {/* Close Button */}
         <button
           onClick={handleClose}
@@ -266,8 +266,8 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
           <X className="w-5 h-5" />
         </button>
 
-        {/* Scrollable Content */}
-        <div className="overflow-y-auto flex-1 p-6">
+        {/* Scrollable Content - Only mobile needs scroll */}
+        <div className="overflow-y-auto md:overflow-y-visible flex-1 p-6 md:p-8">
           <div className="mb-4">
             <div className="relative w-full overflow-hidden rounded-xl bg-red-600 text-white px-4 py-2 text-sm font-semibold shadow-sm animate-urgent-pulse">
               <div className="pointer-events-none absolute inset-0 -skew-x-12 opacity-0.35 bg-gradient-to-r from-transparent via-white to-transparent animate-shine" />
@@ -382,7 +382,7 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
                       <div className="p-2 bg-primary/20 rounded-lg">
                         <DollarSign className="w-5 h-5 text-primary transition-transform duration-200 group-hover:scale-110" />
                       </div>
-                      <span className="font-medium text-foreground">Valor Único Oferta</span>
+                      <span className="font-medium text-foreground">Primera cuota</span>
                     </div>
                     <span className="text-2xl font-bold text-primary">{formatCurrency(offerPrice)}</span>
                   </div>
@@ -436,8 +436,8 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border"></div>
             </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-3 text-muted-foreground font-medium">Datos de Contacto</span>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-card px-4 py-1 text-foreground font-semibold">Con este pago estás reservando tu terreno y pagando la primera cuota</span>
             </div>
           </div>
 
@@ -572,7 +572,7 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
               ) : (
                 <>
                   <CreditCard className="w-4 h-4" />
-                  Proceder al Pago
+                  Reservar y Pagar Primera Cuota
                 </>
               )}
             </Button>
