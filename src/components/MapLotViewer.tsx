@@ -36,6 +36,18 @@ interface MapLotViewerProps {
 export default function MapLotViewer({ lots, onSelectLot, selectedLotId }: MapLotViewerProps) {
     // Usamos los datos crudos directamente ya que no hay edición local
     const polygons = lotPolygonsDataRaw;
+    const [isMobile, setIsMobile] = React.useState(false);
+
+    React.useEffect(() => {
+        const checkMobile = () => {
+            // Verificar si es móvil por ancho de pantalla (< 768px) o si tiene capacidad táctil
+            setIsMobile(window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches);
+        };
+
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     // Centro inicial (usamos el primer lote o un promedio)
     const centerPos = polygons.length > 0 ? polygons[0].center : { lat: -33.46, lng: -71.61 };
@@ -99,8 +111,9 @@ export default function MapLotViewer({ lots, onSelectLot, selectedLotId }: MapLo
                                     weight: isSelected ? 3 : 1
                                 }}
                             >
-                                {/* Tooltip informativo al pasar el cursor (SOLO HOVER) */}
-                                {lot && (
+                                {/* Tooltip informativo al pasar el cursor (SOLO DESKTOP) */}
+                                {/* En móvil desactivamos el tooltip para que el click abra directo el modal */}
+                                {!isMobile && lot && (
                                     <Tooltip direction="top" opacity={1} sticky>
                                         <div className="p-3 min-w-[140px] text-center bg-card text-foreground rounded-lg border border-border shadow-xl">
                                             <p className="font-bold text-base mb-2 border-b border-border/50 pb-1">Lote {lot.displayLabel ?? lot.number}</p>
