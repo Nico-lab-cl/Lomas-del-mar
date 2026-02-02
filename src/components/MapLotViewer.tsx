@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { ZoomIn, ZoomOut, Maximize, Map as MapIcon, FileText, X } from "lucide-react";
+import { ZoomIn, ZoomOut, Maximize, Map as MapIcon, X } from "lucide-react";
 import { mergeLotPositions, filterLotsWithCoordinates } from "@/services/lotPositions";
 
 // Define Types (Same as Builder)
@@ -45,18 +45,31 @@ export default function MapLotViewer({ lots, onSelectLot, selectedLotId }: MapLo
         }
     };
 
-    const getStageBorderColor = (stage?: number) => {
-        switch (stage) {
-            case 1: return "ring-red-300";
-            case 2: return "ring-blue-300";
-            case 3: return "ring-green-300";
-            case 4: return "ring-yellow-300";
-            default: return "";
-        }
+    const getStageBorderColor = (stage: number) => {
+        const colors: Record<number, string> = {
+            1: "ring-blue-500",
+            2: "ring-purple-500",
+            3: "ring-pink-500",
+            4: "ring-orange-500",
+        };
+        return colors[stage] || "ring-gray-500";
     };
 
+    // Listen for external open-schematic event
+    useEffect(() => {
+        const container = document.querySelector('[data-map-viewer]');
+        const handleOpenSchematic = () => setShowSchematic(true);
+
+        if (container) {
+            container.addEventListener('open-schematic', handleOpenSchematic as EventListener);
+            return () => {
+                container.removeEventListener('open-schematic', handleOpenSchematic as EventListener);
+            };
+        }
+    }, []);
+
     return (
-        <div className="relative w-full h-full bg-gray-100 overflow-hidden rounded-xl border shadow-lg group">
+        <div className="relative w-full h-full bg-gray-100 overflow-hidden rounded-xl border shadow-lg group" data-map-viewer>
             {/* Controls Overlay */}
             <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
                 <button
@@ -65,13 +78,6 @@ export default function MapLotViewer({ lots, onSelectLot, selectedLotId }: MapLo
                     title="Cambiar vista"
                 >
                     <MapIcon size={20} />
-                </button>
-                <button
-                    onClick={() => setShowSchematic(true)}
-                    className="bg-white/90 backdrop-blur p-2 rounded-lg shadow hover:bg-white text-gray-700 transition"
-                    title="Ver Plano Esquemático"
-                >
-                    <FileText size={20} />
                 </button>
             </div>
 

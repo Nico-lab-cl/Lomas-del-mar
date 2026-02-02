@@ -33,6 +33,7 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { LotGrid } from '@/components/LotGrid';
 import { LotReservationPopup } from '@/components/LotReservationPopup';
 import { PlanoModal } from '@/components/PlanoModal';
+import { PurchaseTutorial } from '@/components/PurchaseTutorial';
 
 import { Hero } from '@/components/Hero';
 import { TrustBanner } from '@/components/TrustBanner';
@@ -536,6 +537,66 @@ export default function Home() {
                   </button>
                 </div>
 
+                {/* Botón Plano Esquemático */}
+                <div className="bg-white rounded-xl border shadow-sm p-6">
+                  <h3 className="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
+                    <MapIcon className="w-5 h-5 text-primary" />
+                    Plano Esquemático
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Visualiza el plano general del proyecto con la numeración de todos los lotes.
+                  </p>
+                  <button
+                    onClick={() => {
+                      const mapViewer = document.querySelector('[data-map-viewer]');
+                      if (mapViewer) {
+                        const event = new CustomEvent('open-schematic');
+                        mapViewer.dispatchEvent(event);
+                      }
+                    }}
+                    className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                  >
+                    Ver plano general
+                  </button>
+                </div>
+
+                {/* Simbología de Etapas */}
+                <div className="bg-white rounded-xl border shadow-sm p-6">
+                  <h3 className="font-bold text-lg text-gray-900 mb-4">Simbología</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-sm bg-green-500"></div>
+                      <div>
+                        <p className="font-semibold text-sm text-gray-900">Área Verde</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-sm bg-red-500"></div>
+                      <div>
+                        <p className="font-semibold text-sm text-gray-900">Lotes no disponibles</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-sm bg-blue-500"></div>
+                      <div>
+                        <p className="font-semibold text-sm text-gray-900">Equip. Sanitario</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-sm bg-yellow-500"></div>
+                      <div>
+                        <p className="font-semibold text-sm text-gray-900">Estacionamiento visitas</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-sm bg-purple-500"></div>
+                      <div>
+                        <p className="font-semibold text-sm text-gray-900">Sala de equip.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Leyenda de Estados */}
                 <div className="bg-white rounded-xl border shadow-sm p-6">
                   <h3 className="font-bold text-lg text-gray-900 mb-4">Estado de los lotes</h3>
@@ -696,6 +757,9 @@ export default function Home() {
         userReservation={session?.currentReservation ?? null}
         isSessionActive={session?.isActive ?? false}
       />
+
+      {/* Purchase Tutorial Modal */}
+      <PurchaseTutorial />
     </div>
   );
 }
