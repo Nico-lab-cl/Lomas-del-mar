@@ -86,9 +86,11 @@ export default function Home() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isHydrating, setIsHydrating] = useState(false);
   const [isPlanoModalOpen, setIsPlanoModalOpen] = useState(false);
+  const [showCountdown, setShowCountdown] = useState(false);
 
-  // Ref for smooth scroll to map section
+  // Refs for scroll tracking and navigation
   const mapSectionRef = useRef<HTMLDivElement>(null);
+  const videoGalleryRef = useRef<HTMLDivElement>(null);
 
   // Initialize data
   useEffect(() => {
@@ -300,6 +302,23 @@ export default function Home() {
     setLastViewedLot(lot);
   }, [session]);
 
+  // Detect scroll position to show countdown banner after VideoGallery
+  useEffect(() => {
+    const handleScroll = () => {
+      if (videoGalleryRef.current) {
+        const rect = videoGalleryRef.current.getBoundingClientRect();
+        // Show countdown when VideoGallery has scrolled past viewport
+        const hasScrolledPastGallery = rect.bottom < window.innerHeight / 2;
+        setShowCountdown(hasScrolledPastGallery);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial position
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Smooth scroll to map section
   const scrollToMap = useCallback(() => {
     mapSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -410,15 +429,20 @@ export default function Home() {
       <TrustBanner />
 
       {/* Video Gallery */}
-      <VideoGallery onCtaClick={scrollToMap} />
+      <div ref={videoGalleryRef}>
+        <VideoGallery onCtaClick={scrollToMap} />
+      </div>
 
-      {/* Countdown Banner */}
-      {!DISABLE_COUNTDOWN && (
-        <CountdownBanner
-          expiresAt={session.expiresAt}
-          onExpire={handleSessionExpire}
-          isBlurred={selectedLot !== null}
-        />
+
+      {/* Countdown Banner - Sticky, appears after VideoGallery */}
+      {!DISABLE_COUNTDOWN && showCountdown && (
+        <div className="sticky top-0 z-40 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <CountdownBanner
+            expiresAt={session.expiresAt}
+            onExpire={handleSessionExpire}
+            isBlurred={selectedLot !== null}
+          />
+        </div>
       )}
 
       {/* Main Content */}
