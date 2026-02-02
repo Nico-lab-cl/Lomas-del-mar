@@ -1,5 +1,6 @@
 import { Play, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { GoogleMapsButton } from "@/components/GoogleMapsButton";
 
 const videos = [
     {
@@ -78,7 +79,7 @@ export const VideoGallery = ({ onCtaClick }: VideoGalleryProps) => {
                     ))}
                 </div>
 
-                <div className="flex justify-center">
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
                     <Button
                         onClick={onCtaClick}
                         size="lg"
@@ -87,6 +88,7 @@ export const VideoGallery = ({ onCtaClick }: VideoGalleryProps) => {
                         Adquiere tu terreno ahora
                         <ArrowRight className="ml-2 w-5 h-5" />
                     </Button>
+                    <GoogleMapsButton variant="outline" className="h-14" />
                 </div>
             </div>
         </section>

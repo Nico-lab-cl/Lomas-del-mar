@@ -37,6 +37,7 @@ import { Hero } from '@/components/Hero';
 import { TrustBanner } from '@/components/TrustBanner';
 import { VideoGallery } from '@/components/VideoGallery';
 import { ProjectFeatures } from '@/components/ProjectFeatures';
+import { GoogleMapsButton } from '@/components/GoogleMapsButton';
 import { LegalDocumentsPopup } from '@/components/LegalDocumentsPopup';
 import { Footer } from '@/components/Footer';
 import { AdminLogin } from '@/components/AdminLogin';
@@ -442,19 +443,7 @@ export default function Home() {
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
           </div>
           <div className="mt-4 flex justify-center">
-            <a
-              href="https://maps.app.goo.gl/pmYqgPqXJrBghfRR6"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block"
-            >
-              <Button className="h-auto rounded-full px-6 py-2">
-                <span className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
-                  Ver ubicación en Google Maps
-                </span>
-              </Button>
-            </a>
+            <GoogleMapsButton />
           </div>
         </div>
 
@@ -494,13 +483,20 @@ export default function Home() {
                   {/* Ver Plano Button */}
                   <div>
                     <h3 className="text-sm font-black text-muted-foreground uppercase tracking-widest mb-4">Navegación</h3>
-                    <Button
-                      onClick={() => setIsPlanoModalOpen(true)}
-                      className="w-full h-14 rounded-2xl text-lg font-bold shadow-lg shadow-primary/20 bg-gradient-to-r from-primary to-emerald-500 hover:from-primary/90 hover:to-emerald-500/90"
-                    >
-                      <MapIcon className="w-5 h-5 mr-2" />
-                      Ver Plano
-                    </Button>
+                    <div className="space-y-3">
+                      <Button
+                        onClick={() => setIsPlanoModalOpen(true)}
+                        className="w-full h-14 rounded-2xl text-lg font-bold shadow-lg shadow-primary/20 bg-gradient-to-r from-primary to-emerald-500 hover:from-primary/90 hover:to-emerald-500/90"
+                      >
+                        <MapIcon className="w-5 h-5 mr-2" />
+                        Ver Plano
+                      </Button>
+
+                      <GoogleMapsButton
+                        variant="outline"
+                        className="w-full"
+                      />
+                    </div>
                   </div>
 
                   {/* Legend Section */}
