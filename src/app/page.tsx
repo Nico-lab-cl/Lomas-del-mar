@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from 'next/dynamic';
-import { LayoutGrid, Map as MapIcon } from 'lucide-react';
+import { Map as MapIcon } from 'lucide-react';
 
 const MapLotViewer = dynamic(() => import('@/components/MapLotViewer'), {
   ssr: false,
@@ -69,7 +69,6 @@ const fetchLotsFromApi = async (): Promise<ApiLotsRow[]> => {
 };
 
 export default function Home() {
-  const [viewMode, setViewMode] = useState<'schematic' | 'satellite'>('schematic');
   const { toast } = useToast();
   const [lots, setLots] = useState<Lot[]>([]);
   const [session, setSession] = useState<UserSession | null>(null);
@@ -488,45 +487,34 @@ export default function Home() {
         {/* Lot Grid - Full width */}
 
         {/* === INICIO BLOQUE MAPA === */}
-        <div className="flex justify-center mb-6">
-          <div className="bg-muted p-1 rounded-lg inline-flex items-center gap-1 border border-border">
-            <button
-              onClick={() => setViewMode('schematic')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${viewMode === 'schematic' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
-                }`}
-            >
-              <LayoutGrid className="w-4 h-4" />
-              Plano Esquema
-            </button>
-            <button
-              onClick={() => setViewMode('satellite')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${viewMode === 'satellite' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
-                }`}
-            >
-              <MapIcon className="w-4 h-4" />
-              Vista Satelital
-            </button>
-          </div>
+        {/* 1. Plano Esquema (Principal para compra) */}
+        <div className="mb-12">
+          <LotGrid
+            lots={lots}
+            onSelectLot={handleSelectLot}
+            onUpdateLots={handleUpdateLots}
+            selectedLotId={selectedLot?.id ?? null}
+            userReservation={session?.currentReservation ?? null}
+            isSessionActive={session?.isActive ?? false}
+            isHydrating={isHydrating}
+          />
         </div>
 
-        <div className="animate-in fade-in zoom-in duration-300">
-          {viewMode === 'satellite' ? (
-            <MapLotViewer
-              lots={lots}
-              onSelectLot={handleSelectLot}
-              selectedLotId={selectedLot?.id ?? null}
-            />
-          ) : (
-            <LotGrid
-              lots={lots}
-              onSelectLot={handleSelectLot}
-              onUpdateLots={handleUpdateLots}
-              selectedLotId={selectedLot?.id ?? null}
-              userReservation={session?.currentReservation ?? null}
-              isSessionActive={session?.isActive ?? false}
-              isHydrating={isHydrating}
-            />
-          )}
+        {/* 2. Vista Satelital (Secundaria) */}
+        <div className="flex flex-col items-center justify-center w-full max-w-[1248px] mx-auto px-4 mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-foreground mb-2 flex items-center justify-center gap-2">
+              <MapIcon className="w-6 h-6 text-primary" />
+              Explorador Satelital
+            </h2>
+            <p className="text-muted-foreground">Visualiza la ubicación real de tu terreno con tecnología GPS</p>
+          </div>
+
+          <MapLotViewer
+            lots={lots}
+            onSelectLot={handleSelectLot}
+            selectedLotId={selectedLot?.id ?? null}
+          />
         </div>
         {/* === FIN BLOQUE MAPA === */}
       </main>
