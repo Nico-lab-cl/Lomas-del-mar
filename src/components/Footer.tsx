@@ -117,7 +117,7 @@ export const Footer = () => {
           <div className="flex items-center gap-6">
             <img src="/Mastercard-logo.svg" alt="Mastercard" className="h-10 w-auto object-contain" />
             <img src="/Diseño sin título (2).svg" alt="Visa" className="h-10 w-auto object-contain" />
-            <img src="/Diseño sin título (1).svg" alt="Payment" className="h-10 w-auto object-contain" />
+
             <img src="/Diseño sin título (3).svg" alt="Redcompra" className="h-10 w-auto object-contain" />
           </div>
         </div>
