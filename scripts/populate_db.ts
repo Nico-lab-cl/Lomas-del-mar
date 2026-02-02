@@ -40,7 +40,7 @@ async function populateDb() {
             createdCount++;
         } else {
             // Ya existe -> Actualizar SOLO datos técnicos, NO el status (para respetar ventas)
-            if (existing.number !== details.number || existing.stage !== details.stage) {
+            if (existing.number !== details.number || existing.stage !== details.stage || existing.reservation_amount_clp !== 50) {
                 await prisma.lot.update({
                     where: { id },
                     data: {
