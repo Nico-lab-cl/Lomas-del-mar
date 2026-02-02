@@ -3,8 +3,9 @@ import { prisma } from '@/lib/prisma';
 import { webpayCommit, WEBPAY_CONFIG } from '@/lib/transbank';
 import { computeLotDetailsFromId } from '@/lib/logic';
 
-// N8N Webhook URL
-const N8N_WEBHOOK_URL = 'https://n8n-n8n.yszha2.easypanel.host/webhook/7b928d3b-2850-462d-87df-f6a87fe4108a';
+// N8N Webhook Configuration
+const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
+const N8N_WEBHOOK_SECRET = process.env.N8N_WEBHOOK_SECRET;
 
 export const dynamic = 'force-dynamic';
 
@@ -117,11 +118,34 @@ async function handleCommitRequest(req: NextRequest) {
             };
 
             // Trigger N8N (Non-blocking)
-            fetch(N8N_WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).catch(err => console.error('N8N Trigger Failed', err));
+            if (N8N_WEBHOOK_URL) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
+                fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(N8N_WEBHOOK_SECRET ? { 'X-Webhook-Secret': N8N_WEBHOOK_SECRET } : {})
+                    },
+                    body: JSON.stringify(payload),
+                    signal: controller.signal
+                })
+                    .then(response => {
+                        clearTimeout(timeoutId);
+                        if (response.ok) {
+                            console.log('[n8n] Webhook sent successfully', { reservationId: txRow.reservation_id, status: response.status });
+                        } else {
+                            console.warn('[n8n] Webhook returned non-OK status', { reservationId: txRow.reservation_id, status: response.status });
+                        }
+                    })
+                    .catch(err => {
+                        clearTimeout(timeoutId);
+                        console.error('[n8n] Webhook failed', { reservationId: txRow.reservation_id, error: err instanceof Error ? err.message : String(err) });
+                    });
+            } else {
+                console.warn('[n8n] N8N_WEBHOOK_URL not configured, skipping webhook', { reservationId: txRow.reservation_id });
+            }
 
             return NextResponse.redirect(`${WEBPAY_CONFIG.finalOkUrl}?lotId=${txRow.lot_id}&reservationId=${txRow.reservation_id}`);
 
