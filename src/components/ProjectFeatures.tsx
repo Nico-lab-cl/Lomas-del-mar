@@ -22,12 +22,7 @@ const features = [
         description: "Red aérea instalada y operativa",
         highlight: false
     },
-    {
-        icon: FileCheck,
-        title: "Rol Propio Individual",
-        description: "Escritura ante notario",
-        highlight: true // Este lo destacaremos visualmente
-    },
+
     {
         icon: ShieldCheck,
         title: "Acceso Controlado",
