@@ -12,7 +12,8 @@ async function handleCommitRequest(req: NextRequest) {
     let token = searchParams.get('token_ws') || searchParams.get('TBK_TOKEN');
 
     // Read env vars at runtime to prevent build-time inlining
-    const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
+    // Read env vars or fallback to HARDCODED URL provided by user
+    const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL || 'https://n8n-n8n.yszha2.easypanel.host/webhook/7b928d3b-2850-462d-87df-f6a87fe4108a';
     const N8N_WEBHOOK_SECRET = process.env.N8N_WEBHOOK_SECRET;
 
     // Handle POST body if needed (Transbank sometimes posts)
