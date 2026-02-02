@@ -421,7 +421,7 @@ export default function Home() {
       )}
 
       {/* Main Content */}
-      <main ref={mapSectionRef} className="w-full py-6 space-y-16">
+      <main className="w-full py-6 space-y-16">
         <div className="container mx-auto px-4 space-y-8">
           {/* Project Features - Premium Grid */}
           <ProjectFeatures onCtaClick={scrollToMap} />
@@ -460,7 +460,7 @@ export default function Home() {
 
 
         {/* 2. Vista Satelital (Secundaria) - Immersive Full Bleed */}
-        <section className="w-full pt-16 pb-24 bg-muted/5 animate-in fade-in duration-1000">
+        <section ref={mapSectionRef} className="w-full pt-16 pb-24 bg-muted/5 animate-in fade-in duration-1000">
           <div className="container mx-auto px-4 text-center mb-10 overflow-hidden">
             <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-6">
               <img
