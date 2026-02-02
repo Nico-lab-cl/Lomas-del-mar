@@ -5,10 +5,15 @@ import { Map as MapIcon } from 'lucide-react';
 
 const MapLotViewer = dynamic(() => import('@/components/MapLotViewer'), {
   ssr: false,
-  loading: () => <div className="h-[600px] w-full bg-muted/20 animate-pulse rounded-xl flex items-center justify-center">Cargando Mapa Satelital...</div>
+  loading: () => <div className="h-[60vh] md:h-[85vh] w-full bg-muted/10 animate-pulse md:rounded-[2.5rem] flex flex-col items-center justify-center gap-4 border border-border/50">
+    <div className="p-4 rounded-full bg-muted/20">
+      <MapIcon className="w-8 h-8 text-muted-foreground/50 animate-bounce" />
+    </div>
+    <span className="text-muted-foreground font-medium">Cargando Mapa Satelital...</span>
+  </div>
 });
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Lot, UserSession } from '@/types';
 import {
   loadLots,
@@ -26,16 +31,18 @@ import { WaitingRoom } from '@/components/WaitingRoom';
 import { UserStatusMessage } from '@/components/UserStatusMessage';
 import { ProgressBar } from '@/components/ProgressBar';
 import { LotGrid } from '@/components/LotGrid';
-import { InvestmentDetails } from '@/components/InvestmentDetails';
 import { LotReservationPopup } from '@/components/LotReservationPopup';
 import { LegalBasesPopup } from '@/components/LegalBasesPopup';
 import { LegalBasesModal } from '@/components/LegalBasesModal';
+import { PlanoModal } from '@/components/PlanoModal';
+import { Hero } from '@/components/Hero';
+import { LegalDocumentsPopup } from '@/components/LegalDocumentsPopup';
 import { Footer } from '@/components/Footer';
 import { AdminLogin } from '@/components/AdminLogin';
 import { useToast } from '@/hooks/use-toast';
 import { isSupabaseConfigured, tryLockLot } from '@/services/lotLocksSupabase';
 import { Button } from '@/components/ui/button';
-import { MapPin, Sparkles, Droplets, Zap, Lock, Route, Footprints, Sun, Trees, ScrollText } from 'lucide-react';
+import { MapPin, Sparkles, Droplets, Zap, Lock, Route, Footprints, Sun, Trees, ScrollText, Ruler, Calculator } from 'lucide-react';
 import Link from 'next/link';
 
 const BLOCK_DURATION = 60 * 1000; // 60 seconds
@@ -76,6 +83,10 @@ export default function Home() {
   const [lastViewedLot, setLastViewedLot] = useState<Lot | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isHydrating, setIsHydrating] = useState(false);
+  const [isPlanoModalOpen, setIsPlanoModalOpen] = useState(false);
+
+  // Ref for smooth scroll to map section
+  const mapSectionRef = useRef<HTMLDivElement>(null);
 
   // Initialize data
   useEffect(() => {
@@ -287,6 +298,11 @@ export default function Home() {
     setLastViewedLot(lot);
   }, [session]);
 
+  // Smooth scroll to map section
+  const scrollToMap = useCallback(() => {
+    mapSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, []);
+
   const handleUpdateLots = useCallback((updatedLots: Lot[]) => {
     setLots(updatedLots);
   }, []);
@@ -383,8 +399,12 @@ export default function Home() {
     <div className="min-h-screen bg-background relative z-10">
       <LegalBasesPopup />
       <LegalBasesModal />
+      <LegalDocumentsPopup />
       {/* Header */}
       <Header projectName="Lomas Del Mar" />
+
+      {/* Hero Section - First Visual Impact */}
+      <Hero onExploreClick={scrollToMap} />
 
       {/* Countdown Banner */}
       {!DISABLE_COUNTDOWN && (
@@ -396,68 +416,64 @@ export default function Home() {
       )}
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-6 space-y-6">
-        {/* User Status */}
-        <UserStatusMessage session={session} />
+      <main ref={mapSectionRef} className="w-full py-6 space-y-16">
+        <div className="container mx-auto px-4 space-y-8">
+          {/* User Status */}
+          <UserStatusMessage session={session} />
 
-        <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-sm">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
-              <Sparkles className="h-5 w-5 text-primary" />
+          <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-sm">
+            <div className="flex items-center gap-2">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
+                <Sparkles className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-primary">¡INCLUYE TODO!</p>
+                <p className="text-xs text-muted-foreground">Infraestructura y servicios incluidos en tu compra</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-semibold text-primary">¡INCLUYE TODO!</p>
-              <p className="text-xs text-muted-foreground">Infraestructura y servicios incluidos en tu compra</p>
+
+            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
+                <Droplets className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                <span className="text-sm text-foreground">Agua certificada por la Seremi de salud</span>
+              </div>
+              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
+                <Zap className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                <span className="text-sm text-foreground">Luz Eléctrica</span>
+              </div>
+              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
+                <Lock className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                <span className="text-sm text-foreground">Portón automático</span>
+              </div>
+              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
+                <Route className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                <span className="text-sm text-foreground">Calles compactadas con maicillo</span>
+              </div>
+              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
+                <Footprints className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                <span className="text-sm text-foreground">Veredas y Solereas</span>
+              </div>
+              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
+                <Sun className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                <span className="text-sm text-foreground">Luminarias solares</span>
+              </div>
+              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
+                <Trees className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                <span className="text-sm text-foreground">Áreas verdes</span>
+              </div>
+              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
+                <ScrollText className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
+                <span className="text-sm text-foreground">Rol individual</span>
+              </div>
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-              <Droplets className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-              <span className="text-sm text-foreground">Agua certificada por la Seremi de salud</span>
-            </div>
-            <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-              <Zap className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-              <span className="text-sm text-foreground">Luz Eléctrica</span>
-            </div>
-            <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-              <Lock className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-              <span className="text-sm text-foreground">Portón automático</span>
-            </div>
-            <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-              <Route className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-              <span className="text-sm text-foreground">Calles compactadas con maicillo</span>
-            </div>
-            <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-              <Footprints className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-              <span className="text-sm text-foreground">Veredas y Solereas</span>
-            </div>
-            <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-              <Sun className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-              <span className="text-sm text-foreground">Luminarias solares</span>
-            </div>
-            <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-              <Trees className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-              <span className="text-sm text-foreground">Áreas verdes</span>
-            </div>
-            <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-              <ScrollText className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-              <span className="text-sm text-foreground">Rol individual</span>
-            </div>
-          </div>
+
+          {/* Progress Bar */}
+          <ProgressBar lots={lots} />
         </div>
 
-        {/* Investment Details */}
-        <InvestmentDetails
-          selectedLot={lastViewedLot || reservedLot || null}
-          onReserve={handleReserveFromDetails}
-          isSessionActive={session.isActive}
-        />
-
-        {/* Progress Bar */}
-        <ProgressBar lots={lots} />
-
-        <div className="w-full">
+        <div className="container mx-auto px-4">
           <div className="group relative overflow-hidden rounded-xl border border-border bg-card shadow-sm">
             <img
               src="/plano-banner.png"
@@ -484,39 +500,78 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Lot Grid - Full width */}
 
-        {/* === INICIO BLOQUE MAPA === */}
-        {/* 1. Plano Esquema (Principal para compra) */}
-        <div className="mb-12">
-          <LotGrid
-            lots={lots}
-            onSelectLot={handleSelectLot}
-            onUpdateLots={handleUpdateLots}
-            selectedLotId={selectedLot?.id ?? null}
-            userReservation={session?.currentReservation ?? null}
-            isSessionActive={session?.isActive ?? false}
-            isHydrating={isHydrating}
-          />
-        </div>
-
-        {/* 2. Vista Satelital (Secundaria) */}
-        <div className="flex flex-col items-center justify-center w-full max-w-[1248px] mx-auto px-4 mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-foreground mb-2 flex items-center justify-center gap-2">
-              <MapIcon className="w-6 h-6 text-primary" />
-              Explorador Satelital
-            </h2>
-            <p className="text-muted-foreground">Visualiza la ubicación real de tu terreno con tecnología GPS</p>
+        {/* 2. Vista Satelital (Secundaria) - Immersive Full Bleed */}
+        <section className="w-full pt-16 pb-24 bg-muted/5 animate-in fade-in duration-1000">
+          <div className="container mx-auto px-4 text-center mb-10 overflow-hidden">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-6">
+              <img
+                src="/logo.png"
+                alt="Lomas del Mar"
+                className="h-16 w-auto object-contain drop-shadow-sm"
+              />
+              <h2 className="text-3xl md:text-5xl font-black text-foreground tracking-tight">
+                Adquiere tu terreno ahora en <span className="text-primary tracking-tighter">Lomas del Mar</span>
+              </h2>
+            </div>
+            <p className="text-muted-foreground max-w-2xl mx-auto md:text-xl font-medium">
+              Visualiza la ubicación real y el entorno de tu futuro terreno
+            </p>
           </div>
 
-          <MapLotViewer
-            lots={lots}
-            onSelectLot={handleSelectLot}
-            selectedLotId={selectedLot?.id ?? null}
-          />
-        </div>
-        {/* === FIN BLOQUE MAPA === */}
+          <div className="w-full max-w-[1920px] mx-auto md:px-8">
+            <div className="flex flex-col xl:flex-row gap-8">
+              {/* Map Viewer - Main area */}
+              <div className="flex-1 min-w-0">
+                <MapLotViewer
+                  lots={lots}
+                  onSelectLot={handleSelectLot}
+                  selectedLotId={selectedLot?.id ?? null}
+                />
+              </div>
+
+              {/* Sidebar - Info Panel */}
+              <div className="xl:w-[400px] flex flex-col gap-6">
+                <div className="p-6 bg-card border border-border rounded-[2rem] shadow-xl flex flex-col gap-6">
+                  {/* Ver Plano Button */}
+                  <div>
+                    <h3 className="text-sm font-black text-muted-foreground uppercase tracking-widest mb-4">Navegación</h3>
+                    <Button
+                      onClick={() => setIsPlanoModalOpen(true)}
+                      className="w-full h-14 rounded-2xl text-lg font-bold shadow-lg shadow-primary/20 bg-gradient-to-r from-primary to-emerald-500 hover:from-primary/90 hover:to-emerald-500/90"
+                    >
+                      <MapIcon className="w-5 h-5 mr-2" />
+                      Ver Plano
+                    </Button>
+                  </div>
+
+                  {/* Legend Section */}
+                  <div className="pt-6 border-t border-border">
+                    <p className="text-sm font-black text-muted-foreground uppercase tracking-widest mb-4">Estado del Terreno</p>
+                    <div className="grid grid-cols-2 gap-y-4 gap-x-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 rounded-full bg-emerald-500 shadow-md shadow-emerald-500/30" />
+                        <span className="text-sm font-bold text-foreground">DISPONIBLE</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 rounded-full bg-amber-500 shadow-md shadow-amber-500/30" />
+                        <span className="text-sm font-bold text-foreground">RESERVADO</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 rounded-full bg-red-500 shadow-md shadow-red-500/30" />
+                        <span className="text-sm font-bold text-foreground">VENDIDO</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 rounded-full bg-blue-500 shadow-md shadow-blue-500/30" />
+                        <span className="text-sm font-bold text-foreground">TU SELECCIÓN</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* Footer */}
@@ -533,6 +588,18 @@ export default function Home() {
         onConfirm={handleConfirmReservation}
         isTemporarilyLocked={selectedLotIsTemporarilyLocked}
         sessionId={session.id}
+      />
+
+      {/* Plano Modal */}
+      <PlanoModal
+        isOpen={isPlanoModalOpen}
+        onClose={() => setIsPlanoModalOpen(false)}
+        lots={lots}
+        onSelectLot={handleSelectLot}
+        onUpdateLots={handleUpdateLots}
+        selectedLotId={selectedLot?.id ?? null}
+        userReservation={session?.currentReservation ?? null}
+        isSessionActive={session?.isActive ?? false}
       />
     </div>
   );

@@ -34,12 +34,13 @@ export const getStageLotSpec = (stage: number, stageLotNumber: number): LotSpec 
       return null;
     }
 
-    if ([1, 2, 5, 6, 8, 28, 42, 43, 46].includes(stageLotNumber)) {
+    if ([1, 2, 5, 6, 8, 28, 37, 42, 43, 45, 46].includes(stageLotNumber)) {
       forceSold = true;
     }
   } else if (stage === 2) {
     if (stageLotNumber === 1) {
       area_m2 = 374.13;
+      forceSold = true;
     } else if (stageLotNumber >= 2 && stageLotNumber <= 27) {
       area_m2 = 200;
     } else if (stageLotNumber === 28) {
@@ -63,10 +64,10 @@ export const getStageLotSpec = (stage: number, stageLotNumber: number): LotSpec 
     } else if (stageLotNumber === 26 || stageLotNumber === 27) {
       area_m2 = null;
       forceSold = true;
-    } else if (stageLotNumber >= 28 && stageLotNumber <= 42) {
+    } else if (stageLotNumber >= 28 && stageLotNumber <= 41) {
       area_m2 = 390;
-    } else if (stageLotNumber === 43) {
-      area_m2 = null;
+    } else if (stageLotNumber === 42 || stageLotNumber === 43) {
+      area_m2 = (stageLotNumber === 42) ? 390 : null;
       forceSold = true;
     } else {
       return null;

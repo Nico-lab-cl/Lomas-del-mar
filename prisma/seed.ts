@@ -105,17 +105,26 @@ async function main() {
 
     const lotsToCreate = [];
 
+    const soldLotsConfig: Record<number, number[]> = {
+        1: [1, 2, 5, 6, 8, 28, 37, 42, 43, 45, 46],
+        2: [1, 29, 47],
+        3: [26, 27, 42, 43],
+        4: [25, 41, 44, 45, 65]
+    };
+
     for (let id = 1; id <= 300; id++) {
         const details = computeLotDetailsFromId(id);
 
         if (details.stage && details.number) {
+            const isSold = details.stage && soldLotsConfig[details.stage]?.includes(Number(details.number));
+
             lotsToCreate.push({
                 id: id,
                 number: details.number,
                 stage: details.stage,
                 area_m2: details.area_m2,
                 price_total_clp: details.price_total_clp,
-                status: 'available',
+                status: isSold ? 'sold' : 'available',
                 reservation_amount_clp: 550000
             });
         }

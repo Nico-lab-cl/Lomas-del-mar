@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -154,7 +153,7 @@
       height: 20px;
       font-size: 8px;
     }
-    
+
     .lot-marker-small {
       width: 16px;
       height: 16px;
@@ -178,9 +177,12 @@
   }
 
   @keyframes lot-pulse {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 1;
     }
+
     50% {
       opacity: 0.92;
     }
@@ -190,9 +192,11 @@
     0% {
       --lot-jump-y: 0px;
     }
+
     55% {
       --lot-jump-y: -6px;
     }
+
     100% {
       --lot-jump-y: -4px;
     }
@@ -202,6 +206,7 @@
     0% {
       --lot-jump-y: 0px;
     }
+
     100% {
       --lot-jump-y: -8px;
     }
@@ -284,12 +289,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.5) 50%,
-      transparent 100%
-    );
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.5) 50%,
+        transparent 100%);
     background-size: 200% 100%;
     animation: shimmer 10s ease-in-out infinite;
   }
@@ -298,40 +301,84 @@
   .logo-glow {
     animation: logo-pulse 2s ease-in-out infinite;
   }
+
+  /* Custom Leaflet Tooltip styles */
+  .leaflet-tooltip.lot-number-tooltip {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .leaflet-marker-icon.marker-label-icon {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .leaflet-tooltip-pane .leaflet-tooltip {
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 0;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  .leaflet-tooltip-top:before {
+    border-top-color: hsl(var(--border)) !important;
+  }
 }
 
 @keyframes shimmer {
-  0%, 100% {
+
+  0%,
+  100% {
     background-position: 200% 0;
   }
+
   50% {
     background-position: -200% 0;
   }
 }
 
 @keyframes logo-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 20px hsl(160 84% 39% / 0.4), 0 0 40px hsl(160 84% 39% / 0.2);
   }
+
   50% {
     box-shadow: 0 0 30px hsl(160 84% 39% / 0.6), 0 0 60px hsl(160 84% 39% / 0.4);
   }
 }
 
 @keyframes countdown-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 10px hsl(0 84% 60% / 0.5), 0 0 20px hsl(0 84% 60% / 0.3);
   }
+
   50% {
     box-shadow: 0 0 20px hsl(0 84% 60% / 0.8), 0 0 40px hsl(0 84% 60% / 0.5);
   }
 }
 
 @keyframes timer-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.8;
     transform: scale(1.05);
@@ -342,15 +389,19 @@
   0% {
     transform: scale(1);
   }
+
   14% {
     transform: scale(1.08);
   }
+
   28% {
     transform: scale(1);
   }
+
   42% {
     transform: scale(1.08);
   }
+
   70% {
     transform: scale(1);
   }
@@ -384,6 +435,7 @@
     transform: scale(0.8);
     opacity: 1;
   }
+
   100% {
     transform: scale(1.5);
     opacity: 0;
@@ -395,6 +447,7 @@
     transform: scale(0.8);
     opacity: 0;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;

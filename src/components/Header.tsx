@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
 const logo = '/logo.png';
@@ -9,8 +10,27 @@ interface HeaderProps {
 }
 
 export const Header = ({ projectName }: HeaderProps) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show header after scrolling past the hero (viewport height)
+      const scrolled = window.scrollY > window.innerHeight - 100;
+      setIsVisible(scrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check initial state
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="bg-card border-b border-border sticky top-0 z-50" style={{ height: 'var(--header-height)' }}>
+    <header
+      className={`bg-card/95 backdrop-blur-md border-b border-border fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      style={{ height: 'var(--header-height)' }}
+    >
       <div className="container mx-auto px-4 h-full flex items-center">
         <div className="flex items-center justify-between w-full">
           <a
