@@ -487,6 +487,16 @@ export const loadSession = (): UserSession | null => {
         return createNewSession();
       }
 
+      // Fix: Invalidate legacy sessions that are too long (e.g. created when duration was 24h)
+      // Current duration is 10 min. If remaining time is significantly more than 10 min (e.g. > 15 min), reset.
+      const remaining = session.expiresAt - now;
+      const MAX_VALID_DURATION = 15 * 60 * 1000; // 15 minutes safety buffer
+
+      if (remaining > MAX_VALID_DURATION) {
+        console.log('Legacy long session detected, resetting...');
+        return createNewSession();
+      }
+
       return session;
     }
   } catch (e) {
