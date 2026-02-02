@@ -1,5 +1,4 @@
 import { MapPin, Phone, ExternalLink, Instagram, Facebook } from 'lucide-react';
-import { openLegalBasesModal } from '@/components/LegalBasesModal';
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -14,9 +13,9 @@ export const Footer = () => {
             <p className="text-sm text-muted-foreground">
               Tu inversión está segura en Alimin. Terrenos con Rol propio, completamente urbanizados a 8 minutos de la playa en auto.
             </p>
-            <a 
-              href="https://aliminspa.cl" 
-              target="_blank" 
+            <a
+              href="https://aliminspa.cl"
+              target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-primary hover:text-primary/80 transition-colors text-sm font-medium"
             >
@@ -44,21 +43,14 @@ export const Footer = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-bold">Enlaces</h3>
             <div className="space-y-2 text-sm">
-              <a 
-                href="https://aliminspa.cl" 
-                target="_blank" 
+              <a
+                href="https://aliminspa.cl"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="block text-muted-foreground hover:text-primary transition-colors"
               >
                 Página Principal
               </a>
-              <button
-                type="button"
-                className="block text-left w-full text-muted-foreground hover:text-primary transition-colors"
-                onClick={() => openLegalBasesModal()}
-              >
-                Términos y Condiciones
-              </button>
             </div>
           </div>
 
@@ -110,9 +102,9 @@ export const Footer = () => {
           <p className="text-xs text-muted-foreground">
             © {currentYear} Alimin SpA. Todos los derechos reservados.
           </p>
-          <a 
-            href="https://aliminspa.cl" 
-            target="_blank" 
+          <a
+            href="https://aliminspa.cl"
+            target="_blank"
             rel="noopener noreferrer"
             className="text-xs text-primary hover:text-primary/80 transition-colors"
           >
