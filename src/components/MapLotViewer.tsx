@@ -4,16 +4,7 @@ import React, { useState, useRef, useMemo, useEffect } from "react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { ZoomIn, ZoomOut, Maximize, Map as MapIcon, X } from "lucide-react";
 import { mergeLotPositions, filterLotsWithCoordinates } from "@/services/lotPositions";
-
-// Define Types (Same as Builder)
-type Lot = {
-    id: number;
-    number: string;
-    x?: number;
-    y?: number;
-    status: "available" | "sold" | "reserved";
-    stage?: number;
-};
+import type { Lot } from "@/types";
 
 type MapLotViewerProps = {
     lots: Lot[];

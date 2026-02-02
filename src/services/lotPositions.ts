@@ -16,8 +16,9 @@ type LotWithStatus = {
     reservedUntil?: number | null;
     lockedBy?: string | null;
     lockedUntil?: number | null;
-    area?: number;
-    totalPrice?: number;
+    area: number | null;
+    totalPrice: number | null;
+    pricePerM2: number | null;
 };
 
 type MergedLot = {
@@ -30,8 +31,9 @@ type MergedLot = {
     reservedUntil?: number | null;
     lockedBy?: string | null;
     lockedUntil?: number | null;
-    area?: number;
-    totalPrice?: number;
+    area: number | null;
+    totalPrice: number | null;
+    pricePerM2: number | null;
 };
 
 /**
@@ -51,6 +53,9 @@ export function mergeLotPositions(lotsWithStatus?: LotWithStatus[]): MergedLot[]
             reservedUntil: null,
             lockedBy: null,
             lockedUntil: null,
+            area: null,
+            totalPrice: null,
+            pricePerM2: null,
         }));
     }
 
@@ -78,6 +83,7 @@ export function mergeLotPositions(lotsWithStatus?: LotWithStatus[]): MergedLot[]
                 lockedUntil: dbLot.lockedUntil ?? null,
                 area: dbLot.area,
                 totalPrice: dbLot.totalPrice,
+                pricePerM2: dbLot.pricePerM2,
             };
         }
 
@@ -92,6 +98,9 @@ export function mergeLotPositions(lotsWithStatus?: LotWithStatus[]): MergedLot[]
             reservedUntil: null,
             lockedBy: null,
             lockedUntil: null,
+            area: null,
+            totalPrice: null,
+            pricePerM2: null,
         };
     });
 }
