@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from 'next/dynamic';
-import { Map as MapIcon } from 'lucide-react';
+import { Map as MapIcon, HelpCircle } from 'lucide-react';
 
 const MapLotViewer = dynamic(() => import('@/components/MapLotViewer'), {
   ssr: false,
@@ -513,16 +513,140 @@ export default function Home() {
 
           <div className="w-full max-w-[1920px] mx-auto md:px-8">
             <div className="flex flex-col xl:flex-row gap-8">
-              {/* Map Viewer - Main area */}
-              <div className="w-full flex-1 min-w-0">
+              {/* Info Sidebar - Shows FIRST on mobile, SECOND (right side) on XL */}
+              <aside className="w-full xl:w-96 xl:order-2 space-y-6">
+                {/* Manual de Compra */}
+                <div className="bg-white rounded-xl border shadow-sm p-6">
+                  <h3 className="font-bold text-lg text-gray-900 mb-4 flex items-center gap-2">
+                    <HelpCircle className="w-5 h-5 text-primary" />
+                    ¿Cómo comprar?
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Aprende cómo reservar y comprar tu terreno en simples pasos.
+                  </p>
+                  <button
+                    onClick={() => {
+                      if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new Event('alimin:open-purchase-tutorial'));
+                      }
+                    }}
+                    className="w-full bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                  >
+                    Ver guía de compra
+                  </button>
+                </div>
+
+                {/* Leyenda de Estados */}
+                <div className="bg-white rounded-xl border shadow-sm p-6">
+                  <h3 className="font-bold text-lg text-gray-900 mb-4">Estado de los lotes</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-full bg-green-500 border-2 border-green-700"></div>
+                      <div>
+                        <p className="font-semibold text-sm text-gray-900">Disponible</p>
+                        <p className="text-xs text-gray-600">Listo para reservar</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-full bg-yellow-500 border-2 border-yellow-700"></div>
+                      <div>
+                        <p className="font-semibold text-sm text-gray-900">Reservado</p>
+                        <p className="text-xs text-gray-600">En proceso de compra</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-4 h-4 rounded-full bg-red-500 border-2 border-red-700"></div>
+                      <div>
+                        <p className="font-semibold text-sm text-gray-900">Vendido</p>
+                        <p className="text-xs text-gray-600">No disponible</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Google Maps */}
+                <div className="bg-white rounded-xl border shadow-sm p-6">
+                  <h3 className="font-bold text-lg text-gray-900 mb-4">Ubicación</h3>
+                  <div className="aspect-video rounded-lg overflow-hidden border">
+                    <iframe
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3344.8!2d-71.5!3d-33.0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzPCsDAyJzAwLjAiUyA3McKwMzAnMDAuMCJX!5e0!3m2!1ses!2scl!4v1234567890"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      title="Ubicación Lomas del Mar"
+                    ></iframe>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-3 text-center">
+                    Lomas del Mar, Región de Valparaíso
+                  </p>
+                </div>
+
+                {/* Medios de Pago */}
+                <div className="bg-white rounded-xl border shadow-sm p-6">
+                  <h3 className="font-bold text-lg text-gray-900 mb-4">Medios de pago</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center justify-center p-3 bg-gray-50 rounded-lg border">
+                      <img
+                        src="/Diseño sin título (2).svg"
+                        alt="Transbank Webpay"
+                        className="h-8 object-contain"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.parentElement!.innerHTML = '<span class="text-xs text-gray-600 font-semibold">Webpay</span>';
+                        }}
+                      />
+                    </div>
+                    <div className="flex items-center justify-center p-3 bg-gray-50 rounded-lg border">
+                      <img
+                        src="/Diseño sin título (3).svg"
+                        alt="Webpay Plus"
+                        className="h-8 object-contain"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.parentElement!.innerHTML = '<span class="text-xs text-gray-600 font-semibold">Webpay Plus</span>';
+                        }}
+                      />
+                    </div>
+                    <div className="flex items-center justify-center p-3 bg-gray-50 rounded-lg border">
+                      <img
+                        src="/visa-credit-card-logo-payment-mastercard-usa-visa.jpg"
+                        alt="Visa"
+                        className="h-8 object-contain"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.parentElement!.innerHTML = '<span class="text-xs text-gray-600 font-semibold">Visa</span>';
+                        }}
+                      />
+                    </div>
+                    <div className="flex items-center justify-center p-3 bg-gray-50 rounded-lg border">
+                      <img
+                        src="/Mastercard-logo.svg"
+                        alt="Mastercard"
+                        className="h-8 object-contain"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.parentElement!.innerHTML = '<span class="text-xs text-gray-600 font-semibold">Mastercard</span>';
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-600 mt-4 text-center">
+                    Pago seguro con Webpay Plus
+                  </p>
+                </div>
+              </aside>
+
+              {/* Map Viewer - Shows SECOND on mobile, FIRST (left side) on XL */}
+              <div className="w-full flex-1 min-w-0 xl:order-1">
                 <MapLotViewer
                   lots={lots}
                   onSelectLot={handleSelectLot}
                   selectedLotId={selectedLot?.id ?? null}
                 />
               </div>
-
-              {/* Navigation Sidebar (Collapsible) */}
 
             </div>
 

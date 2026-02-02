@@ -1,0 +1,119 @@
+import lotsPositions from '@/data/lots.json';
+
+type LotPosition = {
+    id: number;
+    number: string;
+    x: number;
+    y: number;
+    status: "available" | "sold" | "reserved";
+    stage?: number;
+};
+
+type LotWithStatus = {
+    id: number;
+    number: string;
+    status: "available" | "sold" | "reserved";
+    reservedUntil?: number | null;
+    lockedBy?: string | null;
+    lockedUntil?: number | null;
+    area?: number;
+    totalPrice?: number;
+};
+
+type MergedLot = {
+    id: number;
+    number: string;
+    x: number;
+    y: number;
+    status: "available" | "sold" | "reserved";
+    stage?: number;
+    reservedUntil?: number | null;
+    lockedBy?: string | null;
+    lockedUntil?: number | null;
+    area?: number;
+    totalPrice?: number;
+};
+
+/**
+ * Uses lots.json as the primary source and overlays status from database
+ * This ensures all positioned lots are displayed with current status
+ * @param lotsWithStatus - Lots with current status from database (optional)
+ * @returns Lots from lots.json with updated status from database
+ */
+export function mergeLotPositions(lotsWithStatus?: LotWithStatus[]): MergedLot[] {
+    // Use lots.json as the base (these have the manual positions)
+    const positionedLots = lotsPositions as LotPosition[];
+
+    if (!lotsWithStatus || lotsWithStatus.length === 0) {
+        // No database data, return positioned lots as-is
+        return positionedLots.map(lot => ({
+            ...lot,
+            reservedUntil: null,
+            lockedBy: null,
+            lockedUntil: null,
+        }));
+    }
+
+    // Create a map of database lots by ID for quick lookup
+    const statusById = new Map<number, LotWithStatus>();
+    lotsWithStatus.forEach(lot => {
+        statusById.set(lot.id, lot);
+    });
+
+    // Merge: use positioned lots and overlay status from database
+    return positionedLots.map(posLot => {
+        const dbLot = statusById.get(posLot.id);
+
+        if (dbLot) {
+            // Lot exists in database, use its status
+            return {
+                id: posLot.id,
+                number: posLot.number,
+                x: posLot.x,
+                y: posLot.y,
+                stage: posLot.stage,
+                status: dbLot.status,
+                reservedUntil: dbLot.reservedUntil ?? null,
+                lockedBy: dbLot.lockedBy ?? null,
+                lockedUntil: dbLot.lockedUntil ?? null,
+                area: dbLot.area,
+                totalPrice: dbLot.totalPrice,
+            };
+        }
+
+        // Lot not in database, use position data with default status
+        return {
+            id: posLot.id,
+            number: posLot.number,
+            x: posLot.x,
+            y: posLot.y,
+            stage: posLot.stage,
+            status: posLot.status,
+            reservedUntil: null,
+            lockedBy: null,
+            lockedUntil: null,
+        };
+    });
+}
+
+/**
+ * Filters lots to only those with valid coordinates
+ * @param lots - Lots potentially with coordinates
+ * @returns Only lots that have x,y coordinates
+ */
+export function filterLotsWithCoordinates(lots: MergedLot[]): MergedLot[] {
+    return lots.filter(lot =>
+        typeof lot.x === 'number' &&
+        typeof lot.y === 'number' &&
+        !isNaN(lot.x) &&
+        !isNaN(lot.y)
+    );
+}
+
+/**
+ * Gets all positioned lots from lots.json
+ * @returns All lots with positions
+ */
+export function getAllPositionedLots(): LotPosition[] {
+    return lotsPositions as LotPosition[];
+}

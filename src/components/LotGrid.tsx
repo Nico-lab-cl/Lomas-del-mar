@@ -611,7 +611,7 @@ export const LotGrid = ({
                       {isEditorMode && (
                         <GripVertical className="w-2 h-2 absolute -top-1 -right-1 text-white/70" />
                       )}
-                      {markerText}
+                      {/* {markerText} */}
                     </button>
                   </TooltipTrigger>
                   {!isEditorMode && (

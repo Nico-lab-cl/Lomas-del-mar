@@ -1,0 +1,1618 @@
+[
+    {
+        "id": 1770050527240,
+        "number": "1",
+        "x": 25.73,
+        "y": 29.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050547272,
+        "number": "2",
+        "x": 27.33,
+        "y": 29.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050565535,
+        "number": "3",
+        "x": 28.87,
+        "y": 29.19,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050581072,
+        "number": "4",
+        "x": 30.4,
+        "y": 29.19,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050587376,
+        "number": "5",
+        "x": 32.27,
+        "y": 29.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050597164,
+        "number": "6",
+        "x": 42.61,
+        "y": 28.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050604031,
+        "number": "7",
+        "x": 44.34,
+        "y": 28.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050609347,
+        "number": "8",
+        "x": 45.74,
+        "y": 28.36,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050615022,
+        "number": "9",
+        "x": 47.41,
+        "y": 28.19,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050619941,
+        "number": "10",
+        "x": 48.88,
+        "y": 27.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050629706,
+        "number": "11",
+        "x": 50.54,
+        "y": 27.86,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050639914,
+        "number": "12",
+        "x": 52.01,
+        "y": 27.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050645259,
+        "number": "13",
+        "x": 53.48,
+        "y": 27.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050653103,
+        "number": "14",
+        "x": 54.94,
+        "y": 27.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050660264,
+        "number": "15",
+        "x": 56.54,
+        "y": 27.36,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050675692,
+        "number": "16",
+        "x": 58.21,
+        "y": 27.36,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050682904,
+        "number": "17",
+        "x": 59.61,
+        "y": 27.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050693379,
+        "number": "18",
+        "x": 62.61,
+        "y": 26.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050699442,
+        "number": "19",
+        "x": 64.14,
+        "y": 26.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050706048,
+        "number": "20",
+        "x": 65.48,
+        "y": 26.44,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050710922,
+        "number": "21",
+        "x": 67.08,
+        "y": 26.44,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050720359,
+        "number": "22",
+        "x": 68.74,
+        "y": 26.27,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050731854,
+        "number": "23",
+        "x": 70.21,
+        "y": 25.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050736766,
+        "number": "24",
+        "x": 72.28,
+        "y": 25.61,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050790090,
+        "number": "25",
+        "x": 73.37,
+        "y": 21.11,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050796035,
+        "number": "26",
+        "x": 71.57,
+        "y": 22.77,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050801994,
+        "number": "27",
+        "x": 70.04,
+        "y": 22.86,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050806902,
+        "number": "28",
+        "x": 68.7,
+        "y": 22.86,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050811042,
+        "number": "29",
+        "x": 67.17,
+        "y": 22.86,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050821358,
+        "number": "30",
+        "x": 65.44,
+        "y": 23.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050828161,
+        "number": "31",
+        "x": 64.1,
+        "y": 23.19,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050832841,
+        "number": "32",
+        "x": 62.57,
+        "y": 23.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050848481,
+        "number": "33",
+        "x": 59.53,
+        "y": 23.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050851887,
+        "number": "34",
+        "x": 58,
+        "y": 23.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050856518,
+        "number": "35",
+        "x": 56.53,
+        "y": 23.61,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050864957,
+        "number": "36",
+        "x": 55,
+        "y": 23.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050870418,
+        "number": "37",
+        "x": 53.33,
+        "y": 23.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050874636,
+        "number": "38",
+        "x": 51.73,
+        "y": 23.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050879070,
+        "number": "39",
+        "x": 50.27,
+        "y": 23.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050890172,
+        "number": "40",
+        "x": 48.67,
+        "y": 23.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050899152,
+        "number": "41",
+        "x": 44.8,
+        "y": 24.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050906731,
+        "number": "42",
+        "x": 68.37,
+        "y": 17.61,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050910803,
+        "number": "43",
+        "x": 64.9,
+        "y": 16.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050915710,
+        "number": "44",
+        "x": 62.97,
+        "y": 17.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050922457,
+        "number": "45",
+        "x": 60.77,
+        "y": 17.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050932806,
+        "number": "46",
+        "x": 58.64,
+        "y": 17.19,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050935824,
+        "number": "47",
+        "x": 56.04,
+        "y": 17.86,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050940539,
+        "number": "48",
+        "x": 53.44,
+        "y": 18.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050971270,
+        "number": "65",
+        "x": 23.91,
+        "y": 36.8,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050980703,
+        "number": "64",
+        "x": 26.91,
+        "y": 36.46,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050985036,
+        "number": "63",
+        "x": 29.05,
+        "y": 36.38,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050990381,
+        "number": "62",
+        "x": 31.31,
+        "y": 36.05,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770050995109,
+        "number": "61",
+        "x": 33.53,
+        "y": 35.92,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051001738,
+        "number": "60",
+        "x": 45.08,
+        "y": 34.88,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051005703,
+        "number": "59",
+        "x": 47.28,
+        "y": 34.8,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051010833,
+        "number": "58",
+        "x": 49.8,
+        "y": 34.75,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051014331,
+        "number": "57",
+        "x": 52.21,
+        "y": 34.71,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051017324,
+        "number": "56",
+        "x": 54.67,
+        "y": 34.17,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051020576,
+        "number": "55",
+        "x": 56.48,
+        "y": 34.05,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051026157,
+        "number": "54",
+        "x": 58.88,
+        "y": 33.88,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051030810,
+        "number": "53",
+        "x": 61.08,
+        "y": 33.88,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051049059,
+        "number": "52",
+        "x": 63.54,
+        "y": 33.46,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051052307,
+        "number": "51",
+        "x": 65.68,
+        "y": 33.55,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051059377,
+        "number": "50",
+        "x": 67.94,
+        "y": 33.38,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051066109,
+        "number": "49",
+        "x": 69.94,
+        "y": 33.05,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 1770051159846,
+        "number": "1",
+        "x": 22.78,
+        "y": 40.89,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051170040,
+        "number": "2",
+        "x": 24.45,
+        "y": 40.64,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051175046,
+        "number": "3",
+        "x": 25.85,
+        "y": 40.56,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051179236,
+        "number": "4",
+        "x": 27.45,
+        "y": 40.56,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051184634,
+        "number": "5",
+        "x": 29.05,
+        "y": 40.48,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051192745,
+        "number": "6",
+        "x": 30.51,
+        "y": 40.14,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051198019,
+        "number": "7",
+        "x": 31.91,
+        "y": 39.98,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051205266,
+        "number": "8",
+        "x": 33.85,
+        "y": 39.89,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051213382,
+        "number": "9",
+        "x": 41.3,
+        "y": 39.64,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051219291,
+        "number": "10",
+        "x": 42.9,
+        "y": 39.48,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051233983,
+        "number": "11",
+        "x": 44.3,
+        "y": 39.31,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051238285,
+        "number": "12",
+        "x": 45.76,
+        "y": 39.06,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051242635,
+        "number": "13",
+        "x": 47.23,
+        "y": 39.14,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051246757,
+        "number": "14",
+        "x": 48.83,
+        "y": 38.89,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051255015,
+        "number": "15",
+        "x": 50.36,
+        "y": 38.81,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051262553,
+        "number": "16",
+        "x": 51.96,
+        "y": 38.81,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051268864,
+        "number": "17",
+        "x": 53.5,
+        "y": 38.56,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051272834,
+        "number": "18",
+        "x": 54.96,
+        "y": 38.48,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051283119,
+        "number": "19",
+        "x": 56.43,
+        "y": 38.48,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051290539,
+        "number": "20",
+        "x": 58.16,
+        "y": 38.06,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051296747,
+        "number": "21",
+        "x": 59.43,
+        "y": 37.98,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051300851,
+        "number": "22",
+        "x": 61.03,
+        "y": 37.98,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051308409,
+        "number": "23",
+        "x": 62.76,
+        "y": 37.98,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051313548,
+        "number": "24",
+        "x": 64.1,
+        "y": 37.81,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051321191,
+        "number": "25",
+        "x": 65.83,
+        "y": 37.64,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051326808,
+        "number": "26",
+        "x": 68.23,
+        "y": 37.98,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051362018,
+        "number": "27",
+        "x": 66.53,
+        "y": 44.92,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051366089,
+        "number": "28",
+        "x": 63.16,
+        "y": 44.68,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051374575,
+        "number": "29",
+        "x": 60.95,
+        "y": 44.83,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051384456,
+        "number": "30",
+        "x": 58.75,
+        "y": 44.83,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051388219,
+        "number": "31",
+        "x": 56.49,
+        "y": 44.83,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051392635,
+        "number": "32",
+        "x": 54.22,
+        "y": 45.08,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051398047,
+        "number": "33",
+        "x": 51.95,
+        "y": 45.25,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051402063,
+        "number": "34",
+        "x": 49.62,
+        "y": 45.5,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051407322,
+        "number": "35",
+        "x": 47.29,
+        "y": 45.67,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051412037,
+        "number": "36",
+        "x": 44.95,
+        "y": 45.92,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051414888,
+        "number": "37",
+        "x": 42.42,
+        "y": 45.83,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051418543,
+        "number": "38",
+        "x": 31.6,
+        "y": 46.75,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051421462,
+        "number": "39",
+        "x": 29.02,
+        "y": 47,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051424266,
+        "number": "40",
+        "x": 26.75,
+        "y": 47.08,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051427738,
+        "number": "41",
+        "x": 24.53,
+        "y": 47.08,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051440444,
+        "number": "42",
+        "x": 22.15,
+        "y": 47.33,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051445533,
+        "number": "43",
+        "x": 19.89,
+        "y": 47.42,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 1770051465686,
+        "number": "1",
+        "x": 20.22,
+        "y": 52.08,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051474726,
+        "number": "2",
+        "x": 23.42,
+        "y": 51.75,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051484398,
+        "number": "3",
+        "x": 24.82,
+        "y": 51.42,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051487158,
+        "number": "4",
+        "x": 26.49,
+        "y": 51.5,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051489741,
+        "number": "5",
+        "x": 28.02,
+        "y": 51.33,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051494449,
+        "number": "6",
+        "x": 29.35,
+        "y": 51.17,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051499452,
+        "number": "7",
+        "x": 30.95,
+        "y": 51.08,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051504647,
+        "number": "8",
+        "x": 32.69,
+        "y": 50.83,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051512258,
+        "number": "9",
+        "x": 41.79,
+        "y": 50.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051515433,
+        "number": "10",
+        "x": 43.26,
+        "y": 50.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051519715,
+        "number": "11",
+        "x": 44.92,
+        "y": 50.12,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051525420,
+        "number": "12",
+        "x": 46.32,
+        "y": 49.95,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051529663,
+        "number": "13",
+        "x": 47.79,
+        "y": 49.7,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051532882,
+        "number": "14",
+        "x": 49.39,
+        "y": 49.87,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051536052,
+        "number": "15",
+        "x": 50.92,
+        "y": 49.7,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051539547,
+        "number": "16",
+        "x": 52.39,
+        "y": 49.45,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051543208,
+        "number": "17",
+        "x": 53.92,
+        "y": 49.04,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051549726,
+        "number": "18",
+        "x": 55.52,
+        "y": 49.12,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051554645,
+        "number": "19",
+        "x": 56.86,
+        "y": 48.87,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051558150,
+        "number": "20",
+        "x": 58.46,
+        "y": 48.79,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051562388,
+        "number": "21",
+        "x": 60.12,
+        "y": 48.79,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051584285,
+        "number": "22",
+        "x": 61.59,
+        "y": 48.79,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051595626,
+        "number": "23",
+        "x": 62.99,
+        "y": 48.7,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051605020,
+        "number": "24",
+        "x": 64.66,
+        "y": 48.54,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051610530,
+        "number": "25",
+        "x": 66.19,
+        "y": 48.45,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051614116,
+        "number": "26",
+        "x": 67.72,
+        "y": 48.54,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051617832,
+        "number": "27",
+        "x": 69.32,
+        "y": 48.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051622004,
+        "number": "28",
+        "x": 70.99,
+        "y": 48.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051631843,
+        "number": "29",
+        "x": 74.8,
+        "y": 54.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051635115,
+        "number": "30",
+        "x": 71.87,
+        "y": 55.12,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051640978,
+        "number": "31",
+        "x": 69.47,
+        "y": 55.12,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051644650,
+        "number": "32",
+        "x": 67.27,
+        "y": 55.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051649101,
+        "number": "33",
+        "x": 64.87,
+        "y": 55.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051655406,
+        "number": "34",
+        "x": 62.6,
+        "y": 55.45,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051664110,
+        "number": "35",
+        "x": 60.4,
+        "y": 55.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051668377,
+        "number": "36",
+        "x": 58.13,
+        "y": 55.7,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051671538,
+        "number": "37",
+        "x": 55.73,
+        "y": 55.95,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051675580,
+        "number": "38",
+        "x": 53.2,
+        "y": 56.04,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051683766,
+        "number": "39",
+        "x": 51.2,
+        "y": 56.04,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051689407,
+        "number": "40",
+        "x": 49,
+        "y": 56.29,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051694633,
+        "number": "41",
+        "x": 46.35,
+        "y": 56.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051707084,
+        "number": "42",
+        "x": 34.95,
+        "y": 57.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051710858,
+        "number": "43",
+        "x": 32.75,
+        "y": 57.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051714895,
+        "number": "44",
+        "x": 30.42,
+        "y": 57.87,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051718447,
+        "number": "45",
+        "x": 28.35,
+        "y": 57.95,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051721821,
+        "number": "46",
+        "x": 26.15,
+        "y": 57.95,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770051727714,
+        "number": "47",
+        "x": 23.69,
+        "y": 57.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1770052201967,
+        "number": "1",
+        "x": 27.69,
+        "y": 61.95,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052217189,
+        "number": "2",
+        "x": 29.89,
+        "y": 61.7,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052221448,
+        "number": "3",
+        "x": 31.42,
+        "y": 61.7,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052227424,
+        "number": "4",
+        "x": 32.95,
+        "y": 61.62,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052234369,
+        "number": "5",
+        "x": 34.49,
+        "y": 61.45,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052239652,
+        "number": "6",
+        "x": 35.95,
+        "y": 61.45,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052243953,
+        "number": "7",
+        "x": 46.94,
+        "y": 61.27,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052248263,
+        "number": "8",
+        "x": 48.21,
+        "y": 60.94,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052251797,
+        "number": "9",
+        "x": 49.74,
+        "y": 60.77,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052257539,
+        "number": "10",
+        "x": 51.34,
+        "y": 60.52,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052262332,
+        "number": "11",
+        "x": 52.88,
+        "y": 60.52,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052267209,
+        "number": "12",
+        "x": 54.34,
+        "y": 60.61,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052271792,
+        "number": "13",
+        "x": 55.88,
+        "y": 60.36,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052279625,
+        "number": "14",
+        "x": 57.41,
+        "y": 60.44,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052283673,
+        "number": "15",
+        "x": 59.08,
+        "y": 60.36,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052287766,
+        "number": "16",
+        "x": 60.74,
+        "y": 60.27,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052291550,
+        "number": "17",
+        "x": 62.08,
+        "y": 60.19,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052295886,
+        "number": "18",
+        "x": 63.61,
+        "y": 59.94,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052300665,
+        "number": "19",
+        "x": 65.14,
+        "y": 59.86,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052304235,
+        "number": "20",
+        "x": 66.61,
+        "y": 59.69,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052307690,
+        "number": "21",
+        "x": 68.14,
+        "y": 59.52,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052315748,
+        "number": "22",
+        "x": 69.68,
+        "y": 59.36,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052321096,
+        "number": "23",
+        "x": 71.34,
+        "y": 59.52,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052324763,
+        "number": "24",
+        "x": 72.88,
+        "y": 59.44,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052330105,
+        "number": "25",
+        "x": 74.41,
+        "y": 59.27,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052332975,
+        "number": "26",
+        "x": 75.88,
+        "y": 59.11,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052336693,
+        "number": "27",
+        "x": 77.22,
+        "y": 59,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052348175,
+        "number": "28",
+        "x": 84.47,
+        "y": 65.33,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052351378,
+        "number": "29",
+        "x": 81.62,
+        "y": 65.58,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052354760,
+        "number": "30",
+        "x": 79.16,
+        "y": 65.5,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052360234,
+        "number": "31",
+        "x": 76.6,
+        "y": 65.67,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052366103,
+        "number": "32",
+        "x": 74.49,
+        "y": 65.67,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052397984,
+        "number": "33",
+        "x": 72.09,
+        "y": 65.92,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052402315,
+        "number": "34",
+        "x": 69.96,
+        "y": 66.08,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052412552,
+        "number": "35",
+        "x": 67.82,
+        "y": 66.08,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052415921,
+        "number": "36",
+        "x": 65.29,
+        "y": 66.33,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052419923,
+        "number": "37",
+        "x": 63.02,
+        "y": 66.5,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052423978,
+        "number": "38",
+        "x": 60.76,
+        "y": 66.5,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052428690,
+        "number": "39",
+        "x": 58.09,
+        "y": 66.67,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052435217,
+        "number": "40",
+        "x": 55.96,
+        "y": 66.67,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052442814,
+        "number": "41",
+        "x": 53.56,
+        "y": 67.08,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052453179,
+        "number": "42",
+        "x": 51.42,
+        "y": 67.17,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052470919,
+        "number": "43",
+        "x": 49.29,
+        "y": 67.25,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052476727,
+        "number": "44",
+        "x": 46.89,
+        "y": 67.5,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052483485,
+        "number": "45",
+        "x": 37.56,
+        "y": 67.92,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052487522,
+        "number": "46",
+        "x": 35.56,
+        "y": 68,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 1770052496298,
+        "number": "47",
+        "x": 31.16,
+        "y": 67.67,
+        "status": "available",
+        "stage": 1
+    }
+]

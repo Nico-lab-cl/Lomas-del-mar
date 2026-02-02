@@ -12,8 +12,8 @@ export type LotStatusRow = {
   status: string;
 };
 
-// Always return true to use the internal API/Prisma path
-export const isSupabaseConfigured = (): boolean => true;
+// Return true ONLY if not in development (forces mock mode locally)
+export const isSupabaseConfigured = (): boolean => process.env.NODE_ENV !== 'development';
 
 export const fetchActiveLotLocks = async (): Promise<LotLockRow[]> => {
   return [];
