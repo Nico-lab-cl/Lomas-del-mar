@@ -44,7 +44,7 @@ export const Header = ({ projectName }: HeaderProps) => {
                 {projectName} - <span className="text-primary">Lanzamiento</span>
               </h1>
               <p className="text-sm text-muted-foreground uppercase tracking-wide truncate">
-                Compra tu casa en la playa
+                Compra tu terreno en El Tabo
               </p>
             </div>
           </a>

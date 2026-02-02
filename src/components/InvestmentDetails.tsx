@@ -23,9 +23,9 @@ export const InvestmentDetails = ({ selectedLot, onReserve, isSessionActive }: I
   const lotLabel = selectedLot ? `L-${lotDisplay}` : '';
   const lotStageLabel = lotStage ? `Etapa ${lotStage}` : '';
   const whatsappHref = selectedLot
-    ? `https://wa.me/56948822607?text=${encodeURIComponent(
-        `${lotStageLabel ? `${lotStageLabel} - ` : ''}Quiero comprar mi terreno en Lomas del Mar, quiero consultar por el lote "${lotLabel}".`
-      )}`
+    ? `https://wa.me/56973077128?text=${encodeURIComponent(
+      `${lotStageLabel ? `${lotStageLabel} - ` : ''}Quiero comprar mi terreno en Lomas del Mar, quiero consultar por el lote "${lotLabel}".`
+    )}`
     : '';
 
   if (!selectedLot) {
@@ -43,7 +43,7 @@ export const InvestmentDetails = ({ selectedLot, onReserve, isSessionActive }: I
   return (
     <div className="status-card">
       <h3 className="font-bold text-foreground mb-4">Detalles de mi Inversión</h3>
-      
+
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
           <MapPin className="w-4 h-4 text-primary flex-shrink-0" />

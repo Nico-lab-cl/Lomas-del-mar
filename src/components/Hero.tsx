@@ -11,7 +11,7 @@ interface HeroProps {
 export const Hero = ({ onExploreClick }: HeroProps) => {
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    const whatsappUrl = "https://wa.me/56948822607?text=" + encodeURIComponent(
+    const whatsappUrl = "https://wa.me/56973077128?text=" + encodeURIComponent(
         "Hola, quiero información sobre los terrenos en Lomas del Mar"
     );
 

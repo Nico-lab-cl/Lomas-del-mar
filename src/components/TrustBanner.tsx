@@ -20,14 +20,14 @@ export const TrustBanner = () => {
                         </div>
                     </div>
 
-                    {/* Entrega Inmediata */}
+                    {/* Proyecto en construcción */}
                     <div className="flex flex-col items-center text-center gap-3 group hover:scale-105 transition-transform duration-300">
                         <div className="p-4 bg-white/80 rounded-2xl shadow-sm group-hover:shadow-md transition-shadow ring-1 ring-emerald-100">
                             <Key className="w-10 h-10 text-emerald-600" strokeWidth={1.5} />
                         </div>
                         <div className="space-y-1">
                             <h3 className="text-xl font-bold text-emerald-950 group-hover:text-emerald-700 transition-colors">
-                                Entrega Inmediata
+                                Proyecto en construcción
                             </h3>
                             <p className="text-sm font-medium text-emerald-700/80">
                                 Con Rol Propio individual

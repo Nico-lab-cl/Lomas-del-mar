@@ -25,7 +25,7 @@ const videos = [
     },
     {
         src: "/drone-video-1.mp4",
-        title: "Avance de Obras",
+        title: "Áreas verdes",
         span: "md:col-span-1 md:row-span-1",
     },
 ];

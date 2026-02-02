@@ -25,7 +25,7 @@ const features = [
     {
         icon: FileCheck,
         title: "Rol Propio Individual",
-        description: "Escritura inmediata ante notario",
+        description: "Escritura ante notario",
         highlight: true // Este lo destacaremos visualmente
     },
     {
@@ -70,7 +70,7 @@ export const ProjectFeatures = () => {
                         Todo lo que incluye tu terreno
                     </h2>
                     <p className="text-lg text-slate-600">
-                        No vendemos promesas, vendemos realidad. Tu parcela cuenta con urbanización de alto estándar lista para disfrutar.
+                        No vendemos promesas, vendemos realidad. Tu terreno cuenta con urbanización de alto estándar lista para disfrutar.
                     </p>
                 </div>
 
