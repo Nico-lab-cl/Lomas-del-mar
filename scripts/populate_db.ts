@@ -32,6 +32,7 @@ async function populateDb() {
                     stage: details.stage,
                     area_m2: details.area_m2 || 300, // Valor por defecto seguro
                     price_total_clp: details.price_total_clp || 14990000,
+                    reservation_amount_clp: 50,
                     status: 'available'
                 }
             });
@@ -46,6 +47,7 @@ async function populateDb() {
                         number: details.number,
                         stage: details.stage,
                         // No tocamos status
+                        reservation_amount_clp: 50,
                     }
                 });
                 console.log(`🔄 Updated Lot ID ${id} metadata`);

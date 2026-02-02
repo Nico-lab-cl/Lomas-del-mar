@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
 
         const buyOrder = buildBuyOrder(lotId);
 
-        const amount = RESERVATION_AMOUNT_CLP; // FORCE 50 FOR TESTING
+        const amount = lot.reservation_amount_clp ?? RESERVATION_AMOUNT_CLP;
 
         await prisma.lot.update({
             where: { id: lotId },
