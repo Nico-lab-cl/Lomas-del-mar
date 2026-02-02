@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { StickyContactBar } from "@/components/StickyContactBar";
 
 // Body font - Clean and readable
 const inter = Inter({
@@ -40,6 +41,7 @@ export default function RootLayout({
       >
         <Providers>
           {children}
+          <StickyContactBar />
         </Providers>
       </body>
     </html>

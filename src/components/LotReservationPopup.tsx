@@ -295,6 +295,23 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
             )}
           </div>
 
+          {/* Security & Payment Badges (Top Position) */}
+          <div className="bg-muted/30 rounded-xl p-4 mb-6 border border-border/50 text-center animate-in fade-in slide-in-from-top-4 duration-500 delay-200">
+            <div className="flex items-center justify-center gap-2 mb-3 text-emerald-600 font-bold text-sm uppercase tracking-wide">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Pagos 100% Seguros
+            </div>
+            <div className="flex justify-center items-center gap-4">
+              <img src="/Mastercard-logo.svg" alt="Mastercard" className="h-8 w-auto object-contain" />
+              <img src="/Diseño sin título (2).svg" alt="Visa" className="h-8 w-auto object-contain" />
+              <img src="/Diseño sin título (1).svg" alt="Payment" className="h-8 w-auto object-contain" />
+              <img src="/Diseño sin título (3).svg" alt="Redcompra" className="h-8 w-auto object-contain" />
+            </div>
+            <p className="text-xs text-muted-foreground mt-3">
+              Tus datos están protegidos con encriptación SSL de 256-bits.
+            </p>
+          </div>
+
           {/* Info Cards Grid */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
             {/* Área */}
@@ -552,6 +569,8 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
 
         {/* Fixed Footer with Buttons */}
         <div className="p-4 border-t border-border bg-card/95 backdrop-blur-sm">
+
+
           <div className="flex gap-3">
             <Button
               variant="outline"

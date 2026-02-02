@@ -4,7 +4,7 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[hsl(var(--header-bg))] text-[hsl(var(--header-foreground))] mt-8">
+    <footer className="bg-[hsl(var(--header-bg))] text-[hsl(var(--header-foreground))]">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -98,20 +98,30 @@ export const Footer = () => {
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-muted/20 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-muted-foreground">
-            © {currentYear} Alimin SpA. Todos los derechos reservados.
-          </p>
-          <a
-            href="https://aliminspa.cl"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-primary hover:text-primary/80 transition-colors"
-          >
-            www.aliminspa.cl
-          </a>
+        <div className="border-t border-muted/20 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col md:flex-row items-center gap-4">
+            <p className="text-xs text-muted-foreground order-2 md:order-1">
+              © {currentYear} Alimin SpA. Todos los derechos reservados.
+            </p>
+            <a
+              href="https://aliminspa.cl"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-primary hover:text-primary/80 transition-colors order-1 md:order-2"
+            >
+              www.aliminspa.cl
+            </a>
+          </div>
+
+          {/* Payment Logos - Larger & Right Aligned */}
+          <div className="flex items-center gap-6">
+            <img src="/Mastercard-logo.svg" alt="Mastercard" className="h-10 w-auto object-contain" />
+            <img src="/Diseño sin título (2).svg" alt="Visa" className="h-10 w-auto object-contain" />
+            <img src="/Diseño sin título (1).svg" alt="Payment" className="h-10 w-auto object-contain" />
+            <img src="/Diseño sin título (3).svg" alt="Redcompra" className="h-10 w-auto object-contain" />
+          </div>
         </div>
       </div>
-    </footer>
+    </footer >
   );
 };

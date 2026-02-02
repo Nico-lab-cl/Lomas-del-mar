@@ -23,7 +23,7 @@ const LEGACY_KEYS = ['alimin_lomas_del_mar_lots_v1', 'alimin_lomas_del_mar_lots'
 export { PRICING_RULES, calculateLotPricing } from './lotSpecs';
 
 // Oferta price is the same for all lots
-export const OFFER_PRICE = 550000; // $550.000 CLP (Valor Único Oferta / Reserva)
+export const OFFER_PRICE = 50; // $50 CLP (Valor DE PRUEBA)
 
 // Tipo para el mapa de posiciones por id
 type PositionsMap = Record<string, { x: number; y: number; size?: number }>;

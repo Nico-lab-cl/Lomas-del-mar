@@ -33,8 +33,10 @@ import { ProgressBar } from '@/components/ProgressBar';
 import { LotGrid } from '@/components/LotGrid';
 import { LotReservationPopup } from '@/components/LotReservationPopup';
 import { PlanoModal } from '@/components/PlanoModal';
+import { NavigationSidebar } from '@/components/NavigationSidebar';
 import { Hero } from '@/components/Hero';
 import { TrustBanner } from '@/components/TrustBanner';
+import { InvestmentThesis } from '@/components/InvestmentThesis';
 import { VideoGallery } from '@/components/VideoGallery';
 import { ProjectFeatures } from '@/components/ProjectFeatures';
 import { GoogleMapsButton } from '@/components/GoogleMapsButton';
@@ -324,6 +326,39 @@ export default function Home() {
     mapSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
+  // Auto-open sidebar when map comes into view
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    // Check if element is already in view on mount (e.g. refresh with scroll)
+    const checkVisibility = () => {
+      if (mapSectionRef.current) {
+        const rect = mapSectionRef.current.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight && rect.bottom >= 0;
+        if (isVisible) {
+          setIsSidebarOpen(true);
+        }
+      }
+    };
+    checkVisibility();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Trigger if any part is visible (isIntersecting)
+        if (entries[0].isIntersecting) {
+          setIsSidebarOpen(true);
+        }
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -100px 0px" } // Trigger slightly before it's fully leaving the bottom, but reliably when entering
+    );
+
+    if (mapSectionRef.current) {
+      observer.observe(mapSectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const handleUpdateLots = useCallback((updatedLots: Lot[]) => {
     setLots(updatedLots);
   }, []);
@@ -436,7 +471,7 @@ export default function Home() {
 
       {/* Countdown Banner - Sticky, appears after VideoGallery */}
       {!DISABLE_COUNTDOWN && showCountdown && (
-        <div className="sticky top-0 z-40 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="sticky z-40 animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ top: 'var(--header-height)' }}>
           <CountdownBanner
             expiresAt={session.expiresAt}
             onExpire={handleSessionExpire}
@@ -479,7 +514,7 @@ export default function Home() {
           <div className="w-full max-w-[1920px] mx-auto md:px-8">
             <div className="flex flex-col xl:flex-row gap-8">
               {/* Map Viewer - Main area */}
-              <div className="flex-1 min-w-0">
+              <div className="w-full flex-1 min-w-0">
                 <MapLotViewer
                   lots={lots}
                   onSelectLot={handleSelectLot}
@@ -487,99 +522,14 @@ export default function Home() {
                 />
               </div>
 
-              {/* Sidebar - Info Panel */}
-              <div className="xl:w-[400px] flex flex-col gap-6">
-                <div className="p-6 bg-card border border-border rounded-[2rem] shadow-xl flex flex-col gap-6">
-                  {/* Ver Plano Button */}
-                  <div>
-                    <h3 className="text-sm font-black text-muted-foreground uppercase tracking-widest mb-4">Navegación</h3>
-                    <div className="space-y-3">
-                      <Button
-                        onClick={() => setIsPlanoModalOpen(true)}
-                        className="w-full h-14 rounded-2xl text-lg font-bold shadow-lg shadow-primary/20 bg-gradient-to-r from-primary to-emerald-500 hover:from-primary/90 hover:to-emerald-500/90"
-                      >
-                        <MapIcon className="w-5 h-5 mr-2" />
-                        Ver Plano
-                      </Button>
-
-                      <GoogleMapsButton
-                        variant="outline"
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-
-                  {/* How to Purchase - Instructions */}
-                  <div className="pt-6 border-t border-border">
-                    <h3 className="text-sm font-black text-muted-foreground uppercase tracking-widest mb-4">Cómo Comprar</h3>
-                    <div className="space-y-3">
-                      <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50">
-                        <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 font-bold text-xs">
-                          1
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-foreground">Selecciona tu lote</p>
-                          <p className="text-xs text-muted-foreground mt-1">Haz clic en el terreno disponible (verde) en el mapa</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50">
-                        <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 font-bold text-xs">
-                          2
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-foreground">Revisa los detalles</p>
-                          <p className="text-xs text-muted-foreground mt-1">Verifica precio, superficie y características</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50">
-                        <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 font-bold text-xs">
-                          3
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-foreground">Completa tus datos</p>
-                          <p className="text-xs text-muted-foreground mt-1">Ingresa tu información personal en el formulario</p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 border border-border/50">
-                        <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center flex-shrink-0 font-bold text-xs">
-                          4
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-foreground">Confirma tu reserva</p>
-                          <p className="text-xs text-muted-foreground mt-1">Presiona "Confirmar" para proceder al pago</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Legend Section */}
-                  <div className="pt-6 border-t border-border">
-                    <p className="text-sm font-black text-muted-foreground uppercase tracking-widest mb-4">Estado del Terreno</p>
-                    <div className="grid grid-cols-2 gap-y-4 gap-x-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-5 h-5 rounded-full bg-emerald-500 shadow-md shadow-emerald-500/30" />
-                        <span className="text-sm font-bold text-foreground">DISPONIBLE</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="w-5 h-5 rounded-full bg-amber-500 shadow-md shadow-amber-500/30" />
-                        <span className="text-sm font-bold text-foreground">RESERVADO</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="w-5 h-5 rounded-full bg-red-500 shadow-md shadow-red-500/30" />
-                        <span className="text-sm font-bold text-foreground">VENDIDO</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="w-5 h-5 rounded-full bg-blue-500 shadow-md shadow-blue-500/30" />
-                        <span className="text-sm font-bold text-foreground">TU SELECCIÓN</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {/* Navigation Sidebar (Collapsible) */}
+              <NavigationSidebar
+                isOpen={isSidebarOpen}
+                setIsOpen={setIsSidebarOpen}
+                onOpenPlano={() => setIsPlanoModalOpen(true)}
+              />
             </div>
+
           </div>
         </section>
 
@@ -595,6 +545,9 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* Investment Thesis Section */}
+      <InvestmentThesis />
 
       {/* Footer */}
       <Footer />

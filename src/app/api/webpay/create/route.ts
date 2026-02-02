@@ -22,7 +22,7 @@ const createSchema = z.object({
 });
 
 const LOT_LOCK_MINUTES = 5;
-const RESERVATION_AMOUNT_CLP = 550000;
+const RESERVATION_AMOUNT_CLP = 50;
 
 export async function POST(req: NextRequest) {
     try {
@@ -103,7 +103,7 @@ export async function POST(req: NextRequest) {
 
         const buyOrder = buildBuyOrder(lotId);
 
-        const amount = lot.reservation_amount_clp || 550000;
+        const amount = RESERVATION_AMOUNT_CLP; // FORCE 50 FOR TESTING
 
         await prisma.lot.update({
             where: { id: lotId },
@@ -138,6 +138,10 @@ export async function POST(req: NextRequest) {
 
     } catch (error) {
         console.error('Webpay Create Error:', error);
-        return NextResponse.json({ ok: false, error: 'internal_server_error' }, { status: 500 });
+        return NextResponse.json({
+            ok: false,
+            error: error instanceof Error ? error.message : 'Unknown error',
+            details: String(error)
+        }, { status: 500 });
     }
 }
