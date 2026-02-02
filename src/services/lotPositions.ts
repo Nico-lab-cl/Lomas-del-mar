@@ -72,7 +72,7 @@ export function mergeLotPositions(lotsWithStatus?: LotWithStatus[]): MergedLot[]
         if (dbLot) {
             // Lot exists in database, use its status
             return {
-                id: posLot.id,
+                id: (posLot.id > 100000) ? parseInt(posLot.number) : posLot.id,
                 number: posLot.number,
                 x: posLot.x,
                 y: posLot.y,
@@ -89,7 +89,7 @@ export function mergeLotPositions(lotsWithStatus?: LotWithStatus[]): MergedLot[]
 
         // Lot not in database, use position data with default status
         return {
-            id: posLot.id,
+            id: (posLot.id > 100000) ? parseInt(posLot.number) : posLot.id,
             number: posLot.number,
             x: posLot.x,
             y: posLot.y,

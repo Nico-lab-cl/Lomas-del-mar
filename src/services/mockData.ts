@@ -320,6 +320,10 @@ export const loadLots = (): Lot[] => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
       lots = JSON.parse(stored);
+      // SAFETY FIX: Filter out invalid timestamp IDs (e.g. from MapBuilder) that cause backend INT4 overflow
+      if (lots) {
+        lots = lots.filter(l => l.id < 1000000);
+      }
     }
   } catch (e) {
     console.error('Error loading lots from localStorage:', e);
