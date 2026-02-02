@@ -424,6 +424,8 @@ export default function Home() {
       {/* Main Content */}
       <main className="w-full py-6 space-y-16">
         <div className="container mx-auto px-4 space-y-8">
+          {/* Project Features - Premium Grid */}
+          <ProjectFeatures />
 
 
           {/* Progress Bar */}
@@ -522,9 +524,6 @@ export default function Home() {
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
           </div>
         </div>
-
-        {/* Project Features - Premium Grid */}
-        <ProjectFeatures onCtaClick={scrollToMap} />
       </main>
 
       {/* Footer */}

@@ -6,10 +6,8 @@ import {
     Footprints,
     Sun,
     Trees,
-    FileCheck,
-    ArrowRight
+    FileCheck
 } from 'lucide-react';
-import { Button } from "@/components/ui/button";
 
 const features = [
     {
@@ -62,26 +60,22 @@ const features = [
     }
 ];
 
-interface ProjectFeaturesProps {
-    onCtaClick?: () => void;
-}
-
-export const ProjectFeatures = ({ onCtaClick }: ProjectFeaturesProps) => {
+export const ProjectFeatures = () => {
     return (
         <section className="py-16 md:py-24 bg-slate-50">
             <div className="container mx-auto px-4">
                 {/* Encabezado de la sección */}
                 <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-                    <h2 className="text-3xl md:text-5xl font-bold text-slate-900 tracking-tight font-heading">
+                    <h2 className="text-3xl md:text-5xl font-bold text-slate-900 tracking-tight">
                         Todo lo que incluye tu terreno
                     </h2>
-                    <p className="text-lg text-slate-600 font-medium">
+                    <p className="text-lg text-slate-600">
                         No vendemos promesas, vendemos realidad. Tu parcela cuenta con urbanización de alto estándar lista para disfrutar.
                     </p>
                 </div>
 
                 {/* Grid de Características */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                     {features.map((feature, index) => (
                         <div
                             key={index}
@@ -108,23 +102,11 @@ export const ProjectFeatures = ({ onCtaClick }: ProjectFeaturesProps) => {
                             <h3 className="text-xl font-bold text-slate-900 mb-2">
                                 {feature.title}
                             </h3>
-                            <p className="text-sm text-slate-500 leading-relaxed font-medium">
+                            <p className="text-sm text-slate-500 leading-relaxed">
                                 {feature.description}
                             </p>
                         </div>
                     ))}
-                </div>
-
-                {/* CTA Button */}
-                <div className="flex justify-center">
-                    <Button
-                        onClick={onCtaClick}
-                        size="lg"
-                        className="rounded-full text-lg h-14 px-10 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 bg-emerald-600 hover:bg-emerald-700 transition-all hover:scale-105"
-                    >
-                        Compra ahora
-                        <ArrowRight className="ml-2 w-5 h-5" />
-                    </Button>
                 </div>
             </div>
         </section>
