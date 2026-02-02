@@ -106,7 +106,7 @@ async function main() {
     const lotsToCreate = [];
 
     const soldLotsConfig: Record<number, number[]> = {
-        1: [1, 2, 5, 6, 8, 28, 37, 42, 43, 45, 46],
+        1: [1, 2, 5, 6, 8, 28, 37, 42, 45, 46],
         2: [1, 29, 47],
         3: [26, 27, 42, 43],
         4: [25, 41, 44, 45, 65]
