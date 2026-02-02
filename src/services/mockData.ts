@@ -461,7 +461,7 @@ export const generateSessionId = (): string => {
 
 export const createNewSession = (): UserSession => {
   const now = Date.now();
-  const SESSION_DURATION = 10 * 60 * 1000; // 10 minutes
+  const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours (Disabled for editing)
 
   return {
     id: generateSessionId(),
