@@ -36,6 +36,7 @@ import { PlanoModal } from '@/components/PlanoModal';
 import { Hero } from '@/components/Hero';
 import { TrustBanner } from '@/components/TrustBanner';
 import { VideoGallery } from '@/components/VideoGallery';
+import { ProjectFeatures } from '@/components/ProjectFeatures';
 import { LegalDocumentsPopup } from '@/components/LegalDocumentsPopup';
 import { Footer } from '@/components/Footer';
 import { AdminLogin } from '@/components/AdminLogin';
@@ -422,55 +423,8 @@ export default function Home() {
       {/* Main Content */}
       <main ref={mapSectionRef} className="w-full py-6 space-y-16">
         <div className="container mx-auto px-4 space-y-8">
-          {/* User Status */}
-          <UserStatusMessage session={session} />
-
-          <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 shadow-sm">
-            <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/15">
-                <Sparkles className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-primary">¡INCLUYE TODO!</p>
-                <p className="text-xs text-muted-foreground">Infraestructura y servicios incluidos en tu compra</p>
-              </div>
-            </div>
-
-            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-                <Droplets className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span className="text-sm text-foreground">Agua certificada por la Seremi de salud</span>
-              </div>
-              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-                <Zap className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span className="text-sm text-foreground">Luz Eléctrica</span>
-              </div>
-              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-                <Lock className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span className="text-sm text-foreground">Portón automático</span>
-              </div>
-              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-                <Route className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span className="text-sm text-foreground">Calles compactadas con maicillo</span>
-              </div>
-              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-                <Footprints className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span className="text-sm text-foreground">Veredas y Solereas</span>
-              </div>
-              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-                <Sun className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span className="text-sm text-foreground">Luminarias solares</span>
-              </div>
-              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-                <Trees className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span className="text-sm text-foreground">Áreas verdes</span>
-              </div>
-              <div className="group flex items-start gap-3 rounded-lg bg-background/60 p-3 border border-border/60 transition-all duration-200 hover:bg-muted/50 hover:translate-x-1 hover:shadow-md">
-                <ScrollText className="mt-0.5 h-4 w-4 text-primary flex-shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <span className="text-sm text-foreground">Rol individual</span>
-              </div>
-            </div>
-          </div>
+          {/* Project Features - Premium Grid */}
+          <ProjectFeatures />
 
 
           {/* Progress Bar */}
