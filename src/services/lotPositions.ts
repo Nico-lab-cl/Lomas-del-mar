@@ -12,6 +12,7 @@ type LotPosition = {
 type LotWithStatus = {
     id: number;
     number: string;
+    stage?: number | null; // Added stage to type
     status: "available" | "sold" | "reserved";
     reservedUntil?: number | null;
     lockedBy?: string | null;
@@ -59,20 +60,27 @@ export function mergeLotPositions(lotsWithStatus?: LotWithStatus[]): MergedLot[]
         }));
     }
 
-    // Create a map of database lots by ID for quick lookup
-    const statusById = new Map<number, LotWithStatus>();
+    // Create a map of database lots by "stage-number" for reliable lookup
+    // Fallback to just "number" if stage is missing (though stage should be present)
+    const statusByKey = new Map<string, LotWithStatus>();
     lotsWithStatus.forEach(lot => {
-        statusById.set(lot.id, lot);
+        // We assume lot.stage is available on the DB object. If not, we might have issues matching.
+        // Based on schema, stage is Int?.
+        const key = lot.stage ? `${lot.stage}-${lot.number}` : `no_stage-${lot.number}`;
+        statusByKey.set(key, lot);
     });
 
     // Merge: use positioned lots and overlay status from database
     return positionedLots.map(posLot => {
-        const dbLot = statusById.get(posLot.id);
+        // Construct the key for the JSON lot
+        const key = posLot.stage ? `${posLot.stage}-${posLot.number}` : `no_stage-${posLot.number}`;
+
+        const dbLot = statusByKey.get(key);
 
         if (dbLot) {
-            // Lot exists in database, use its status
+            // Lot exists in database, use its status and ID from DB
             return {
-                id: (posLot.id > 100000) ? parseInt(posLot.number) : posLot.id,
+                id: dbLot.id, // CRITICAL: Use the real DB ID, not the fake JSON ID
                 number: posLot.number,
                 x: posLot.x,
                 y: posLot.y,

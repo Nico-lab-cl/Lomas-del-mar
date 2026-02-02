@@ -145,7 +145,7 @@ export default function MapLotViewer({ lots, onSelectLot, selectedLotId }: MapLo
                       ${selectedLotId === lot.id ? 'ring-1 ring-white scale-125' : ''}
                     `}
                                         >
-                                            {lot.number}
+                                            {lot.stage ? `E${lot.stage}-${lot.number}` : lot.number}
                                         </button>
                                     );
                                 })}
