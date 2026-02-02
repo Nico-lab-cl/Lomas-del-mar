@@ -34,45 +34,52 @@ export const getStageLotSpec = (stage: number, stageLotNumber: number): LotSpec 
       return null;
     }
 
-    if ([1, 2, 5, 6, 8, 28, 37, 42, 43, 45, 46].includes(stageLotNumber)) {
+    // Etapa 1 vendidos: 1, 2, 5, 6, 8, 28, 37, 42, 45, 46
+    if ([1, 2, 5, 6, 8, 28, 37, 42, 45, 46].includes(stageLotNumber)) {
       forceSold = true;
     }
   } else if (stage === 2) {
+    // Etapa 2 vendidos: 1, 29, 47
     if (stageLotNumber === 1) {
       area_m2 = 374.13;
-      forceSold = true;
     } else if (stageLotNumber >= 2 && stageLotNumber <= 27) {
       area_m2 = 200;
     } else if (stageLotNumber === 28) {
       area_m2 = 211.72;
     } else if (stageLotNumber === 29) {
       area_m2 = null;
-      forceSold = true;
     } else if (stageLotNumber === 30) {
       area_m2 = 361.08;
     } else if (stageLotNumber >= 31 && stageLotNumber <= 46) {
       area_m2 = 390;
     } else if (stageLotNumber === 47) {
       area_m2 = 303.52;
-      forceSold = true;
     } else {
       return null;
     }
+
+    if ([1, 29, 47].includes(stageLotNumber)) {
+      forceSold = true;
+    }
   } else if (stage === 3) {
+    // Etapa 3 vendidos: 26, 27, 42, 43
     if (stageLotNumber >= 1 && stageLotNumber <= 25) {
       area_m2 = 200;
     } else if (stageLotNumber === 26 || stageLotNumber === 27) {
       area_m2 = null;
-      forceSold = true;
     } else if (stageLotNumber >= 28 && stageLotNumber <= 41) {
       area_m2 = 390;
     } else if (stageLotNumber === 42 || stageLotNumber === 43) {
       area_m2 = (stageLotNumber === 42) ? 390 : null;
-      forceSold = true;
     } else {
       return null;
     }
+
+    if ([26, 27, 42, 43].includes(stageLotNumber)) {
+      forceSold = true;
+    }
   } else if (stage === 4) {
+    // Etapa 4 vendidos: 25, 41, 44, 45, 65
     if (stageLotNumber === 1) {
       area_m2 = 249.24;
     } else if (stageLotNumber === 2) {
@@ -89,19 +96,16 @@ export const getStageLotSpec = (stage: number, stageLotNumber: number): LotSpec 
       area_m2 = 293.3;
     } else if (stageLotNumber === 25) {
       area_m2 = 449.28;
-      forceSold = true;
     } else if (stageLotNumber >= 26 && stageLotNumber <= 40) {
       area_m2 = 200;
     } else if (stageLotNumber === 41) {
       area_m2 = null;
-      forceSold = true;
     } else if (stageLotNumber === 42) {
       area_m2 = 294.07;
     } else if (stageLotNumber === 43) {
       area_m2 = 308.84;
     } else if (stageLotNumber === 44 || stageLotNumber === 45) {
       area_m2 = null;
-      forceSold = true;
     } else if (stageLotNumber === 46) {
       area_m2 = 316.56;
     } else if (stageLotNumber === 47) {
@@ -112,9 +116,12 @@ export const getStageLotSpec = (stage: number, stageLotNumber: number): LotSpec 
       area_m2 = 390;
     } else if (stageLotNumber === 65) {
       area_m2 = null;
-      forceSold = true;
     } else {
       return null;
+    }
+
+    if ([25, 41, 44, 45, 65].includes(stageLotNumber)) {
+      forceSold = true;
     }
   } else {
     return null;
