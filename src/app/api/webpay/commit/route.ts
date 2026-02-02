@@ -3,15 +3,17 @@ import { prisma } from '@/lib/prisma';
 import { webpayCommit, WEBPAY_CONFIG } from '@/lib/transbank';
 import { computeLotDetailsFromId } from '@/lib/logic';
 
-// N8N Webhook Configuration
-const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
-const N8N_WEBHOOK_SECRET = process.env.N8N_WEBHOOK_SECRET;
+// N8N Webhook Configuration handled inside request to ensure runtime access
 
 export const dynamic = 'force-dynamic';
 
 async function handleCommitRequest(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     let token = searchParams.get('token_ws') || searchParams.get('TBK_TOKEN');
+
+    // Read env vars at runtime to prevent build-time inlining
+    const N8N_WEBHOOK_URL = process.env.N8N_WEBHOOK_URL;
+    const N8N_WEBHOOK_SECRET = process.env.N8N_WEBHOOK_SECRET;
 
     // Handle POST body if needed (Transbank sometimes posts)
     if (!token && req.method === 'POST') {

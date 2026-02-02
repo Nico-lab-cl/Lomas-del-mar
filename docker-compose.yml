@@ -17,6 +17,8 @@ services:
       - RESERVATION_AMOUNT_CLP=50
       - LOT_LOCK_MINUTES=5
       - NEXT_PUBLIC_BASE_URL=https://aliminlomasdelmar.com
+      - N8N_WEBHOOK_URL=${N8N_WEBHOOK_URL}
+      - N8N_WEBHOOK_SECRET=${N8N_WEBHOOK_SECRET}
     volumes:
       - ./prisma:/app/prisma
     networks:
