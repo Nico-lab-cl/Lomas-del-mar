@@ -34,6 +34,7 @@ import { LotGrid } from '@/components/LotGrid';
 import { LotReservationPopup } from '@/components/LotReservationPopup';
 import { PlanoModal } from '@/components/PlanoModal';
 import { Hero } from '@/components/Hero';
+import { TrustBanner } from '@/components/TrustBanner';
 import { LegalDocumentsPopup } from '@/components/LegalDocumentsPopup';
 import { Footer } from '@/components/Footer';
 import { AdminLogin } from '@/components/AdminLogin';
@@ -401,6 +402,9 @@ export default function Home() {
 
       {/* Hero Section - First Visual Impact */}
       <Hero onExploreClick={scrollToMap} />
+
+      {/* Trust Banner - Key Value Propositions */}
+      <TrustBanner />
 
       {/* Countdown Banner */}
       {!DISABLE_COUNTDOWN && (
