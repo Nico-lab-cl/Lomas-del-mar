@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
-const logo = '/logo.png';
+const logo = '/Diseño sin título.svg';
 
 interface HeaderProps {
   projectName: string;
@@ -44,7 +44,7 @@ export const Header = ({ projectName }: HeaderProps) => {
                 {projectName} - <span className="text-primary">Lanzamiento</span>
               </h1>
               <p className="text-sm text-muted-foreground uppercase tracking-wide truncate">
-                Oportunidad única de adquirir tu terreno
+                Compra tu casa en la playa
               </p>
             </div>
           </a>
