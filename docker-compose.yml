@@ -14,7 +14,9 @@ services:
       - WEBPAY_RETURN_URL=${WEBPAY_RETURN_URL}
       - FINAL_OK_URL=${FINAL_OK_URL}
       - FINAL_FAIL_URL=${FINAL_FAIL_URL}
-      - RESERVATION_AMOUNT_CLP=${RESERVATION_AMOUNT_CLP}
+      - RESERVATION_AMOUNT_CLP=50
+      - LOT_LOCK_MINUTES=5
+      - NEXT_PUBLIC_BASE_URL=https://aliminlomasdelmar.com
     volumes:
       - ./prisma:/app/prisma
     networks:

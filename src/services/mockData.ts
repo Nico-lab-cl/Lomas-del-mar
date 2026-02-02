@@ -465,7 +465,7 @@ export const generateSessionId = (): string => {
 
 export const createNewSession = (): UserSession => {
   const now = Date.now();
-  const SESSION_DURATION = 10 * 60 * 1000; // 10 minutes
+  const SESSION_DURATION = 5 * 60 * 1000; // 5 minutes
 
   return {
     id: generateSessionId(),
@@ -523,7 +523,7 @@ export const clearSession = (): void => {
 
 // ====== FUNCIONES DE BLOQUEO TEMPORAL DE LOTES ======
 
-const LOCK_DURATION = 10 * 60 * 1000; // 10 minutes
+const LOCK_DURATION = 5 * 60 * 1000; // 5 minutes
 
 /**
  * Bloquea un lote temporalmente para una sesión específica
