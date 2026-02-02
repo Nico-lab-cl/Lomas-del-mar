@@ -31,7 +31,7 @@ async function populateDb() {
                     number: details.number,
                     stage: details.stage,
                     area_m2: details.area_m2 || 300, // Valor por defecto seguro
-                    price_clp: details.price_clp || 14990000,
+                    price_total_clp: details.price_clp || 14990000,
                     status: 'available'
                 }
             });
