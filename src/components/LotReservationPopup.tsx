@@ -441,8 +441,9 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
             </div>
           </div>
 
-          {/* Contact Form */}
-          <div className="space-y-4">
+
+          {/* Contact Form - 2 columns on larger devices */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <div className="group space-y-2">
               <Label htmlFor="name" className="flex items-center gap-2 text-sm">
                 <User className="w-4 h-4 text-primary" />
