@@ -35,6 +35,7 @@ import { LotReservationPopup } from '@/components/LotReservationPopup';
 import { PlanoModal } from '@/components/PlanoModal';
 import { Hero } from '@/components/Hero';
 import { TrustBanner } from '@/components/TrustBanner';
+import { VideoGallery } from '@/components/VideoGallery';
 import { LegalDocumentsPopup } from '@/components/LegalDocumentsPopup';
 import { Footer } from '@/components/Footer';
 import { AdminLogin } from '@/components/AdminLogin';
@@ -405,6 +406,9 @@ export default function Home() {
 
       {/* Trust Banner - Key Value Propositions */}
       <TrustBanner />
+
+      {/* Video Gallery */}
+      <VideoGallery />
 
       {/* Countdown Banner */}
       {!DISABLE_COUNTDOWN && (
