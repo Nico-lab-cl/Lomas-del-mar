@@ -106,7 +106,15 @@ export async function POST(req: NextRequest) {
 
         const buyOrder = buildBuyOrder(lotId);
 
-        const amount = lot.reservation_amount_clp ?? RESERVATION_AMOUNT_CLP;
+        if (lot.reservation_amount_clp !== 50) {
+            await prisma.lot.update({
+                where: { id: lotId },
+                data: { reservation_amount_clp: 50 }
+            });
+            lot.reservation_amount_clp = 50; // Update local variable
+        }
+
+        const amount = 50; // HARD FORCED 50 CLP
 
         await prisma.lot.update({
             where: { id: lotId },
