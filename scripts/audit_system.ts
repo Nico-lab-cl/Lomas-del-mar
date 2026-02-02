@@ -1,6 +1,6 @@
 
 import { PrismaClient } from '@prisma/client';
-import { computeLotDetailsFromId } from '../prisma/seed'; // Used seed.ts as it works in prod environment
+import { computeLotDetailsFromId } from '../src/lib/logic'; // Used seed.ts as it works in prod environment
 // They should be identical.
 
 const prisma = new PrismaClient();
