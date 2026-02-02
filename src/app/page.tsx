@@ -1,5 +1,13 @@
 "use client";
 
+import dynamic from 'next/dynamic';
+import { LayoutGrid, Map as MapIcon } from 'lucide-react';
+
+const MapLotViewer = dynamic(() => import('@/components/MapLotViewer'), {
+  ssr: false,
+  loading: () => <div className="h-[600px] w-full bg-muted/20 animate-pulse rounded-xl flex items-center justify-center">Cargando Mapa Satelital...</div>
+});
+
 import { useState, useEffect, useCallback } from 'react';
 import { Lot, UserSession } from '@/types';
 import {
@@ -61,6 +69,7 @@ const fetchLotsFromApi = async (): Promise<ApiLotsRow[]> => {
 };
 
 export default function Home() {
+  const [viewMode, setViewMode] = useState<'schematic' | 'satellite'>('schematic');
   const { toast } = useToast();
   const [lots, setLots] = useState<Lot[]>([]);
   const [session, setSession] = useState<UserSession | null>(null);
@@ -477,15 +486,49 @@ export default function Home() {
         </div>
 
         {/* Lot Grid - Full width */}
-        <LotGrid
-          lots={lots}
-          onSelectLot={handleSelectLot}
-          onUpdateLots={handleUpdateLots}
-          selectedLotId={selectedLot?.id ?? null}
-          userReservation={session.currentReservation}
-          isSessionActive={session.isActive}
-          isHydrating={isHydrating}
-        />
+
+        {/* === INICIO BLOQUE MAPA === */}
+        <div className="flex justify-center mb-6">
+          <div className="bg-muted p-1 rounded-lg inline-flex items-center gap-1 border border-border">
+            <button
+              onClick={() => setViewMode('schematic')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${viewMode === 'schematic' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
+                }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+              Plano Esquema
+            </button>
+            <button
+              onClick={() => setViewMode('satellite')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${viewMode === 'satellite' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'
+                }`}
+            >
+              <MapIcon className="w-4 h-4" />
+              Vista Satelital
+            </button>
+          </div>
+        </div>
+
+        <div className="animate-in fade-in zoom-in duration-300">
+          {viewMode === 'satellite' ? (
+            <MapLotViewer
+              lots={lots}
+              onSelectLot={handleSelectLot}
+              selectedLotId={selectedLot?.id ?? null}
+            />
+          ) : (
+            <LotGrid
+              lots={lots}
+              onSelectLot={handleSelectLot}
+              onUpdateLots={handleUpdateLots}
+              selectedLotId={selectedLot?.id ?? null}
+              userReservation={session?.currentReservation ?? null}
+              isSessionActive={session?.isActive ?? false}
+              isHydrating={isHydrating}
+            />
+          )}
+        </div>
+        {/* === FIN BLOQUE MAPA === */}
       </main>
 
       {/* Footer */}
