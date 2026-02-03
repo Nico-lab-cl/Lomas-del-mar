@@ -100,7 +100,7 @@ export const StickyContactBar = () => {
 
                 {/* WhatsApp CTA */}
                 <a
-                    href="https://wa.me/56973077128"
+                    href="https://wa.me/+56973077128"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-alimin-green hover:bg-alimin-green/90 text-white rounded-full px-4 py-2 flex items-center gap-2 transition-all hover:scale-105 whitespace-nowrap"
