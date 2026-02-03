@@ -1,8 +1,22 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Instagram, Mail, MessageCircle, Youtube, Facebook } from 'lucide-react';
 
 export const StickyContactBar = () => {
+    const [isVisible, setIsVisible] = useState(true);
+
+    useEffect(() => {
+        const handleToggle = (e: CustomEvent<{ show: boolean }>) => {
+            setIsVisible(e.detail.show);
+        };
+
+        window.addEventListener('toggle-sticky-bar', handleToggle as EventListener);
+        return () => window.removeEventListener('toggle-sticky-bar', handleToggle as EventListener);
+    }, []);
+
+    if (!isVisible) return null;
+
     return (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-bottom-10 fade-in duration-700 w-[95%] max-w-fit">
             <div className="flex items-center gap-3 md:gap-4 bg-slate-900/90 backdrop-blur-md rounded-full shadow-2xl border border-white/10 p-2 pl-4 md:pl-6 pr-2 overflow-x-auto md:overflow-hidden max-w-full">

@@ -206,6 +206,21 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
   };
 
   useEffect(() => {
+    if (isOpen) {
+      window.dispatchEvent(new CustomEvent('toggle-sticky-bar', { detail: { show: false } }));
+    } else {
+      window.dispatchEvent(new CustomEvent('toggle-sticky-bar', { detail: { show: true } }));
+    }
+
+    // Cleanup: ensure it's shown if component unmounts while open (safeguard)
+    return () => {
+      if (isOpen) {
+        window.dispatchEvent(new CustomEvent('toggle-sticky-bar', { detail: { show: true } }));
+      }
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     if (!isOpen) return;
 
     const randomInt = (min: number, max: number) =>
