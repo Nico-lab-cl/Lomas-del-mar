@@ -25,7 +25,7 @@ export { PRICING_RULES, calculateLotPricing } from './lotSpecs';
 
 // Oferta price is the same for all lots
 // Oferta price is the same for all lots
-export const OFFER_PRICE = 50; // $50 CLP (Valor DE PRUEBA)
+export const OFFER_PRICE = 550000; // $550.000 CLP
 
 // Tipo para el mapa de posiciones por id
 type PositionsMap = Record<string, { x: number; y: number; size?: number }>;
