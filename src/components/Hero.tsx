@@ -52,10 +52,10 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
 
                     {/* Main Headline */}
                     <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tight animate-in fade-in-up duration-1000 delay-100">
-                        Tu Proyecto de Vida
+                        ✨ Aniversario
                         <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-emerald-600">
-                            Comienza Frente al Mar
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-alimin-gold to-yellow-300 drop-shadow-sm">
+                            4 Años
                         </span>
                     </h1>
 

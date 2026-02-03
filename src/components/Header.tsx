@@ -41,9 +41,7 @@ export const Header = ({ projectName }: HeaderProps) => {
             <img src={logo} alt="Logo" className="w-14 h-14 object-contain" />
             <div className="min-w-0">
               <h1 className="text-xl font-bold text-foreground truncate">
-                {projectName} <span className="hidden md:inline-flex text-muted-foreground mx-1">-</span> <span className="inline-flex items-center px-3 py-0.5 rounded-full bg-alimin-green/90 text-alimin-gold text-sm font-medium border border-alimin-gold/40 shadow-[0_2px_8px_rgba(224,180,87,0.15)] backdrop-blur-sm">
-                  ✨ Aniversario 4 Años
-                </span>
+                {projectName}
               </h1>
               <p className="text-sm text-muted-foreground uppercase tracking-wide truncate">
                 Compra tu terreno en El Tabo

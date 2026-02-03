@@ -120,8 +120,13 @@ async function handleCommitRequest(req: NextRequest) {
                 lot_price_label: lotDetails.price_total_clp ? '' : 'Consultar',
             };
 
-            // Trigger N8N (Non-blocking)
-            if (N8N_WEBHOOK_URL) {
+            // CRITICAL FIX: Make N8N webhook authentication mandatory
+            if (!N8N_WEBHOOK_URL) {
+                console.warn('[n8n] N8N_WEBHOOK_URL not configured, skipping webhook', { reservationId: txRow.reservation_id });
+            } else if (!N8N_WEBHOOK_SECRET) {
+                console.error('[SECURITY] N8N_WEBHOOK_SECRET not configured - SKIPPING webhook for security', { reservationId: txRow.reservation_id });
+            } else {
+                // Trigger N8N (Non-blocking) - ONLY if secret is configured
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
@@ -129,7 +134,7 @@ async function handleCommitRequest(req: NextRequest) {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        ...(N8N_WEBHOOK_SECRET ? { 'X-Webhook-Secret': N8N_WEBHOOK_SECRET } : {})
+                        'X-Webhook-Secret': N8N_WEBHOOK_SECRET // ALWAYS include secret
                     },
                     body: JSON.stringify(payload),
                     signal: controller.signal
@@ -146,8 +151,6 @@ async function handleCommitRequest(req: NextRequest) {
                         clearTimeout(timeoutId);
                         console.error('[n8n] Webhook failed', { reservationId: txRow.reservation_id, error: err instanceof Error ? err.message : String(err) });
                     });
-            } else {
-                console.warn('[n8n] N8N_WEBHOOK_URL not configured, skipping webhook', { reservationId: txRow.reservation_id });
             }
 
             return NextResponse.redirect(`${WEBPAY_CONFIG.finalOkUrl}?lotId=${txRow.lot_id}&reservationId=${txRow.reservation_id}`);
