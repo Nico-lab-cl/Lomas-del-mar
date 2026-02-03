@@ -523,7 +523,7 @@ export const clearSession = (): void => {
 
 // ====== FUNCIONES DE BLOQUEO TEMPORAL DE LOTES ======
 
-const LOCK_DURATION = 5 * 60 * 1000; // 5 minutes
+const LOCK_DURATION = 2 * 60 * 1000; // 2 minutes
 
 /**
  * Bloquea un lote temporalmente para una sesión específica
