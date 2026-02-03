@@ -46,7 +46,7 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
 
                     {/* Badge */}
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-medium animate-in fade-in-up duration-700">
-                        <Shield className="w-4 h-4 text-emerald-400" />
+                        <Shield className="w-4 h-4 text-[#4EA898]" />
                         Compra Segura con Rol Propio
                     </div>
 
@@ -71,7 +71,7 @@ export const Hero = ({ onExploreClick }: HeroProps) => {
                         <Button
                             onClick={onExploreClick}
                             size="lg"
-                            className="w-full sm:w-auto h-14 px-8 text-lg font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xl shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all duration-300 hover:scale-105"
+                            className="w-full sm:w-auto h-14 px-8 text-lg font-bold bg-alimin-green hover:bg-alimin-green/90 text-white shadow-2xl shadow-alimin-green/30 hover:shadow-alimin-green/50 transition-all duration-300 hover:scale-105"
                         >
                             Ver Disponibilidad
                         </Button>

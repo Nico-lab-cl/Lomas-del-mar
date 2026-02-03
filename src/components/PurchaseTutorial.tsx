@@ -27,8 +27,8 @@ type Step = {
 
 const STEPS: Step[] = [
   {
-    title: 'Elige un lote disponible (verde)',
-    body: 'Haz clic en un lote verde del plano para ver sus detalles.',
+    title: 'Elige un lote disponible',
+    body: 'Haz clic en un lote disponible del plano para ver sus detalles.',
     Icon: MousePointerClick,
   },
   {
@@ -128,7 +128,7 @@ export const PurchaseTutorial = () => {
             <div className="font-semibold text-foreground mb-2">Leyenda de colores</div>
             <div className="grid gap-2 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <span className="h-2.5 w-2.5 rounded-full bg-emerald-500" />
+                <span className="h-2.5 w-2.5 rounded-full bg-alimin-green" />
                 <span>Verde: disponible</span>
               </div>
               <div className="flex items-center gap-2">

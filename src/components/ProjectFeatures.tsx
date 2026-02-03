@@ -77,7 +77,7 @@ export const ProjectFeatures = () => {
                             className={`
                 group relative p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1
                 ${feature.highlight
-                                    ? 'bg-white shadow-xl border-2 border-emerald-100 ring-4 ring-emerald-50/50'
+                                    ? 'bg-white shadow-xl border-2 border-alimin-green/20 ring-4 ring-alimin-green/10'
                                     : 'bg-white shadow-sm hover:shadow-lg border border-slate-100'
                                 }
               `}
@@ -86,8 +86,8 @@ export const ProjectFeatures = () => {
                             <div className={`
                 w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-colors
                 ${feature.highlight
-                                    ? 'bg-emerald-600 text-white'
-                                    : 'bg-emerald-50 text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white'
+                                    ? 'bg-alimin-green text-white'
+                                    : 'bg-alimin-green/10 text-alimin-green group-hover:bg-alimin-green group-hover:text-white'
                                 }
               `}>
                                 <feature.icon className="w-6 h-6" />

@@ -59,7 +59,7 @@ export const InvestmentThesis = () => {
                 {/* Texto Principal */}
                 <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white max-w-4xl mx-auto leading-tight mb-16 font-outfit">
                     "Somos una empresa productora de capital lo que nos permite generar
-                    <span className="text-emerald-400"> retornos y rentabilidades de gran escala </span>
+                    <span className="text-alimin-gold"> retornos y rentabilidades de gran escala </span>
                     en corto/medio plazo (1 a 2 años)"
                 </h2>
 
@@ -67,8 +67,8 @@ export const InvestmentThesis = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 max-w-6xl mx-auto">
                     {benefits.map((item, index) => (
                         <div key={index} className="flex flex-col items-center group">
-                            <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mb-4 backdrop-blur-sm group-hover:bg-emerald-500/20 transition-all duration-300 group-hover:scale-110">
-                                <item.icon className="w-8 h-8 text-emerald-400" />
+                            <div className="w-16 h-16 rounded-full bg-alimin-gold/10 border border-alimin-gold/30 flex items-center justify-center mb-4 backdrop-blur-sm group-hover:bg-alimin-gold/20 transition-all duration-300 group-hover:scale-110">
+                                <item.icon className="w-8 h-8 text-alimin-gold" />
                             </div>
                             <h3 className="text-white font-bold text-lg md:text-xl mb-1 font-outfit">
                                 {item.title.split(' ')[0]} <br className="hidden md:block" />

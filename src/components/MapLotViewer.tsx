@@ -26,7 +26,7 @@ export default function MapLotViewer({ lots, onSelectLot, selectedLotId }: MapLo
     const getStatusColor = (status: Lot["status"]) => {
         switch (status) {
             case "available":
-                return "bg-green-500 border-green-700";
+                return "bg-primary border-[#2A454A]";
             case "sold":
                 return "bg-red-500 border-red-700";
             case "reserved":

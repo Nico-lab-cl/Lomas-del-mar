@@ -105,7 +105,7 @@ export default function MapBuilder() {
 
             {/* 1. Header Fijo Arriba */}
             <div className="fixed top-0 left-0 right-0 h-16 bg-slate-900 border-b border-white/10 z-50 flex items-center justify-between px-4 shadow-xl">
-                <h1 className="text-xl font-bold flex gap-2 items-center text-emerald-400">
+                <h1 className="text-xl font-bold flex gap-2 items-center text-[#4EA898]">
                     <LucideMap className="w-6 h-6" />
                     Builder v3 (Fixed)
                 </h1>
@@ -116,7 +116,7 @@ export default function MapBuilder() {
                             <TabsTrigger value="tecnico">Técnico</TabsTrigger>
                         </TabsList>
                     </Tabs>
-                    <Button onClick={handleExport} className="bg-emerald-600 font-bold">
+                    <Button onClick={handleExport} className="bg-alimin-green font-bold">
                         <Copy className="w-4 h-4 mr-2" /> COPIAR JSON
                     </Button>
                 </div>
@@ -126,7 +126,7 @@ export default function MapBuilder() {
             <div className="fixed top-16 right-0 bottom-0 w-80 bg-slate-900 border-l border-white/20 z-40 flex flex-col shadow-2xl">
                 <div className="p-3 border-b border-white/10 bg-slate-800/50">
                     <h2 className="text-sm font-bold text-center text-slate-300">
-                        PENDIENTES: <span className="text-emerald-400 text-lg">{availableLots.length}</span>
+                        PENDIENTES: <span className="text-[#4EA898] text-lg">{availableLots.length}</span>
                     </h2>
                     <input
                         className="mt-2 w-full bg-slate-950 border border-slate-700 rounded px-2 py-1 text-sm text-white"
@@ -144,7 +144,7 @@ export default function MapBuilder() {
                                 key={lot.id}
                                 draggable
                                 onDragStart={(e) => handleDragStartFromPalette(e, lot as Lot)}
-                                className="aspect-square bg-slate-800 border border-slate-600 rounded flex items-center justify-center cursor-grab hover:bg-emerald-900 hover:border-emerald-500 transition-all select-none"
+                                className="aspect-square bg-slate-800 border border-slate-600 rounded flex items-center justify-center cursor-grab hover:bg-[#1E3337] hover:border-alimin-green transition-all select-none"
                             >
                                 <span className="font-bold text-white shadow-black drop-shadow-md">{lot.number}</span>
                             </div>
@@ -181,7 +181,7 @@ export default function MapBuilder() {
                             className="absolute -translate-x-1/2 -translate-y-1/2 cursor-move hover:scale-125 z-20"
                             style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
                         >
-                            <div className="w-6 h-6 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center shadow-lg">
+                            <div className="w-6 h-6 rounded-full bg-alimin-green border-2 border-white flex items-center justify-center shadow-lg">
                                 <span className="text-[9px] font-black text-white">{pin.number}</span>
                             </div>
                         </div>

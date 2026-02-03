@@ -22,7 +22,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 160 84% 39%;
+    --primary: 189 28% 29%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96%;
@@ -37,7 +37,7 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 142 76% 36%;
+    --success: 189 28% 29%;
     --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
@@ -48,12 +48,12 @@
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 160 84% 39%;
+    --ring: 189 28% 29%;
 
     --radius: 0.75rem;
 
     /* Lot status colors */
-    --lot-available: 160 84% 39%;
+    --lot-available: 189 28% 29%;
     --lot-reserved: 38 92% 50%;
     --lot-sold: 0 84% 60%;
     --lot-selected: 217 91% 60%;
@@ -77,7 +77,7 @@
     --popover: 217 33% 17%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 160 84% 39%;
+    --primary: 189 28% 29%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 217 33% 17%;
@@ -94,7 +94,7 @@
 
     --border: 217 33% 17%;
     --input: 217 33% 17%;
-    --ring: 160 84% 39%;
+    --ring: 189 28% 29%;
   }
 
   /* Typography - Elegant hierarchy */
@@ -229,7 +229,7 @@
   }
 
   .lot-marker-available {
-    @apply bg-emerald-500 hover:bg-emerald-600 hover:scale-105;
+    @apply bg-primary hover:bg-primary/90 hover:scale-105;
   }
 
   .lot-marker-reserved {
@@ -430,7 +430,7 @@
 
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-primary to-emerald-400 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary to-[#4EA898] bg-clip-text text-transparent;
   }
 
   .animate-pulse-slow {

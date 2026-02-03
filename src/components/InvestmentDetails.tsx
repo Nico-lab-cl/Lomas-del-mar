@@ -84,7 +84,7 @@ export const InvestmentDetails = ({ selectedLot, onReserve, isSessionActive }: I
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-3">
-        <Button asChild size="lg" className="w-full bg-emerald-600 hover:bg-emerald-700">
+        <Button asChild size="lg" className="w-full bg-alimin-green hover:bg-alimin-green/90">
           <a href={whatsappHref} target="_blank" rel="noreferrer">
             <MessageCircle className="w-4 h-4" />
             Consultar por WhatsApp

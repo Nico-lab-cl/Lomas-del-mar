@@ -621,7 +621,7 @@ export default function Home() {
                   <h3 className="font-bold text-lg text-gray-900 mb-4">Simbología</h3>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-4 h-4 rounded-sm bg-green-500"></div>
+                      <div className="w-4 h-4 rounded-sm bg-primary"></div>
                       <div>
                         <p className="font-semibold text-sm text-gray-900">Área Verde</p>
                       </div>
@@ -658,7 +658,7 @@ export default function Home() {
                   <h3 className="font-bold text-lg text-gray-900 mb-4">Estado de los lotes</h3>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-4 h-4 rounded-full bg-green-500 border-2 border-green-700"></div>
+                      <div className="w-4 h-4 rounded-full bg-primary border-2 border-[#2A454A]"></div>
                       <div>
                         <p className="font-semibold text-sm text-gray-900">Disponible</p>
                         <p className="text-xs text-gray-600">Listo para reservar</p>

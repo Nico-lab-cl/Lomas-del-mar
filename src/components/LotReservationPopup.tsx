@@ -312,8 +312,8 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
 
           {/* Security & Payment Badges (Top Position) */}
           <div className="bg-muted/30 rounded-xl p-4 mb-6 border border-border/50 text-center animate-in fade-in slide-in-from-top-4 duration-500 delay-200">
-            <div className="flex items-center justify-center gap-2 mb-3 text-emerald-600 font-bold text-sm uppercase tracking-wide">
-              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="flex items-center justify-center gap-2 mb-3 text-alimin-green font-bold text-sm uppercase tracking-wide">
+              <div className="w-2 h-2 rounded-full bg-alimin-green animate-pulse" />
               Pagos 100% Seguros
             </div>
             <div className="flex justify-center items-center gap-4">

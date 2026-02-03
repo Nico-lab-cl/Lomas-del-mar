@@ -103,7 +103,7 @@ export const StickyContactBar = () => {
                     href="https://wa.me/56973077128"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-emerald-600 hover:bg-emerald-500 text-white rounded-full px-4 py-2 flex items-center gap-2 transition-all hover:scale-105 whitespace-nowrap"
+                    className="bg-alimin-green hover:bg-alimin-green/90 text-white rounded-full px-4 py-2 flex items-center gap-2 transition-all hover:scale-105 whitespace-nowrap"
                 >
                     <MessageCircle className="w-4 h-4" />
                     <span className="text-sm font-medium hidden sm:inline">Estamos en línea</span>

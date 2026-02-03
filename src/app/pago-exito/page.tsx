@@ -185,8 +185,8 @@ function PagoExitoContent() {
             <main className="container mx-auto px-4 py-12">
                 <div className="max-w-3xl mx-auto print-container">
                     <div className="text-center mb-8 no-print">
-                        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-900/30 mb-6 animate-scale-in">
-                            <CheckCircle2 className="w-12 h-12 text-emerald-600 dark:text-emerald-400" />
+                        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-alimin-green/10 dark:bg-alimin-green/30 mb-6 animate-scale-in">
+                            <CheckCircle2 className="w-12 h-12 text-alimin-green dark:text-[#4EA898]" />
                         </div>
 
                         <h1 className="text-4xl font-bold text-foreground mb-4">
@@ -325,12 +325,12 @@ function PagoExitoContent() {
                             )}
                         </div>
 
-                        <div className="mt-5 rounded-lg border border-emerald-200/60 dark:border-emerald-900/40 bg-emerald-50/60 dark:bg-emerald-900/20 p-4 no-print">
+                        <div className="mt-5 rounded-lg border border-alimin-green/30 dark:border-alimin-green/40 bg-alimin-green/10 dark:bg-alimin-green/20 p-4 no-print">
                             <div className="flex items-start gap-3">
-                                <FileText className="w-5 h-5 text-emerald-700 dark:text-emerald-300 flex-shrink-0 mt-0.5" />
+                                <FileText className="w-5 h-5 text-alimin-green dark:text-[#4EA898] flex-shrink-0 mt-0.5" />
                                 <div>
-                                    <p className="font-semibold text-emerald-900 dark:text-emerald-100">Siguiente paso</p>
-                                    <p className="text-sm text-emerald-800/90 dark:text-emerald-200/80">
+                                    <p className="font-semibold text-alimin-green dark:text-[#E0F2F1]">Siguiente paso</p>
+                                    <p className="text-sm text-foreground/80 dark:text-[#B2DFDB]">
                                         Guarda esta confirmación. Nuestro equipo se pondrá en contacto contigo para coordinar los siguientes pasos.
                                     </p>
                                 </div>
