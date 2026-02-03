@@ -88,8 +88,10 @@ async function handleCommitRequest(req: NextRequest) {
                 where: { lot_id: txRow.lot_id }
             });
 
-            // Construct detailed payload for N8N
-            const lotDetails = computeLotDetailsFromId(txRow.lot_id);
+            // Construct detailed payload for N8N using REAL DB data
+            // We avoid computeLotDetailsFromId because DB IDs might not match hardcoded ranges
+            const lot = txRow.lot;
+
             const payload = {
                 contact_name: txRow.reservation.name,
                 contact_email: txRow.reservation.email,
@@ -97,11 +99,11 @@ async function handleCommitRequest(req: NextRequest) {
                 contact_rut: txRow.reservation.rut,
                 contact_address: txRow.reservation.address,
 
-                lot_number: lotDetails.number,
-                lot_id: String(txRow.lot_id),
-                lot_stage: lotDetails.stage,
-                lot_area_m2: lotDetails.area_m2,
-                lot_total_price: lotDetails.price_total_clp,
+                lot_number: lot.number,
+                lot_id: String(lot.id),
+                lot_stage: lot.stage,
+                lot_area_m2: lot.area_m2,
+                lot_total_price: lot.price_total_clp,
 
                 amount_paid: String(txRow.amount_clp),
                 transbank_order_id: txRow.buy_order,
@@ -117,16 +119,15 @@ async function handleCommitRequest(req: NextRequest) {
                 payment_type_code: String(commitRes.payment_type_code),
                 installments_number: String(commitRes.installments_number),
 
-                lot_price_label: lotDetails.price_total_clp ? '' : 'Consultar',
+                lot_price_label: lot.price_total_clp ? '' : 'Consultar',
             };
 
-            // CRITICAL FIX: Make N8N webhook authentication mandatory
-            if (!N8N_WEBHOOK_URL) {
-                console.warn('[n8n] N8N_WEBHOOK_URL not configured, skipping webhook', { reservationId: txRow.reservation_id });
-            } else if (!N8N_WEBHOOK_SECRET) {
-                console.error('[SECURITY] N8N_WEBHOOK_SECRET not configured - SKIPPING webhook for security', { reservationId: txRow.reservation_id });
-            } else {
-                // Trigger N8N (Non-blocking) - ONLY if secret is configured
+            // Trigger N8N (Non-blocking)
+            if (N8N_WEBHOOK_URL) {
+                if (!N8N_WEBHOOK_SECRET) {
+                    console.warn('[n8n] N8N_WEBHOOK_SECRET not configured, sending webhook without signature', { reservationId: txRow.reservation_id });
+                }
+
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
@@ -134,7 +135,7 @@ async function handleCommitRequest(req: NextRequest) {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Webhook-Secret': N8N_WEBHOOK_SECRET // ALWAYS include secret
+                        ...(N8N_WEBHOOK_SECRET ? { 'X-Webhook-Secret': N8N_WEBHOOK_SECRET } : {})
                     },
                     body: JSON.stringify(payload),
                     signal: controller.signal
@@ -151,6 +152,8 @@ async function handleCommitRequest(req: NextRequest) {
                         clearTimeout(timeoutId);
                         console.error('[n8n] Webhook failed', { reservationId: txRow.reservation_id, error: err instanceof Error ? err.message : String(err) });
                     });
+            } else {
+                console.warn('[n8n] N8N_WEBHOOK_URL not configured, skipping webhook', { reservationId: txRow.reservation_id });
             }
 
             return NextResponse.redirect(`${WEBPAY_CONFIG.finalOkUrl}?lotId=${txRow.lot_id}&reservationId=${txRow.reservation_id}`);
