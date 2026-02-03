@@ -205,27 +205,7 @@ export default function Home() {
   }, []);
 
   // CRITICAL FIX: Add polling to sync lots data every 30 seconds for real-time updates
-  useEffect(() => {
-    if (!isInitialized) return;
-
-    const syncLots = async () => {
-      try {
-        const res = await fetch('/api/lots');
-        const { ok, data } = await res.json();
-        if (ok && data) {
-          setLots(data);
-          saveLots(data);
-        }
-      } catch (error) {
-        console.warn('Failed to sync lots:', error);
-      }
-    };
-
-    // Sync every 30 seconds
-    const interval = setInterval(syncLots, 30000);
-
-    return () => clearInterval(interval);
-  }, [isInitialized]);
+  // Removed defective polling effect that was overwriting state with raw DB data
 
   // Save lots when they change
   useEffect(() => {
