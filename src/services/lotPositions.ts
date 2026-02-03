@@ -60,14 +60,17 @@ export function mergeLotPositions(lotsWithStatus?: LotWithStatus[]): MergedLot[]
         }));
     }
 
-    // Create a map of database lots by "stage-number" for reliable lookup
-    // Fallback to just "number" if stage is missing (though stage should be present)
+    // Create a maps for reliable lookup
     const statusByKey = new Map<string, LotWithStatus>();
+    const statusById = new Map<number, LotWithStatus>();
+
     lotsWithStatus.forEach(lot => {
-        // We assume lot.stage is available on the DB object. If not, we might have issues matching.
-        // Based on schema, stage is Int?.
+        // Map by Stage-Number
         const key = lot.stage ? `${lot.stage}-${lot.number}` : `no_stage-${lot.number}`;
         statusByKey.set(key, lot);
+
+        // Map by ID (Secondary robust lookup)
+        statusById.set(lot.id, lot);
     });
 
     // Merge: use positioned lots and overlay status from database
@@ -75,12 +78,13 @@ export function mergeLotPositions(lotsWithStatus?: LotWithStatus[]): MergedLot[]
         // Construct the key for the JSON lot
         const key = posLot.stage ? `${posLot.stage}-${posLot.number}` : `no_stage-${posLot.number}`;
 
-        const dbLot = statusByKey.get(key);
+        // Try exact match by Key first, then fallback to ID match
+        const dbLot = statusByKey.get(key) || statusById.get(posLot.id);
 
         if (dbLot) {
             // Lot exists in database, use its status and ID from DB
             return {
-                id: dbLot.id, // CRITICAL: Use the real DB ID, not the fake JSON ID
+                id: dbLot.id, // CRITICAL: Use the real DB ID
                 number: posLot.number,
                 x: posLot.x,
                 y: posLot.y,
