@@ -92,7 +92,6 @@ export default function Home() {
   const [showCountdown, setShowCountdown] = useState(false);
 
   // Refs for scroll tracking and navigation
-  const mapSectionRef = useRef<HTMLDivElement>(null);
   const videoGalleryRef = useRef<HTMLDivElement>(null);
 
   // Initialize data
@@ -317,14 +316,20 @@ export default function Home() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check initial position
-
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Smooth scroll to map section
+  const mapSectionRef = useRef<HTMLElement>(null);
+  const mobileMapSectionRef = useRef<HTMLElement>(null);
+
   const scrollToMap = useCallback(() => {
-    mapSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // If on mobile (check width < 768), scroll to mobile map. Else, desktop map.
+    if (window.innerWidth < 768 && mobileMapSectionRef.current) {
+      mobileMapSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      mapSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }, []);
 
   // Auto-open sidebar when map comes into view
@@ -469,6 +474,34 @@ export default function Home() {
         <VideoGallery onCtaClick={scrollToMap} />
       </div>
 
+      {/* MOBILE MAP SECTION - VISIBLE ONLY ON MOBILE */}
+      <section ref={mobileMapSectionRef} className="w-full pt-16 pb-24 bg-muted/5 animate-in fade-in duration-1000 block md:hidden">
+        <div className="container mx-auto px-4 text-center mb-10 overflow-hidden">
+          <div className="flex flex-col items-center justify-center gap-6 mb-6">
+            <img src="/logo.png" alt="Lomas del Mar" className="h-16 w-auto object-contain drop-shadow-sm" />
+            <h2 className="text-3xl font-black text-foreground tracking-tight">
+              Adquiere tu terreno ahora en <span className="text-primary tracking-tighter">Lomas del Mar</span>
+            </h2>
+          </div>
+          <p className="text-muted-foreground max-w-2xl mx-auto font-medium">
+            Visualiza la ubicación real y el entorno de tu futuro terreno
+          </p>
+        </div>
+
+        <div className="w-full max-w-[1920px] mx-auto">
+          <div className="flex flex-col gap-8">
+            {/* Map Viewer Mobile */}
+            <div className="w-full min-w-0">
+              <MapLotViewer
+                lots={lots}
+                onSelectLot={handleSelectLot}
+                selectedLotId={selectedLot?.id ?? null}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
 
       {/* Countdown Banner - Sticky, appears after VideoGallery */}
       {!DISABLE_COUNTDOWN && showCountdown && (
@@ -494,8 +527,8 @@ export default function Home() {
 
 
 
-        {/* 2. Vista Satelital (Secundaria) - Immersive Full Bleed */}
-        <section ref={mapSectionRef} className="w-full pt-16 pb-24 bg-muted/5 animate-in fade-in duration-1000">
+        {/* 2. Vista Satelital (Secundaria) - Immersive Full Bleed - DESKTOP ONLY */}
+        <section ref={mapSectionRef} className="w-full pt-16 pb-24 bg-muted/5 animate-in fade-in duration-1000 hidden md:block">
           <div className="container mx-auto px-4 text-center mb-10 overflow-hidden">
             <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-6">
               <img
