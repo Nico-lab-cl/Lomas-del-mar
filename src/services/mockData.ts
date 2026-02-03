@@ -4,14 +4,15 @@ import layoutPositions from './layoutPositions.json';
 import defaultMapOverrides from './defaultMapOverrides.json';
 
 // CONTRATO DE STORAGE - NO MODIFICAR ESTAS KEYS SIN INSTRUCCIÓN EXPLÍCITA
-const STORAGE_KEY = 'alimin_lomas_del_mar_lots_v6';
+// CONTRATO DE STORAGE - NO MODIFICAR ESTAS KEYS SIN INSTRUCCIÓN EXPLÍCITA
+const STORAGE_KEY = 'alimin_lomas_del_mar_lots_v7';
 const SESSION_KEY = 'alimin_lomas_del_mar_session_v2';
 const POSITIONS_KEY = 'alimin_lomas_del_mar_positions_v1';
 const POSITIONS_VERSION_KEY = 'alimin_lomas_del_mar_positions_version_v1';
 const MAP_OVERRIDES_KEY = 'lomas_lot_map_overrides_v3';
 
 // Incrementar cuando publiques un nuevo layout oficial para forzar que todos vuelvan al layout del repo.
-const LAYOUT_VERSION = 9;
+const LAYOUT_VERSION = 10;
 
 // Modo admin/operación: fuerza todo el plano a DISPONIBLE (sin vendidos ni reservados)
 const FORCE_ALL_AVAILABLE = false;
