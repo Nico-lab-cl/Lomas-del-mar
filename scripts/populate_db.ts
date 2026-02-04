@@ -6,18 +6,27 @@ const prisma = new PrismaClient();
 // Lista MAESTRA de lotes vendidos proporcionada por el usuario
 const SOLD_LOTS = [
     // Etapa 1
-    { stage: 1, number: 1 }, { stage: 1, number: 2 }, { stage: 1, number: 5 },
-    { stage: 1, number: 6 }, { stage: 1, number: 8 }, { stage: 1, number: 28 },
-    { stage: 1, number: 37 }, { stage: 1, number: 42 }, { stage: 1, number: 45 },
-    { stage: 1, number: 46 },
+    { stage: 1, number: 1 }, { stage: 1, number: 2 }, { stage: 1, number: 3 },
+    { stage: 1, number: 4 }, { stage: 1, number: 5 }, { stage: 1, number: 6 },
+    { stage: 1, number: 8 }, { stage: 1, number: 15 }, { stage: 1, number: 16 },
+    { stage: 1, number: 28 }, { stage: 1, number: 29 }, { stage: 1, number: 33 },
+    { stage: 1, number: 35 }, { stage: 1, number: 36 }, { stage: 1, number: 37 },
+    { stage: 1, number: 38 }, { stage: 1, number: 39 }, { stage: 1, number: 40 },
+    { stage: 1, number: 41 }, { stage: 1, number: 43 }, { stage: 1, number: 44 },
+    { stage: 1, number: 45 }, { stage: 1, number: 46 },
+
     // Etapa 2
-    { stage: 2, number: 1 }, { stage: 2, number: 29 }, { stage: 2, number: 47 },
+    { stage: 2, number: 1 }, { stage: 2, number: 29 }, { stage: 2, number: 33 },
+    { stage: 2, number: 39 }, { stage: 2, number: 40 }, { stage: 2, number: 41 },
+    { stage: 2, number: 42 }, { stage: 2, number: 43 }, { stage: 2, number: 47 },
+
     // Etapa 3
     { stage: 3, number: 26 }, { stage: 3, number: 27 }, { stage: 3, number: 42 },
-    { stage: 3, number: 43 },
+
     // Etapa 4
-    { stage: 4, number: 25 }, { stage: 4, number: 41 }, { stage: 4, number: 44 },
-    { stage: 4, number: 45 }, { stage: 4, number: 65 }
+    { stage: 4, number: 6 }, { stage: 4, number: 7 }, { stage: 4, number: 8 },
+    { stage: 4, number: 9 }, { stage: 4, number: 25 }, { stage: 4, number: 41 },
+    { stage: 4, number: 44 }, { stage: 4, number: 45 }, { stage: 4, number: 65 }
 ];
 
 async function populateDb() {
