@@ -119,6 +119,7 @@ export default function Home() {
           ...lot,
           // Sync Stage and Number from DB if available (Source of Truth)
           stage: row?.stage ?? lot.stage,
+          displayStage: row?.stage ?? lot.displayStage, // FORCE DISPLAY TO MATCH DB
           number: row?.number ?? lot.number,
           status: nextStatus,
           reservedUntil: Number.isFinite(reservedUntilMs) ? reservedUntilMs : null,
@@ -273,6 +274,7 @@ export default function Home() {
               ...lot,
               // Sync Stage and Number from DB
               stage: row?.stage ?? lot.stage,
+              displayStage: row?.stage ?? lot.displayStage, // FORCE DISPLAY TO MATCH DB
               number: row?.number ?? lot.number,
               status: nextStatus,
               reservedUntil: nextReservedUntil,
