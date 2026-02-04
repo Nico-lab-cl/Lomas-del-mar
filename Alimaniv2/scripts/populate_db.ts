@@ -12,8 +12,8 @@ const SOLD_LOTS = [
     { stage: 1, number: 28 }, { stage: 1, number: 29 }, { stage: 1, number: 33 },
     { stage: 1, number: 35 }, { stage: 1, number: 36 }, { stage: 1, number: 37 },
     { stage: 1, number: 38 }, { stage: 1, number: 39 }, { stage: 1, number: 40 },
-    { stage: 1, number: 41 }, { stage: 1, number: 43 }, { stage: 1, number: 44 },
-    { stage: 1, number: 45 }, { stage: 1, number: 46 },
+    { stage: 1, number: 41 }, { stage: 1, number: 42 }, { stage: 1, number: 43 },
+    { stage: 1, number: 44 }, { stage: 1, number: 45 }, { stage: 1, number: 46 },
 
     // Etapa 2
     { stage: 2, number: 1 }, { stage: 2, number: 29 }, { stage: 2, number: 33 },
@@ -22,6 +22,7 @@ const SOLD_LOTS = [
 
     // Etapa 3
     { stage: 3, number: 26 }, { stage: 3, number: 27 }, { stage: 3, number: 42 },
+    { stage: 3, number: 43 },
 
     // Etapa 4
     { stage: 4, number: 6 }, { stage: 4, number: 7 }, { stage: 4, number: 8 },
