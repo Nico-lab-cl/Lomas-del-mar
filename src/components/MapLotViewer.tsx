@@ -136,8 +136,8 @@ export default function MapLotViewer({ lots, onSelectLot, selectedLotId }: MapLo
                                             }}
                                             className={`
                       group relative
-                      w-[4px] h-[4px] sm:w-[5px] sm:h-[5px] md:w-[6px] md:h-[6px] lg:w-2 lg:h-2
-                      rounded-full border-[0.5px] shadow-sm
+                      w-[6px] h-[6px] sm:w-2 sm:h-2 md:w-3 md:h-3 lg:w-4 lg:h-4
+                      rounded-full border-[0.5px] text-white font-bold text-[3px] sm:text-[4px] md:text-[5px] lg:text-[7px] shadow-sm
                       flex items-center justify-center
                       transition-transform ${isClickable ? 'hover:scale-150 hover:z-30 cursor-pointer' : 'cursor-not-allowed opacity-90'}
                       ${getStatusColor(lot.status)}
@@ -145,6 +145,7 @@ export default function MapLotViewer({ lots, onSelectLot, selectedLotId }: MapLo
                       ${selectedLotId === lot.id ? 'ring-1 ring-white scale-125' : ''}
                     `}
                                         >
+                                            {lot.number}
                                         </button>
                                     );
                                 })}
