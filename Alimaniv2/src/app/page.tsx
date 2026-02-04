@@ -115,11 +115,16 @@ export default function Home() {
         const nextStatus: Lot['status'] =
           remoteStatus === 'sold' ? 'sold' : isExpiredReserved ? 'available' : remoteStatus ?? 'available';
 
+        // HARDCODE FIX: Ensure Stage 4 lots are correctly identified regardless of DB/Cache state
+        const isStage4 = lot.id >= 132 && lot.id <= 196;
+        const finalStage = isStage4 ? 4 : (row?.stage ?? lot.stage);
+        const finalDisplayStage = isStage4 ? 4 : (row?.stage ?? lot.displayStage);
+
         return {
           ...lot,
           // Sync Stage and Number from DB if available (Source of Truth)
-          stage: row?.stage ?? lot.stage,
-          displayStage: row?.stage ?? lot.displayStage, // FORCE DISPLAY TO MATCH DB
+          stage: finalStage,
+          displayStage: finalDisplayStage, // FORCE DISPLAY TO MATCH DB
           number: row?.number ?? lot.number,
           status: nextStatus,
           reservedUntil: Number.isFinite(reservedUntilMs) ? reservedUntilMs : null,
@@ -270,11 +275,16 @@ export default function Home() {
               return lot;
             }
 
+            // HARDCODE FIX: Ensure Stage 4 lots are correctly identified regardless of DB/Cache state
+            const isStage4 = lot.id >= 132 && lot.id <= 196;
+            const finalStage = isStage4 ? 4 : (row?.stage ?? lot.stage);
+            const finalDisplayStage = isStage4 ? 4 : (row?.stage ?? lot.displayStage);
+
             return {
               ...lot,
               // Sync Stage and Number from DB
-              stage: row?.stage ?? lot.stage,
-              displayStage: row?.stage ?? lot.displayStage, // FORCE DISPLAY TO MATCH DB
+              stage: finalStage,
+              displayStage: finalDisplayStage, // FORCE DISPLAY TO MATCH DB
               number: row?.number ?? lot.number,
               status: nextStatus,
               reservedUntil: nextReservedUntil,
