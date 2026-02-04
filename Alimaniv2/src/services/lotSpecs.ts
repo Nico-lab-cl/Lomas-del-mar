@@ -28,8 +28,6 @@ export const getStageLotSpec = (stage: number, stageLotNumber: number): LotSpec 
       area_m2 = 344.2;
     } else if (stageLotNumber >= 29 && stageLotNumber <= 46) {
       area_m2 = 390;
-    } else if (stageLotNumber === 47) {
-      area_m2 = 236.97;
     } else {
       return null;
     }
@@ -71,6 +69,8 @@ export const getStageLotSpec = (stage: number, stageLotNumber: number): LotSpec 
       area_m2 = 390;
     } else if (stageLotNumber === 42 || stageLotNumber === 43) {
       area_m2 = (stageLotNumber === 42) ? 390 : null;
+    } else if (stageLotNumber === 47) {
+      area_m2 = 236.97; // Moved from Stage 1
     } else {
       return null;
     }
@@ -139,8 +139,8 @@ export const getStageLotSpec = (stage: number, stageLotNumber: number): LotSpec 
 const NULL_DIMENSIONS: LotDimensions = { front_m: null, depth_m: null, width_m: null, other_side_m: null, notes: null };
 
 const getStageAndIndexByLotId = (lotId: number): { stage: number; index: number } | null => {
-  // Stage 1: 1-47 (Standard)
-  if (lotId >= 1 && lotId <= 47) return { stage: 1, index: lotId - 1 };
+  // Stage 1: 1-46 (Exc 47 which is moved to Stage 3)
+  if (lotId >= 1 && lotId <= 46) return { stage: 1, index: lotId - 1 };
 
   // Stage 2: 50-92 + Special Cases
   if (lotId >= 50 && lotId <= 92) return { stage: 2, index: lotId - 50 }; // #1-#43
@@ -155,6 +155,7 @@ const getStageAndIndexByLotId = (lotId: number): { stage: number; index: number 
   if (lotId === 203) return { stage: 3, index: 40 }; // #41
   if (lotId === 202) return { stage: 3, index: 41 }; // #42
   if (lotId === 201) return { stage: 3, index: 42 }; // #43
+  if (lotId === 47) return { stage: 3, index: 46 }; // #47 (Moved from Stage 1)
 
   // Stage 4: 132-196 (Standard)
   if (lotId >= 132 && lotId <= 196) return { stage: 4, index: lotId - 132 }; // #1-#65

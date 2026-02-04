@@ -359,15 +359,10 @@ export const loadLots = (): Lot[] => {
     const spec = getLotSpec(lot.id);
     const area = spec ? spec.area_m2 : lot.area;
 
-    // HARDCODE ID RULES (Source of Truth)
-    let hardcodedStage = spec?.stage ?? lot.stage ?? 1;
+    // HARDCODE ID RULES REMOVED
+    const stage = spec?.stage ?? lot.stage ?? 1;
 
-    if (lot.id >= 1 && lot.id <= 47) hardcodedStage = 1;
-    if ((lot.id >= 50 && lot.id <= 92) || [48, 197, 198, 199].includes(lot.id)) hardcodedStage = 2;
-    if ((lot.id >= 93 && lot.id <= 131) || [49, 201, 202, 203].includes(lot.id)) hardcodedStage = 3;
-    if (lot.id >= 132 && lot.id <= 196) hardcodedStage = 4;
-
-    const stage = hardcodedStage;
+    // Remove redeclaration and explicit usage of hardcodedStage
     const stageLotNumber = spec?.stageLotNumber ?? lot.stageLotNumber;
     const forceSold = spec?.forceSold ?? lot.forceSold;
     const dimensions = spec?.dimensions ?? lot.dimensions ?? null;
