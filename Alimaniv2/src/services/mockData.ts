@@ -356,12 +356,19 @@ export const loadLots = (): Lot[] => {
   // Sincronizar siempre specs (etapa/área/dimensiones) desde fuente de verdad
   // para que cambios en lotSpecs se reflejen aunque existan datos en localStorage.
   lots = lots.map((lot) => {
-    const spec = getLotSpec(lot.id);
-    const area = spec ? spec.area_m2 : lot.area;
-    const stage = spec?.stage ?? lot.stage ?? 1;
+    // HARDCODE ID RULES (Source of Truth)
+    let hardcodedStage = spec?.stage ?? lot.stage ?? 1;
+
+    if (lot.id >= 1 && lot.id <= 47) hardcodedStage = 1;
+    if ((lot.id >= 50 && lot.id <= 92) || [48, 197, 198, 199].includes(lot.id)) hardcodedStage = 2;
+    if ((lot.id >= 93 && lot.id <= 131) || [49, 201, 202, 203].includes(lot.id)) hardcodedStage = 3;
+    if (lot.id >= 132 && lot.id <= 196) hardcodedStage = 4;
+
+    const stage = hardcodedStage;
     const stageLotNumber = spec?.stageLotNumber ?? lot.stageLotNumber;
     const forceSold = spec?.forceSold ?? lot.forceSold;
     const dimensions = spec?.dimensions ?? lot.dimensions ?? null;
+
 
     const pricing = calculateLotPricing(area);
 
