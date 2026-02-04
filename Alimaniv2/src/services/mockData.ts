@@ -356,6 +356,9 @@ export const loadLots = (): Lot[] => {
   // Sincronizar siempre specs (etapa/área/dimensiones) desde fuente de verdad
   // para que cambios en lotSpecs se reflejen aunque existan datos en localStorage.
   lots = lots.map((lot) => {
+    const spec = getLotSpec(lot.id);
+    const area = spec ? spec.area_m2 : lot.area;
+
     // HARDCODE ID RULES (Source of Truth)
     let hardcodedStage = spec?.stage ?? lot.stage ?? 1;
 
