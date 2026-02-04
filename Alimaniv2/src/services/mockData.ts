@@ -359,10 +359,9 @@ export const loadLots = (): Lot[] => {
     const spec = getLotSpec(lot.id);
     const area = spec ? spec.area_m2 : lot.area;
 
-    // HARDCODE ID RULES REMOVED
+    // HARDCODE ID RULES REMOVED - Respecting Logic/DB Source of Truth
     const stage = spec?.stage ?? lot.stage ?? 1;
 
-    // Remove redeclaration and explicit usage of hardcodedStage
     const stageLotNumber = spec?.stageLotNumber ?? lot.stageLotNumber;
     const forceSold = spec?.forceSold ?? lot.forceSold;
     const dimensions = spec?.dimensions ?? lot.dimensions ?? null;
