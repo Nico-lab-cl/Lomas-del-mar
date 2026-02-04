@@ -1,0 +1,1618 @@
+[
+    {
+        "id": 132,
+        "number": "1",
+        "x": 25.73,
+        "y": 29.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 133,
+        "number": "2",
+        "x": 27.33,
+        "y": 29.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 134,
+        "number": "3",
+        "x": 28.87,
+        "y": 29.19,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 135,
+        "number": "4",
+        "x": 30.4,
+        "y": 29.19,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 136,
+        "number": "5",
+        "x": 32.27,
+        "y": 29.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 137,
+        "number": "6",
+        "x": 42.61,
+        "y": 28.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 138,
+        "number": "7",
+        "x": 44.34,
+        "y": 28.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 139,
+        "number": "8",
+        "x": 45.74,
+        "y": 28.36,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 140,
+        "number": "9",
+        "x": 47.41,
+        "y": 28.19,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 141,
+        "number": "10",
+        "x": 48.88,
+        "y": 27.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 142,
+        "number": "11",
+        "x": 50.54,
+        "y": 27.86,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 143,
+        "number": "12",
+        "x": 52.01,
+        "y": 27.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 144,
+        "number": "13",
+        "x": 53.48,
+        "y": 27.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 145,
+        "number": "14",
+        "x": 54.94,
+        "y": 27.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 146,
+        "number": "15",
+        "x": 56.54,
+        "y": 27.36,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 147,
+        "number": "16",
+        "x": 58.21,
+        "y": 27.36,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 148,
+        "number": "17",
+        "x": 59.61,
+        "y": 27.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 149,
+        "number": "18",
+        "x": 62.61,
+        "y": 26.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 150,
+        "number": "19",
+        "x": 64.14,
+        "y": 26.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 151,
+        "number": "20",
+        "x": 65.48,
+        "y": 26.44,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 152,
+        "number": "21",
+        "x": 67.08,
+        "y": 26.44,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 153,
+        "number": "22",
+        "x": 68.74,
+        "y": 26.27,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 154,
+        "number": "23",
+        "x": 70.21,
+        "y": 25.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 155,
+        "number": "24",
+        "x": 72.28,
+        "y": 25.61,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 156,
+        "number": "25",
+        "x": 73.37,
+        "y": 21.11,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 157,
+        "number": "26",
+        "x": 71.57,
+        "y": 22.77,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 158,
+        "number": "27",
+        "x": 70.04,
+        "y": 22.86,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 159,
+        "number": "28",
+        "x": 68.7,
+        "y": 22.86,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 160,
+        "number": "29",
+        "x": 67.17,
+        "y": 22.86,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 161,
+        "number": "30",
+        "x": 65.44,
+        "y": 23.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 162,
+        "number": "31",
+        "x": 64.1,
+        "y": 23.19,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 163,
+        "number": "32",
+        "x": 62.57,
+        "y": 23.02,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 164,
+        "number": "33",
+        "x": 59.53,
+        "y": 23.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 165,
+        "number": "34",
+        "x": 58,
+        "y": 23.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 166,
+        "number": "35",
+        "x": 56.53,
+        "y": 23.61,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 167,
+        "number": "36",
+        "x": 55,
+        "y": 23.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 168,
+        "number": "37",
+        "x": 53.33,
+        "y": 23.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 169,
+        "number": "38",
+        "x": 51.73,
+        "y": 23.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 170,
+        "number": "39",
+        "x": 50.27,
+        "y": 23.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 171,
+        "number": "40",
+        "x": 48.67,
+        "y": 23.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 172,
+        "number": "41",
+        "x": 44.8,
+        "y": 24.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 173,
+        "number": "42",
+        "x": 68.37,
+        "y": 17.61,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 174,
+        "number": "43",
+        "x": 64.9,
+        "y": 16.94,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 175,
+        "number": "44",
+        "x": 62.97,
+        "y": 17.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 176,
+        "number": "45",
+        "x": 60.77,
+        "y": 17.52,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 177,
+        "number": "46",
+        "x": 58.64,
+        "y": 17.19,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 178,
+        "number": "47",
+        "x": 56.04,
+        "y": 17.86,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 179,
+        "number": "48",
+        "x": 53.44,
+        "y": 18.69,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 196,
+        "number": "65",
+        "x": 23.91,
+        "y": 36.8,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 195,
+        "number": "64",
+        "x": 26.91,
+        "y": 36.46,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 194,
+        "number": "63",
+        "x": 29.05,
+        "y": 36.38,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 193,
+        "number": "62",
+        "x": 31.31,
+        "y": 36.05,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 192,
+        "number": "61",
+        "x": 33.53,
+        "y": 35.92,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 191,
+        "number": "60",
+        "x": 45.08,
+        "y": 34.88,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 190,
+        "number": "59",
+        "x": 47.28,
+        "y": 34.8,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 189,
+        "number": "58",
+        "x": 49.8,
+        "y": 34.75,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 188,
+        "number": "57",
+        "x": 52.21,
+        "y": 34.71,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 187,
+        "number": "56",
+        "x": 54.67,
+        "y": 34.17,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 186,
+        "number": "55",
+        "x": 56.48,
+        "y": 34.05,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 185,
+        "number": "54",
+        "x": 58.88,
+        "y": 33.88,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 184,
+        "number": "53",
+        "x": 61.08,
+        "y": 33.88,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 183,
+        "number": "52",
+        "x": 63.54,
+        "y": 33.46,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 182,
+        "number": "51",
+        "x": 65.68,
+        "y": 33.55,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 181,
+        "number": "50",
+        "x": 67.94,
+        "y": 33.38,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 180,
+        "number": "49",
+        "x": 69.94,
+        "y": 33.05,
+        "status": "available",
+        "stage": 4
+    },
+    {
+        "id": 93,
+        "number": "1",
+        "x": 22.78,
+        "y": 40.89,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 94,
+        "number": "2",
+        "x": 24.45,
+        "y": 40.64,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 95,
+        "number": "3",
+        "x": 25.85,
+        "y": 40.56,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 96,
+        "number": "4",
+        "x": 27.45,
+        "y": 40.56,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 97,
+        "number": "5",
+        "x": 29.05,
+        "y": 40.48,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 98,
+        "number": "6",
+        "x": 30.51,
+        "y": 40.14,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 99,
+        "number": "7",
+        "x": 31.91,
+        "y": 39.98,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 100,
+        "number": "8",
+        "x": 33.85,
+        "y": 39.89,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 101,
+        "number": "9",
+        "x": 41.3,
+        "y": 39.64,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 102,
+        "number": "10",
+        "x": 42.9,
+        "y": 39.48,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 103,
+        "number": "11",
+        "x": 44.3,
+        "y": 39.31,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 104,
+        "number": "12",
+        "x": 45.76,
+        "y": 39.06,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 105,
+        "number": "13",
+        "x": 47.23,
+        "y": 39.14,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 106,
+        "number": "14",
+        "x": 48.83,
+        "y": 38.89,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 107,
+        "number": "15",
+        "x": 50.36,
+        "y": 38.81,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 108,
+        "number": "16",
+        "x": 51.96,
+        "y": 38.81,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 109,
+        "number": "17",
+        "x": 53.5,
+        "y": 38.56,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 110,
+        "number": "18",
+        "x": 54.96,
+        "y": 38.48,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 111,
+        "number": "19",
+        "x": 56.43,
+        "y": 38.48,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 112,
+        "number": "20",
+        "x": 58.16,
+        "y": 38.06,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 113,
+        "number": "21",
+        "x": 59.43,
+        "y": 37.98,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 114,
+        "number": "22",
+        "x": 61.03,
+        "y": 37.98,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 115,
+        "number": "23",
+        "x": 62.76,
+        "y": 37.98,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 116,
+        "number": "24",
+        "x": 64.1,
+        "y": 37.81,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 117,
+        "number": "25",
+        "x": 65.83,
+        "y": 37.64,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 118,
+        "number": "26",
+        "x": 68.23,
+        "y": 37.98,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 119,
+        "number": "27",
+        "x": 66.53,
+        "y": 44.92,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 120,
+        "number": "28",
+        "x": 63.16,
+        "y": 44.68,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 121,
+        "number": "29",
+        "x": 60.95,
+        "y": 44.83,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 122,
+        "number": "30",
+        "x": 58.75,
+        "y": 44.83,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 123,
+        "number": "31",
+        "x": 56.49,
+        "y": 44.83,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 124,
+        "number": "32",
+        "x": 54.22,
+        "y": 45.08,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 125,
+        "number": "33",
+        "x": 51.95,
+        "y": 45.25,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 126,
+        "number": "34",
+        "x": 49.62,
+        "y": 45.5,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 127,
+        "number": "35",
+        "x": 47.29,
+        "y": 45.67,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 128,
+        "number": "36",
+        "x": 44.95,
+        "y": 45.92,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 129,
+        "number": "37",
+        "x": 42.42,
+        "y": 45.83,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 130,
+        "number": "38",
+        "x": 31.6,
+        "y": 46.75,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 131,
+        "number": "39",
+        "x": 29.02,
+        "y": 47,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 49,
+        "number": "40",
+        "x": 26.75,
+        "y": 47.08,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 203,
+        "number": "41",
+        "x": 24.53,
+        "y": 47.08,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 202,
+        "number": "42",
+        "x": 22.15,
+        "y": 47.33,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 201,
+        "number": "43",
+        "x": 19.89,
+        "y": 47.42,
+        "status": "available",
+        "stage": 3
+    },
+    {
+        "id": 50,
+        "number": "1",
+        "x": 20.22,
+        "y": 52.08,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 51,
+        "number": "2",
+        "x": 23.42,
+        "y": 51.75,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 52,
+        "number": "3",
+        "x": 24.82,
+        "y": 51.42,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 53,
+        "number": "4",
+        "x": 26.49,
+        "y": 51.5,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 54,
+        "number": "5",
+        "x": 28.02,
+        "y": 51.33,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 55,
+        "number": "6",
+        "x": 29.35,
+        "y": 51.17,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 56,
+        "number": "7",
+        "x": 30.95,
+        "y": 51.08,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 57,
+        "number": "8",
+        "x": 32.69,
+        "y": 50.83,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 58,
+        "number": "9",
+        "x": 41.79,
+        "y": 50.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 59,
+        "number": "10",
+        "x": 43.26,
+        "y": 50.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 60,
+        "number": "11",
+        "x": 44.92,
+        "y": 50.12,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 61,
+        "number": "12",
+        "x": 46.32,
+        "y": 49.95,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 62,
+        "number": "13",
+        "x": 47.79,
+        "y": 49.7,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 63,
+        "number": "14",
+        "x": 49.39,
+        "y": 49.87,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 64,
+        "number": "15",
+        "x": 50.92,
+        "y": 49.7,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 65,
+        "number": "16",
+        "x": 52.39,
+        "y": 49.45,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 66,
+        "number": "17",
+        "x": 53.92,
+        "y": 49.04,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 67,
+        "number": "18",
+        "x": 55.52,
+        "y": 49.12,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 68,
+        "number": "19",
+        "x": 56.86,
+        "y": 48.87,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 69,
+        "number": "20",
+        "x": 58.46,
+        "y": 48.79,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 70,
+        "number": "21",
+        "x": 60.12,
+        "y": 48.79,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 71,
+        "number": "22",
+        "x": 61.59,
+        "y": 48.79,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 72,
+        "number": "23",
+        "x": 62.99,
+        "y": 48.7,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 73,
+        "number": "24",
+        "x": 64.66,
+        "y": 48.54,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 74,
+        "number": "25",
+        "x": 66.19,
+        "y": 48.45,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 75,
+        "number": "26",
+        "x": 67.72,
+        "y": 48.54,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 76,
+        "number": "27",
+        "x": 69.32,
+        "y": 48.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 77,
+        "number": "28",
+        "x": 70.99,
+        "y": 48.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 78,
+        "number": "29",
+        "x": 74.8,
+        "y": 54.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 79,
+        "number": "30",
+        "x": 71.87,
+        "y": 55.12,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 80,
+        "number": "31",
+        "x": 69.47,
+        "y": 55.12,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 81,
+        "number": "32",
+        "x": 67.27,
+        "y": 55.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 82,
+        "number": "33",
+        "x": 64.87,
+        "y": 55.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 83,
+        "number": "34",
+        "x": 62.6,
+        "y": 55.45,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 84,
+        "number": "35",
+        "x": 60.4,
+        "y": 55.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 85,
+        "number": "36",
+        "x": 58.13,
+        "y": 55.7,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 86,
+        "number": "37",
+        "x": 55.73,
+        "y": 55.95,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 87,
+        "number": "38",
+        "x": 53.2,
+        "y": 56.04,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 88,
+        "number": "39",
+        "x": 51.2,
+        "y": 56.04,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 89,
+        "number": "40",
+        "x": 49,
+        "y": 56.29,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 90,
+        "number": "41",
+        "x": 46.35,
+        "y": 56.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 91,
+        "number": "42",
+        "x": 34.95,
+        "y": 57.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 92,
+        "number": "43",
+        "x": 32.75,
+        "y": 57.62,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 199,
+        "number": "44",
+        "x": 30.42,
+        "y": 57.87,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 198,
+        "number": "45",
+        "x": 28.35,
+        "y": 57.95,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 197,
+        "number": "46",
+        "x": 26.15,
+        "y": 57.95,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 48,
+        "number": "47",
+        "x": 23.69,
+        "y": 57.37,
+        "status": "available",
+        "stage": 2
+    },
+    {
+        "id": 1,
+        "number": "1",
+        "x": 27.69,
+        "y": 61.95,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 2,
+        "number": "2",
+        "x": 29.89,
+        "y": 61.7,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 3,
+        "number": "3",
+        "x": 31.42,
+        "y": 61.7,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 4,
+        "number": "4",
+        "x": 32.95,
+        "y": 61.62,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 5,
+        "number": "5",
+        "x": 34.49,
+        "y": 61.45,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 6,
+        "number": "6",
+        "x": 35.95,
+        "y": 61.45,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 7,
+        "number": "7",
+        "x": 46.94,
+        "y": 61.27,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 8,
+        "number": "8",
+        "x": 48.21,
+        "y": 60.94,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 9,
+        "number": "9",
+        "x": 49.74,
+        "y": 60.77,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 10,
+        "number": "10",
+        "x": 51.34,
+        "y": 60.52,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 11,
+        "number": "11",
+        "x": 52.88,
+        "y": 60.52,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 12,
+        "number": "12",
+        "x": 54.34,
+        "y": 60.61,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 13,
+        "number": "13",
+        "x": 55.88,
+        "y": 60.36,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 14,
+        "number": "14",
+        "x": 57.41,
+        "y": 60.44,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 15,
+        "number": "15",
+        "x": 59.08,
+        "y": 60.36,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 16,
+        "number": "16",
+        "x": 60.74,
+        "y": 60.27,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 17,
+        "number": "17",
+        "x": 62.08,
+        "y": 60.19,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 18,
+        "number": "18",
+        "x": 63.61,
+        "y": 59.94,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 19,
+        "number": "19",
+        "x": 65.14,
+        "y": 59.86,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 20,
+        "number": "20",
+        "x": 66.61,
+        "y": 59.69,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 21,
+        "number": "21",
+        "x": 68.14,
+        "y": 59.52,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 22,
+        "number": "22",
+        "x": 69.68,
+        "y": 59.36,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 23,
+        "number": "23",
+        "x": 71.34,
+        "y": 59.52,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 24,
+        "number": "24",
+        "x": 72.88,
+        "y": 59.44,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 25,
+        "number": "25",
+        "x": 74.41,
+        "y": 59.27,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 26,
+        "number": "26",
+        "x": 75.88,
+        "y": 59.11,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 27,
+        "number": "27",
+        "x": 77.22,
+        "y": 59,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 28,
+        "number": "28",
+        "x": 84.47,
+        "y": 65.33,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 29,
+        "number": "29",
+        "x": 81.62,
+        "y": 65.58,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 30,
+        "number": "30",
+        "x": 79.16,
+        "y": 65.5,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 31,
+        "number": "31",
+        "x": 76.6,
+        "y": 65.67,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 32,
+        "number": "32",
+        "x": 74.49,
+        "y": 65.67,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 33,
+        "number": "33",
+        "x": 72.09,
+        "y": 65.92,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 34,
+        "number": "34",
+        "x": 69.96,
+        "y": 66.08,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 35,
+        "number": "35",
+        "x": 67.82,
+        "y": 66.08,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 36,
+        "number": "36",
+        "x": 65.29,
+        "y": 66.33,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 37,
+        "number": "37",
+        "x": 63.02,
+        "y": 66.5,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 38,
+        "number": "38",
+        "x": 60.76,
+        "y": 66.5,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 39,
+        "number": "39",
+        "x": 58.09,
+        "y": 66.67,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 40,
+        "number": "40",
+        "x": 55.96,
+        "y": 66.67,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 41,
+        "number": "41",
+        "x": 53.56,
+        "y": 67.08,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 42,
+        "number": "42",
+        "x": 51.42,
+        "y": 67.17,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 43,
+        "number": "43",
+        "x": 49.29,
+        "y": 67.25,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 44,
+        "number": "44",
+        "x": 46.89,
+        "y": 67.5,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 45,
+        "number": "45",
+        "x": 37.56,
+        "y": 67.92,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 46,
+        "number": "46",
+        "x": 35.56,
+        "y": 68,
+        "status": "available",
+        "stage": 1
+    },
+    {
+        "id": 47,
+        "number": "47",
+        "x": 31.16,
+        "y": 67.67,
+        "status": "available",
+        "stage": 1
+    }
+]

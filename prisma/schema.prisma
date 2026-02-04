@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Lot {
+  id                     Int       @id @default(autoincrement())
+  number                 String?
+  stage                  Int?
+  area_m2                Float?
+  price_total_clp        Int?
+  reservation_amount_clp Int?
+  status                 String    @default("available") // available, reserved, sold
+  reserved_until         DateTime?
+  reserved_at            DateTime?
+  reserved_by            String?
+  order_id               String?
+  updated_at             DateTime? @updatedAt
+  
+  // Relations
+  reservations           Reservation[]
+  locks                  LotLock[]
+  transactions           WebpayTransaction[]
+}
+
+model Reservation {
+  id          String    @id @default(uuid())
+  lot_id      Int
+  name        String
+  email       String
+  phone       String
+  rut         String?
+  address     String?
+  folio       String?
+  status      String    // pending_payment, paid, canceled
+  session_id  String?
+  expires_at  DateTime?
+  created_at  DateTime  @default(now())
+  
+  // Relations
+  lot         Lot                 @relation(fields: [lot_id], references: [id])
+  transactions WebpayTransaction[]
+}
+
+model LotLock {
+  lot_id       Int      @id
+  locked_by    String
+  locked_until DateTime
+  created_at   DateTime @default(now())
+  
+  lot          Lot      @relation(fields: [lot_id], references: [id])
+}
+
+model WebpayTransaction {
+  id                  String    @id @default(uuid())
+  token               String    @unique
+  buy_order           String
+  amount_clp          Int
+  status              String?
+  response_code       Int?
+  transaction_date    DateTime?
+  authorization_code  String?
+  payment_type_code   String?
+  installments_number Int?
+  processed_at        DateTime?
+  created_at          DateTime  @default(now())
+  
+  // Relations
+  reservation_id      String
+  lot_id              Int
+  reservation         Reservation @relation(fields: [reservation_id], references: [id])
+  lot                 Lot         @relation(fields: [lot_id], references: [id])
+}

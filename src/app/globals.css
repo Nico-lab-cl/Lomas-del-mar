@@ -1,0 +1,471 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    overflow-y: scroll;
+  }
+
+  :root {
+    --header-height: 88px;
+    --background: 210 20% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 189 28% 29%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 189 28% 29%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 189 28% 29%;
+
+    --radius: 0.75rem;
+
+    /* Lot status colors */
+    --lot-available: 189 28% 29%;
+    --lot-reserved: 38 92% 50%;
+    --lot-sold: 0 84% 60%;
+    --lot-selected: 217 91% 60%;
+
+    /* Header dark */
+    --header-bg: 222 47% 11%;
+    --header-foreground: 0 0% 100%;
+
+    /* Session banner */
+    --session-bg: 217 33% 17%;
+    --session-urgent: 0 84% 60%;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 189 28% 29%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 189 28% 29%;
+  }
+
+  /* Typography - Elegant hierarchy */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-outfit), sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  body {
+    font-family: var(--font-inter), sans-serif;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .lot-marker {
+    @apply flex items-center justify-center rounded-full text-white font-semibold text-xs shadow-lg transition-all duration-200 cursor-pointer;
+    width: 32px;
+    height: 32px;
+  }
+
+  .lot-marker-responsive {
+    @apply flex items-center justify-center rounded-full text-white font-bold shadow-lg transition-all duration-200 cursor-pointer;
+    width: 18px;
+    height: 18px;
+    font-size: 7px;
+    animation: lot-pulse 3s ease-in-out infinite;
+  }
+
+  /* Smaller size for lots 1-27 */
+  .lot-marker-small {
+    width: 14px;
+    height: 14px;
+    font-size: 6px;
+  }
+
+  /* Phone */
+  @media (max-width: 480px) {
+    .lot-marker-responsive {
+      width: 10px;
+      height: 10px;
+      font-size: 4px;
+    }
+
+    .lot-marker-small {
+      width: 7px;
+      height: 7px;
+      font-size: 3px;
+    }
+  }
+
+  /* Tablet */
+  @media (min-width: 768px) {
+    .lot-marker-responsive {
+      width: 20px;
+      height: 20px;
+      font-size: 8px;
+    }
+
+    .lot-marker-small {
+      width: 16px;
+      height: 16px;
+      font-size: 7px;
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 1024px) {
+    .lot-marker-responsive {
+      width: 32px;
+      height: 32px;
+      font-size: 11px;
+    }
+
+    .lot-marker-small {
+      width: 22px;
+      height: 22px;
+      font-size: 8px;
+    }
+  }
+
+  @keyframes lot-pulse {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.92;
+    }
+  }
+
+  @keyframes lot-jump {
+    0% {
+      --lot-jump-y: 0px;
+    }
+
+    55% {
+      --lot-jump-y: -6px;
+    }
+
+    100% {
+      --lot-jump-y: -4px;
+    }
+  }
+
+  @keyframes lot-jump-click {
+    0% {
+      --lot-jump-y: 0px;
+    }
+
+    100% {
+      --lot-jump-y: -8px;
+    }
+  }
+
+  .lot-marker-available {
+    @apply bg-primary hover:bg-primary/90 hover:scale-105;
+  }
+
+  .lot-marker-reserved {
+    @apply bg-amber-500 cursor-not-allowed;
+  }
+
+  .lot-marker-sold {
+    @apply bg-red-500 cursor-not-allowed;
+  }
+
+  .lot-marker-selected {
+    @apply bg-blue-500 ring-4 ring-blue-200 scale-110;
+  }
+
+  .lot-marker-jumpable {
+    --lot-jump-y: 0px;
+  }
+
+  .lot-marker-jumpable:hover {
+    --lot-jump-y: -4px;
+    animation: lot-jump 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .lot-marker-jumpable:active {
+    --lot-jump-y: -8px;
+    animation: lot-jump-click 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .status-card {
+    @apply bg-card rounded-xl border border-border p-5 shadow-sm;
+  }
+
+  .countdown-banner {
+    @apply bg-[hsl(var(--session-bg))] text-white py-3 px-6;
+  }
+
+  .countdown-urgent {
+    @apply bg-[hsl(var(--session-urgent))];
+  }
+
+  .countdown-pulse {
+    animation: countdown-glow 1s ease-in-out infinite;
+  }
+
+  .countdown-timer-urgent {
+    animation: timer-pulse 0.5s ease-in-out infinite;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
+  }
+
+  .countdown-blurred {
+    @apply opacity-50 blur-[2px];
+    pointer-events: none;
+  }
+
+  .progress-track {
+    @apply h-4 bg-muted rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full transition-all duration-500;
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--lot-available)));
+  }
+
+  .progress-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.5) 50%,
+        transparent 100%);
+    background-size: 200% 100%;
+    animation: shimmer 10s ease-in-out infinite;
+  }
+
+  /* Logo glow effect for waiting room */
+  .logo-glow {
+    animation: logo-pulse 2s ease-in-out infinite;
+  }
+
+  /* Custom Leaflet Tooltip styles */
+  .leaflet-tooltip.lot-number-tooltip {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .leaflet-marker-icon.marker-label-icon {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .leaflet-tooltip-pane .leaflet-tooltip {
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+    border: 1px solid hsl(var(--border));
+    border-radius: var(--radius);
+    padding: 0;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  .leaflet-tooltip-top:before {
+    border-top-color: hsl(var(--border)) !important;
+  }
+}
+
+@keyframes shimmer {
+
+  0%,
+  100% {
+    background-position: 200% 0;
+  }
+
+  50% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes logo-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px hsl(160 84% 39% / 0.4), 0 0 40px hsl(160 84% 39% / 0.2);
+  }
+
+  50% {
+    box-shadow: 0 0 30px hsl(160 84% 39% / 0.6), 0 0 60px hsl(160 84% 39% / 0.4);
+  }
+}
+
+@keyframes countdown-glow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 10px hsl(0 84% 60% / 0.5), 0 0 20px hsl(0 84% 60% / 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 20px hsl(0 84% 60% / 0.8), 0 0 40px hsl(0 84% 60% / 0.5);
+  }
+}
+
+@keyframes timer-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+
+  14% {
+    transform: scale(1.08);
+  }
+
+  28% {
+    transform: scale(1);
+  }
+
+  42% {
+    transform: scale(1.08);
+  }
+
+  70% {
+    transform: scale(1);
+  }
+}
+
+.countdown-heartbeat {
+  animation: heartbeat 2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-[#4EA898] bg-clip-text text-transparent;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-pulse-ring {
+    animation: pulse-ring 2s ease-out infinite;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.5s ease-out;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
