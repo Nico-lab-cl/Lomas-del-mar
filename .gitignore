@@ -41,3 +41,12 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+# User requested ignores
+check_duplicate_ids.js
+detect_duplicates.js
+'Lomas del mar - Reservas en vivo ? FUNCIONANDO (3).json'
+'Lomas del mar - Reservas en vivo ? FUNCIONANDO (4).json'
+Lot.csv
+Reservation.csv
+WebpayTransaction.csv
