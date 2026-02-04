@@ -115,26 +115,14 @@ export default function Home() {
         const nextStatus: Lot['status'] =
           remoteStatus === 'sold' ? 'sold' : isExpiredReserved ? 'available' : remoteStatus ?? 'available';
 
-        // HARDCODE FIX: Force explicit Stage mapping based on ID ranges (Source of Truth)
-        let hardcodedStage = row?.stage ?? lot.stage;
-
-        // Stage 1: 1-47
-        if (lot.id >= 1 && lot.id <= 47) hardcodedStage = 1;
-
-        // Stage 2: 50-92 + Special Cases
-        if ((lot.id >= 50 && lot.id <= 92) || [48, 197, 198, 199].includes(lot.id)) hardcodedStage = 2;
-
-        // Stage 3: 93-131 + Special Cases
-        if ((lot.id >= 93 && lot.id <= 131) || [49, 201, 202, 203].includes(lot.id)) hardcodedStage = 3;
-
-        // Stage 4: 132-196
-        if (lot.id >= 132 && lot.id <= 196) hardcodedStage = 4;
+        // HARDCODE FIX REMOVED: Respecting DB/JSON Source of Truth
+        const stage = row?.stage ?? lot.stage;
 
         return {
           ...lot,
           // Sync Stage and Number from DB if available (Source of Truth)
-          stage: hardcodedStage,
-          displayStage: hardcodedStage, // FORCE DISPLAY TO MATCH ID RULES
+          stage: stage,
+          displayStage: stage,
           number: row?.number ?? lot.number,
           status: nextStatus,
           reservedUntil: Number.isFinite(reservedUntilMs) ? reservedUntilMs : null,
@@ -285,26 +273,14 @@ export default function Home() {
               return lot;
             }
 
-            // HARDCODE FIX: Force explicit Stage mapping based on ID ranges (Source of Truth)
-            let hardcodedStage = row?.stage ?? lot.stage;
-
-            // Stage 1: 1-47
-            if (lot.id >= 1 && lot.id <= 47) hardcodedStage = 1;
-
-            // Stage 2: 50-92 + Special Cases
-            if ((lot.id >= 50 && lot.id <= 92) || [48, 197, 198, 199].includes(lot.id)) hardcodedStage = 2;
-
-            // Stage 3: 93-131 + Special Cases
-            if ((lot.id >= 93 && lot.id <= 131) || [49, 201, 202, 203].includes(lot.id)) hardcodedStage = 3;
-
-            // Stage 4: 132-196
-            if (lot.id >= 132 && lot.id <= 196) hardcodedStage = 4;
+            // HARDCODE FIX REMOVED: Respecting DB/JSON Source of Truth
+            const stage = row?.stage ?? lot.stage;
 
             return {
               ...lot,
               // Sync Stage and Number from DB
-              stage: hardcodedStage,
-              displayStage: hardcodedStage, // FORCE DISPLAY TO MATCH ID RULES
+              stage: stage,
+              displayStage: stage,
               number: row?.number ?? lot.number,
               status: nextStatus,
               reservedUntil: nextReservedUntil,
