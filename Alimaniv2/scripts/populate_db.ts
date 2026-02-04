@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { computeLotDetailsFromId } from '../src/lib/logic';
+import { computeLotDetailsFromId } from '@/lib/logic';
 
 const prisma = new PrismaClient();
 
