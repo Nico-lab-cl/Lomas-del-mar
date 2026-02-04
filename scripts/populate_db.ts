@@ -65,7 +65,7 @@ async function populateDb() {
                     number: details.number,
                     stage: details.stage,
                     price_total_clp: details.price_total_clp || 14990000,
-                    reservation_amount_clp: 50, // FORCE 50 CLP
+                    reservation_amount_clp: 550000, // FORCE 550000 CLP
                     status: targetStatus // FORCE STATUS
                 }
             });
