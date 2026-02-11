@@ -25,5 +25,5 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 // In Docker 'standalone' server.js, this runs once per process.
 if (!globalForPrisma.prisma) {
     // Only run on fresh start
-    bootstrapDatabase(prisma).catch(err => console.error('Bootstrap failed', err));
+    // bootstrapDatabase(prisma).catch(err => console.error('Bootstrap failed', err));
 }
