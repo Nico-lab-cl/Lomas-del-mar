@@ -42,7 +42,13 @@ interface ContactFormData {
   phone: string;
   rut: string;
   rutRaw: string;
-  address: string;
+  marital_status: string;
+  profession: string;
+  nationality: string;
+  address_street: string;
+  address_number: string;
+  address_commune: string;
+  address_region: string;
 }
 
 export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTemporarilyLocked, sessionId }: LotReservationPopupProps) => {
@@ -55,7 +61,13 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
     phone: '',
     rut: '',
     rutRaw: '',
-    address: '',
+    marital_status: '',
+    profession: '',
+    nationality: 'Chilena',
+    address_street: '',
+    address_number: '',
+    address_commune: '',
+    address_region: '',
   });
   const [errors, setErrors] = useState<Partial<ContactFormData>>({});
 
@@ -101,11 +113,13 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
       newErrors.rut = 'Ingresa un RUT válido (ej: 19.405.444-7)';
     }
 
-    if (!formData.address.trim()) {
-      newErrors.address = 'La dirección es requerida';
-    } else if (formData.address.trim().length < 5) {
-      newErrors.address = 'Ingresa una dirección válida';
-    }
+    if (!formData.marital_status) newErrors.marital_status = 'El estado civil es requerido';
+    if (!formData.profession.trim()) newErrors.profession = 'La profesión es requerida';
+    if (!formData.nationality.trim()) newErrors.nationality = 'La nacionalidad es requerida';
+    if (!formData.address_street.trim()) newErrors.address_street = 'La calle es requerida';
+    if (!formData.address_number.trim()) newErrors.address_number = 'El número es requerido';
+    if (!formData.address_commune.trim()) newErrors.address_commune = 'La comuna es requerida';
+    if (!formData.address_region.trim()) newErrors.address_region = 'La región es requerida';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -144,7 +158,7 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
     const contactEmail = formData.email.trim();
     const contactPhone = formData.phone.trim();
     const contactRut = formData.rut.trim();
-    const contactAddress = formData.address.trim();
+
 
     try {
       const res = await fetch('/api/webpay/create', {
@@ -159,7 +173,13 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
           email: contactEmail,
           phone: contactPhone,
           rut: contactRut,
-          address: contactAddress,
+          marital_status: formData.marital_status,
+          profession: formData.profession,
+          nationality: formData.nationality,
+          address_street: formData.address_street,
+          address_number: formData.address_number,
+          address_commune: formData.address_commune,
+          address_region: formData.address_region,
         }),
       });
 
@@ -200,7 +220,11 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
   };
 
   const handleClose = () => {
-    setFormData({ name: '', email: '', phone: '', rut: '', rutRaw: '', address: '' });
+    setFormData({
+      name: '', email: '', phone: '', rut: '', rutRaw: '',
+      marital_status: '', profession: '', nationality: 'Chilena',
+      address_street: '', address_number: '', address_commune: '', address_region: ''
+    });
     setErrors({});
     onClose();
   };
@@ -559,25 +583,121 @@ export const LotReservationPopup = ({ lot, isOpen, onClose, onConfirm, isTempora
               {errors.rut && <p className="text-sm text-destructive animate-fade-in">{errors.rut}</p>}
             </div>
 
+            {/* Nuevos Campos Legales */}
             <div className="group space-y-2">
-              <Label htmlFor="address" className="flex items-center gap-2 text-sm">
-                <Home className="w-4 h-4 text-primary" />
-                Dirección
+              <Label htmlFor="marital_status" className="flex items-center gap-2 text-sm">
+                Estado Civil
               </Label>
-              <Input
-                id="address"
-                placeholder="Calle, número, comuna, región"
-                value={formData.address}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  setFormData({ ...formData, address: e.target.value });
-                  if (errors.address) setErrors({ ...errors, address: undefined });
+              <select
+                id="marital_status"
+                value={formData.marital_status}
+                onChange={(e) => {
+                  setFormData({ ...formData, marital_status: e.target.value });
+                  if (errors.marital_status) setErrors({ ...errors, marital_status: undefined });
                 }}
-                className={`transition-all duration-200 focus:scale-[1.01] ${errors.address ? 'border-destructive' : ''}`}
-                maxLength={180}
+                className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 focus:scale-[1.01] ${errors.marital_status ? 'border-destructive' : ''}`}
+              >
+                <option value="" disabled>Selecciona una opción</option>
+                <option value="Soltero/a">Soltero/a</option>
+                <option value="Casado/a">Casado/a</option>
+                <option value="Viudo/a">Viudo/a</option>
+                <option value="Divorciado/a">Divorciado/a</option>
+                <option value="Conviviente Civil">Conviviente Civil</option>
+              </select>
+              {errors.marital_status && <p className="text-sm text-destructive animate-fade-in">{errors.marital_status}</p>}
+            </div>
+
+            <div className="group space-y-2">
+              <Label htmlFor="profession" className="flex items-center gap-2 text-sm">Profesión u Oficio</Label>
+              <Input
+                id="profession"
+                placeholder="Ej: Ingeniero, Comerciante"
+                value={formData.profession}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  setFormData({ ...formData, profession: e.target.value });
+                  if (errors.profession) setErrors({ ...errors, profession: undefined });
+                }}
+                className={`transition-all duration-200 focus:scale-[1.01] ${errors.profession ? 'border-destructive' : ''}`}
               />
-              {errors.address && (
-                <p className="text-sm text-destructive animate-fade-in">{errors.address}</p>
-              )}
+              {errors.profession && <p className="text-sm text-destructive animate-fade-in">{errors.profession}</p>}
+            </div>
+
+            <div className="group space-y-2">
+              <Label htmlFor="nationality" className="flex items-center gap-2 text-sm">Nacionalidad</Label>
+              <Input
+                id="nationality"
+                value={formData.nationality}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  setFormData({ ...formData, nationality: e.target.value });
+                  if (errors.nationality) setErrors({ ...errors, nationality: undefined });
+                }}
+                className={`transition-all duration-200 focus:scale-[1.01] ${errors.nationality ? 'border-destructive' : ''}`}
+              />
+              {errors.nationality && <p className="text-sm text-destructive animate-fade-in">{errors.nationality}</p>}
+            </div>
+
+            <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="group space-y-2">
+                <Label htmlFor="address_street" className="flex items-center gap-2 text-sm">Calle / Pasaje</Label>
+                <Input
+                  id="address_street"
+                  placeholder="Av. Principal"
+                  value={formData.address_street}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setFormData({ ...formData, address_street: e.target.value });
+                    if (errors.address_street) setErrors({ ...errors, address_street: undefined });
+                  }}
+                  className={`transition-all duration-200 focus:scale-[1.01] ${errors.address_street ? 'border-destructive' : ''}`}
+                />
+                {errors.address_street && <p className="text-sm text-destructive animate-fade-in">{errors.address_street}</p>}
+              </div>
+
+              <div className="group space-y-2">
+                <Label htmlFor="address_number" className="flex items-center gap-2 text-sm">Número</Label>
+                <Input
+                  id="address_number"
+                  placeholder="1234"
+                  value={formData.address_number}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setFormData({ ...formData, address_number: e.target.value });
+                    if (errors.address_number) setErrors({ ...errors, address_number: undefined });
+                  }}
+                  className={`transition-all duration-200 focus:scale-[1.01] ${errors.address_number ? 'border-destructive' : ''}`}
+                />
+                {errors.address_number && <p className="text-sm text-destructive animate-fade-in">{errors.address_number}</p>}
+              </div>
+            </div>
+
+            <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="group space-y-2">
+                <Label htmlFor="address_commune" className="flex items-center gap-2 text-sm">Comuna</Label>
+                <Input
+                  id="address_commune"
+                  placeholder="Ej: Santiago"
+                  value={formData.address_commune}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setFormData({ ...formData, address_commune: e.target.value });
+                    if (errors.address_commune) setErrors({ ...errors, address_commune: undefined });
+                  }}
+                  className={`transition-all duration-200 focus:scale-[1.01] ${errors.address_commune ? 'border-destructive' : ''}`}
+                />
+                {errors.address_commune && <p className="text-sm text-destructive animate-fade-in">{errors.address_commune}</p>}
+              </div>
+
+              <div className="group space-y-2">
+                <Label htmlFor="address_region" className="flex items-center gap-2 text-sm">Región</Label>
+                <Input
+                  id="address_region"
+                  placeholder="Ej: Metropolitana"
+                  value={formData.address_region}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setFormData({ ...formData, address_region: e.target.value });
+                    if (errors.address_region) setErrors({ ...errors, address_region: undefined });
+                  }}
+                  className={`transition-all duration-200 focus:scale-[1.01] ${errors.address_region ? 'border-destructive' : ''}`}
+                />
+                {errors.address_region && <p className="text-sm text-destructive animate-fade-in">{errors.address_region}</p>}
+              </div>
             </div>
           </div>
         </div>

@@ -1,11 +1,29 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+
 const prisma = new PrismaClient();
 
-async function syncSoldLots() {
-    console.log('🔄 Sincronizando lotes...');
+async function main() {
+    console.log('🌱 Iniciando seed...');
 
-    // 1. Limpiar todo (opcional, si quieres resetear a 'available' antes de aplicar vendidos)
-    // await prisma.lot.updateMany({ data: { status: 'available' } });
+    // 1. Crear Usuario Admin
+    const hashedPassword = await bcrypt.hash('admin123', 10);
+    const admin = await prisma.user.upsert({
+        where: { email: 'admin@lomasdelmar.cl' },
+        update: {
+            password: hashedPassword,
+            role: 'ADMIN',
+        },
+        create: {
+            email: 'admin@lomasdelmar.cl',
+            name: 'Administrador',
+            password: hashedPassword,
+            role: 'ADMIN',
+        },
+    });
+    console.log('👤 Usuario Admin listo:', admin.email);
+
+    console.log('🔄 Sincronizando lotes...');
 
     // 2. Marcar Etapa 1
     await prisma.lot.updateMany({ where: { id: { in: [1, 2, 5, 6, 8, 28, 37, 42, 45, 46] } }, data: { status: 'sold' } });
@@ -20,10 +38,10 @@ async function syncSoldLots() {
     await prisma.lot.updateMany({ where: { id: { in: [156, 172, 175, 176, 196] } }, data: { status: 'sold' } });
 
     const count = await prisma.lot.count({ where: { status: 'sold' } });
-    console.log('✅ LISTO! Total actual:', count);
+    console.log('✅ LISTO! Total actual vendidos:', count);
 }
 
-syncSoldLots()
+main()
     .catch((e) => {
         console.error(e);
         process.exit(1);

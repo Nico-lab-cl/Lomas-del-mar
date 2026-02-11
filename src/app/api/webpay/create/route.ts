@@ -18,7 +18,13 @@ const createSchema = z.object({
         .string()
         .regex(/^\d{1,3}\.\d{3}\.\d{3}-[0-9Kk]$/, 'invalid_rut_format')
         .refine((v) => isValidRut(v), 'invalid_rut_dv'),
-    address: z.string().min(5),
+    marital_status: z.string().optional(),
+    profession: z.string().optional(),
+    nationality: z.string().optional(),
+    address_street: z.string().optional(),
+    address_number: z.string().optional(),
+    address_commune: z.string().optional(),
+    address_region: z.string().optional(),
 });
 
 // Constants moved inside handler to ensure runtime env vars are read correctly
@@ -36,7 +42,12 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ ok: false, error: 'invalid_payload', details: parsed.error.flatten() }, { status: 400 });
         }
 
-        const { lotId, sessionId, name, email, phone, rut, address } = parsed.data;
+        const {
+            lotId, sessionId, name, email, phone, rut,
+            marital_status, profession, nationality,
+            address_street, address_number, address_commune, address_region
+        } = parsed.data;
+
         const now = new Date();
         const expiresAt = new Date(now.getTime() + LOT_LOCK_MINUTES * 60 * 1000);
 
@@ -86,7 +97,13 @@ export async function POST(req: NextRequest) {
                     email,
                     phone,
                     rut,
-                    address,
+                    marital_status,
+                    profession,
+                    nationality: nationality || 'Chilena',
+                    address_street,
+                    address_number,
+                    address_commune,
+                    address_region,
                     folio,
                     status: 'pending_payment',
                     expires_at: expiresAt,
