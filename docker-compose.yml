@@ -1,0 +1,29 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - TBK_ENV=${TBK_ENV}
+      - TBK_API_KEY_ID=${TBK_API_KEY_ID}
+      - TBK_API_KEY_SECRET=${TBK_API_KEY_SECRET}
+      - WEBPAY_RETURN_URL=${WEBPAY_RETURN_URL}
+      - FINAL_OK_URL=${FINAL_OK_URL}
+      - FINAL_FAIL_URL=${FINAL_FAIL_URL}
+      - RESERVATION_AMOUNT_CLP=50
+      - LOT_LOCK_MINUTES=5
+      - NEXT_PUBLIC_BASE_URL=https://aliminlomasdelmar.com
+      - N8N_WEBHOOK_URL=${N8N_WEBHOOK_URL}
+      - N8N_WEBHOOK_SECRET=${N8N_WEBHOOK_SECRET}
+    volumes:
+      - ./prisma:/app/prisma
+    networks:
+      - alimin_net
+
+networks:
+  alimin_net:
+    external: true
