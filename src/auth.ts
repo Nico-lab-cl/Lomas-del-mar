@@ -64,4 +64,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return session
         },
     },
+    secret: process.env.AUTH_SECRET,
+    trustHost: true, // Specific for Easypanel/Docker behind proxy
 })
