@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 
 const prisma = new PrismaClient();
 
@@ -50,7 +50,7 @@ export async function POST(req: Request) {
         );
     } catch (error) {
         console.error('Registration error:', error);
-        if (error instanceof z.ZodError) {
+        if (error instanceof ZodError) {
             return NextResponse.json(
                 { error: 'Datos inválidos', details: error.errors },
                 { status: 400 }
