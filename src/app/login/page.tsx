@@ -83,10 +83,10 @@ export default function LoginPage() {
                         </div>
                     </div>
                     <CardTitle className="text-2xl font-bold tracking-tight text-[#36595F]">
-                        Acceso Administrativo
+                        Iniciar Sesión
                     </CardTitle>
                     <CardDescription className="text-gray-400">
-                        Ingresa tus credenciales para gestionar el proyecto
+                        Ingresa a tu cuenta para continuar
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
