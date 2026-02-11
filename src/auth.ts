@@ -10,21 +10,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     providers: [
         Credentials({
             async authorize(credentials) {
-                const parsedCredentials = z
-                    .object({ email: z.string().email(), password: z.string().min(6) })
-                    .safeParse(credentials)
+                try {
+                    const parsedCredentials = z
+                        .object({ email: z.string().email(), password: z.string().min(6) })
+                        .safeParse(credentials)
 
-                if (parsedCredentials.success) {
-                    const { email, password } = parsedCredentials.data
-                    const user = await prisma.user.findUnique({ where: { email } })
-                    if (!user) return null
+                    if (parsedCredentials.success) {
+                        const { email, password } = parsedCredentials.data
 
-                    const passwordsMatch = await bcrypt.compare(password, user.password)
-                    if (passwordsMatch) return user
+                        console.log(`[Auth] Attempting login for: ${email}`);
+
+                        const user = await prisma.user.findUnique({ where: { email } });
+                        if (!user) {
+                            console.log(`[Auth] User not found: ${email}`);
+                            return null;
+                        }
+
+                        const passwordsMatch = await bcrypt.compare(password, user.password);
+                        if (passwordsMatch) {
+                            console.log(`[Auth] Login successful for: ${email}`);
+                            return user;
+                        }
+
+                        console.log(`[Auth] Password mismatch for: ${email}`);
+                    } else {
+                        console.log("[Auth] Invalid credentials format");
+                    }
+
+                    return null;
+                } catch (error) {
+                    console.error("[Auth] Error in authorize:", error);
+                    return null;
                 }
-
-                console.log("Invalid credentials")
-                return null
             },
         }),
     ],
