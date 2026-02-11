@@ -11,7 +11,8 @@
   "prisma": {
     "seed": "npx tsx prisma/seed.ts",
     "db:resync": "npx tsx scripts/resync_db_numbers.ts",
-    "db:audit": "npx tsx scripts/audit_system.ts"
+    "db:audit": "npx tsx scripts/audit_system.ts",
+    "db:seed-prod": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
