@@ -41,9 +41,21 @@ model Reservation {
   expires_at  DateTime?
   created_at  DateTime  @default(now())
   
+  // Legal / Contract Data
+  marital_status  String?
+  profession      String?
+  nationality     String?   @default("Chilena")
+  address_street  String?
+  address_number  String?
+  address_commune String?
+  address_region  String?
+
   // Relations
   lot         Lot                 @relation(fields: [lot_id], references: [id])
   transactions WebpayTransaction[]
+
+  seller_id   String?
+  seller      User?               @relation(fields: [seller_id], references: [id])
 }
 
 model LotLock {
@@ -74,4 +86,21 @@ model WebpayTransaction {
   lot_id              Int
   reservation         Reservation @relation(fields: [reservation_id], references: [id])
   lot                 Lot         @relation(fields: [lot_id], references: [id])
+}
+
+enum Role {
+  ADMIN
+  SELLER
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(SELLER)
+  createdAt DateTime @default(now())
+
+  // Relations
+  reservations Reservation[]
 }
