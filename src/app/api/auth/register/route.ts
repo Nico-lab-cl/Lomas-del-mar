@@ -52,7 +52,7 @@ export async function POST(req: Request) {
         console.error('Registration error:', error);
         if (error instanceof ZodError) {
             return NextResponse.json(
-                { error: 'Datos inválidos', details: error.errors },
+                { error: 'Datos inválidos', details: (error as any).errors },
                 { status: 400 }
             );
         }
