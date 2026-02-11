@@ -91,6 +91,7 @@ model WebpayTransaction {
 enum Role {
   ADMIN
   SELLER
+  USER
 }
 
 model User {

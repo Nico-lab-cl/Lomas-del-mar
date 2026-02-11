@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { useSession, signOut } from 'next-auth/react';
+import Link from 'next/link';
 const logo = '/Diseño sin título.svg';
 
 interface HeaderProps {
@@ -24,6 +26,8 @@ export const Header = ({ projectName }: HeaderProps) => {
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const { data: session } = useSession();
 
   return (
     <header
@@ -53,6 +57,26 @@ export const Header = ({ projectName }: HeaderProps) => {
             <a href="#plano" className="hidden md:inline-flex">
               <Button variant="outline">Plano</Button>
             </a>
+
+            {session ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium hidden md:block">
+                  {session.user?.name?.split(' ')[0]}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => signOut({ callbackUrl: '/' })}
+                >
+                  Salir
+                </Button>
+              </div>
+            ) : (
+              <Link href="/login">
+                <Button variant="ghost" size="sm">Ingresar</Button>
+              </Link>
+            )}
+
             <div className="hidden md:flex">
               <ThemeToggle />
             </div>
@@ -66,9 +90,12 @@ export const Header = ({ projectName }: HeaderProps) => {
             <div className="md:hidden flex">
               <ThemeToggle />
             </div>
-            <a href="https://aliminspa.cl" target="_blank" rel="noopener noreferrer" className="md:hidden inline-flex">
-              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" size="sm">Portal</Button>
-            </a>
+            {/* Mobile simplified menu */}
+            {!session && (
+              <Link href="/login" className="md:hidden inline-flex">
+                <Button variant="ghost" size="sm">Ingresar</Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>

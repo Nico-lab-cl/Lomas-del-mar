@@ -125,7 +125,16 @@ export default function LoginPage() {
                         </Button>
                     </form>
                 </CardContent>
-                <CardFooter className="justify-center">
+                <CardFooter className="flex flex-col items-center gap-4">
+                    <p className="text-sm text-gray-400">
+                        ¿No tienes cuenta?{' '}
+                        <span
+                            onClick={() => router.push('/register')}
+                            className="text-[#36595F] hover:text-[#2a454a] cursor-pointer font-semibold"
+                        >
+                            Regístrate aquí
+                        </span>
+                    </p>
                     <p className="text-xs text-gray-500">
                         © 2024 Lomas del Mar. Todos los derechos reservados.
                     </p>
