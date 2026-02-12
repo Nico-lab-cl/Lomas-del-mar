@@ -71,7 +71,7 @@ export const Header = ({ projectName }: HeaderProps) => {
             </div>
           </Link>
 
-          <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-start gap-2 md:gap-4">
 
 
             {session ? (
