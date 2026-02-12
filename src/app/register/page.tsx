@@ -66,7 +66,10 @@ export default function RegisterPage() {
                     form.setError('email', { message: 'El correo electrónico ya está registrado' });
                     throw new Error('El correo electrónico ya está registrado');
                 }
-                throw new Error(result.error || 'Error al registrarse');
+                const errorMessage = result.details
+                    ? `${result.error}: ${result.details}`
+                    : (result.error || 'Error al registrarse');
+                throw new Error(errorMessage);
             }
 
             toast({
