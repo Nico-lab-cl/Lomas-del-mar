@@ -29,9 +29,11 @@ export async function POST(req: Request) {
             .sign(secret);
 
         // 3. Construct the Reset Link
-        // We need the base URL. In production, this should be an ENV var or constructed from headers.
-        // For now, let's assume standard deployment or localhost.
-        const baseUrl = process.env.NEXTAUTH_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000";
+        // Priority: NEXTAUTH_URL env var -> Request Host header -> Localhost fallback
+        const protocol = req.headers.get("x-forwarded-proto") || "http";
+        const host = req.headers.get("host");
+        const baseUrl = process.env.NEXTAUTH_URL || `${protocol}://${host}`;
+
         const resetLink = `${baseUrl}/reset-password?token=${token}`;
 
         // 4. Send to n8n Webhook
