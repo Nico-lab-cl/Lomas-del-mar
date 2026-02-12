@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 
@@ -126,6 +127,14 @@ export default function LoginPage() {
                             {errors.password && (
                                 <p className="text-sm text-red-400">{errors.password.message}</p>
                             )}
+                        </div>
+                        <div className="flex justify-end">
+                            <Link
+                                href="/forgot-password"
+                                className="text-xs text-[#36595F] hover:text-[#2a454a] hover:underline"
+                            >
+                                ¿Olvidaste tu contraseña?
+                            </Link>
                         </div>
                         <Button
                             type="submit"
