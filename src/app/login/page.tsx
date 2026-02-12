@@ -55,7 +55,17 @@ export default function LoginPage() {
                 setIsLoading(false);
             } else {
                 toast.success('Inicio de sesión exitoso');
-                router.push('/admin/dashboard');
+
+                // Fetch session to check role
+                const response = await fetch('/api/auth/session');
+                const session = await response.json();
+
+                if (session?.user?.role === 'ADMIN') {
+                    router.push('/admin/dashboard');
+                } else {
+                    router.push('/dashboard');
+                }
+
                 router.refresh();
             }
         } catch (error) {
