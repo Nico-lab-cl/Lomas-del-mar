@@ -26,7 +26,13 @@ export default function UserDashboard() {
     useEffect(() => {
         if (status === "authenticated") {
             fetch("/api/user/reservations")
-                .then((res) => res.json())
+                .then(async (res) => {
+                    if (!res.ok) {
+                        const errorData = await res.json().catch(() => ({}));
+                        throw new Error(errorData.details || errorData.error || `Error ${res.status}`);
+                    }
+                    return res.json();
+                })
                 .then((data) => {
                     setReservations(data);
                     setLoading(false);
@@ -34,6 +40,7 @@ export default function UserDashboard() {
                 .catch((err) => {
                     console.error("Failed to fetch reservations", err);
                     setLoading(false);
+                    // Could set an error state here to show in UI
                 });
         } else if (status === "unauthenticated") {
             setLoading(false);
@@ -92,8 +99,8 @@ export default function UserDashboard() {
                                         <div className="flex justify-between items-center border-b pb-2">
                                             <span className="font-medium text-[#36595F]">Estado:</span>
                                             <span className={`px-2 py-1 rounded text-xs font-bold ${res.status === 'paid' ? 'bg-green-100 text-green-800' :
-                                                    res.status === 'pending_payment' ? 'bg-yellow-100 text-yellow-800' :
-                                                        'bg-gray-100 text-gray-800'
+                                                res.status === 'pending_payment' ? 'bg-yellow-100 text-yellow-800' :
+                                                    'bg-gray-100 text-gray-800'
                                                 }`}>
                                                 {res.status === 'paid' ? 'PAGADO' : res.status.toUpperCase()}
                                             </span>

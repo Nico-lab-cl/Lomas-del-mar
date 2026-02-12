@@ -41,6 +41,6 @@ export async function GET() {
         return NextResponse.json(reservations);
     } catch (error) {
         console.error("Error fetching user reservations:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+        return NextResponse.json({ error: "Internal Server Error", details: error instanceof Error ? error.message : String(error) }, { status: 500 });
     }
 }
