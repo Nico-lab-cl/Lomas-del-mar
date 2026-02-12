@@ -55,7 +55,10 @@ model Reservation {
   transactions WebpayTransaction[]
 
   seller_id   String?
-  seller      User?               @relation(fields: [seller_id], references: [id])
+  seller      User?               @relation("SellerReservations", fields: [seller_id], references: [id])
+
+  buyer_id    String?
+  buyer       User?               @relation("BuyerReservations", fields: [buyer_id], references: [id])
 }
 
 model LotLock {
@@ -103,5 +106,6 @@ model User {
   createdAt DateTime @default(now())
 
   // Relations
-  reservations Reservation[]
+  sales     Reservation[] @relation("SellerReservations")
+  purchases Reservation[] @relation("BuyerReservations")
 }
