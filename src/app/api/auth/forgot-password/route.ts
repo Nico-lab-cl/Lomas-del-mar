@@ -17,9 +17,7 @@ export async function POST(req: Request) {
         });
 
         if (!user) {
-            // For security, do not reveal if user does not exist.
-            // We'll simulate a success response slightly delayed or just return ok.
-            return NextResponse.json({ success: true, message: "If account exists, email sent" });
+            return NextResponse.json({ error: "El correo no está registrado en nuestra base de datos" }, { status: 404 });
         }
 
         // 2. Generate a secure, short-lived token (15 mins)

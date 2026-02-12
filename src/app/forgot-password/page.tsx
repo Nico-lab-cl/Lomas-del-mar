@@ -51,6 +51,11 @@ export default function ForgotPasswordPage() {
 
             if (!response.ok) {
                 const errorData = await response.json();
+                if (response.status === 404) {
+                    toast.error(errorData.error); // "El correo no está registrado..."
+                    setIsLoading(false);
+                    return;
+                }
                 throw new Error(errorData.error || "Error al enviar solicitud");
             }
 
