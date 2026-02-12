@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 
 export function BackToSiteButton() {
     return (
-        <div className="fixed bottom-4 right-4 z-50">
+        <div className="fixed top-24 left-4 z-50">
             <Link href="/">
                 <Button
                     variant="secondary"

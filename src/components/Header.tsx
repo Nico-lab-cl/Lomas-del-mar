@@ -169,8 +169,13 @@ export const Header = ({ projectName }: HeaderProps) => {
               </DropdownMenu>
             ) : (
               <Link href="/login">
-                <Button variant="default" size="sm" className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium shadow-sm">
-                  Ingreso Vendedores / Clientes
+                <Button
+                  variant="default"
+                  size="sm"
+                  className="h-auto py-1 px-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg hover:shadow-xl transition-all border-0 flex flex-col items-start gap-0.5"
+                >
+                  <span className="font-bold text-sm leading-none">Iniciar Sesión</span>
+                  <span className="text-[10px] font-normal opacity-90 leading-none">Registrarse</span>
                 </Button>
               </Link>
             )}
