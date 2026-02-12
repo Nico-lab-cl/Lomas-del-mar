@@ -20,10 +20,16 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
                         console.log(`[Auth] Attempting login for: ${email}`);
 
-                        const user = await prisma.user.findUnique({ where: { email } });
                         if (!user) {
                             console.log(`[Auth] User not found: ${email}`);
                             return null;
+                        }
+
+                        if (!user.emailVerified) {
+                            console.log(`[Auth] User not verified: ${email}`);
+                            // We can throw an error to be caught by the frontend, or return null.
+                            // Throwing allows specific error messages.
+                            throw new Error("Por favor verifica tu correo electrónico antes de iniciar sesión.");
                         }
 
                         const passwordsMatch = await bcrypt.compare(password, user.password);

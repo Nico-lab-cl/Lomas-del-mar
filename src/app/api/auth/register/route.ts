@@ -61,17 +61,22 @@ export async function POST(req: Request) {
         // 3. Send to n8n Webhook
         const webhookUrl = "https://n8n-n8n.yszha2.easypanel.host/webhook/6014ee07-0470-4a07-aa94-2e5266bd9a03";
 
-        // Non-blocking fetch to avoid delaying response
-        fetch(webhookUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: user.email,
-                name: user.name,
-                verificationLink,
-                timestamp: new Date().toISOString(),
-            }),
-        }).catch(err => console.error("Failed to send verification email webhook:", err));
+        // Blocking fetch to ensure execution in serverless environment
+        try {
+            await fetch(webhookUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: user.email,
+                    name: user.name,
+                    verificationLink,
+                    timestamp: new Date().toISOString(),
+                }),
+            });
+        } catch (webhookError) {
+            console.error("Failed to send verification email webhook:", webhookError);
+            // We don't fail the registration, but we log the error
+        }
 
         // -------------------------------
 

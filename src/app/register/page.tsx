@@ -36,6 +36,7 @@ export default function RegisterPage() {
     const { toast } = useToast();
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const form = useForm<RegisterFormData>({
         resolver: zodResolver(registerSchema),
@@ -73,16 +74,13 @@ export default function RegisterPage() {
                 throw new Error(errorMessage);
             }
 
+            // Instead of redirecting, we show a success state
+            setIsSuccess(true);
             toast({
-                title: "¡Bienvenido!",
-                description: "Tu cuenta ha sido creada exitosamente.",
+                title: "¡Cuenta creada!",
+                description: "Revisa tu correo para verificar tu cuenta.",
                 className: "bg-[#36595F] text-white border-none",
             });
-
-            // Small delay for UX
-            setTimeout(() => {
-                router.push('/login');
-            }, 1000);
 
         } catch (error) {
             toast({
@@ -94,6 +92,30 @@ export default function RegisterPage() {
             setIsLoading(false);
         }
     };
+
+    if (isSuccess) {
+        return (
+            <div className="min-h-screen flex w-full items-center justify-center bg-[#FDF9F3] p-4">
+                <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl space-y-6 text-center">
+                    <div className="mx-auto w-16 h-16 bg-[#36595F]/10 rounded-full flex items-center justify-center">
+                        <Mail className="h-8 w-8 text-[#36595F]" />
+                    </div>
+                    <div className="space-y-2">
+                        <h2 className="text-2xl font-bold text-[#36595F]">¡Cuenta creada!</h2>
+                        <p className="text-muted-foreground">
+                            Hemos enviado un enlace de verificación a tu correo electrónico. Por favor revisa tu bandeja de entrada (y spam) para activar tu cuenta.
+                        </p>
+                    </div>
+                    <Button
+                        onClick={() => router.push('/login')}
+                        className="w-full bg-[#36595F] hover:bg-[#2A464B] text-white"
+                    >
+                        Ir al Login
+                    </Button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen flex w-full">
