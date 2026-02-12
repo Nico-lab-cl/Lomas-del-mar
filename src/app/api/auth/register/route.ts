@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { z, ZodError } from 'zod';
+import { Role } from '@prisma/client';
 
 const registerSchema = z.object({
     name: z.string().min(2),
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
                 name,
                 email,
                 password: hashedPassword,
-                role: 'USER',
+                role: Role.USER,
             },
         });
 
@@ -55,7 +56,7 @@ export async function POST(req: Request) {
             );
         }
         return NextResponse.json(
-            { error: 'Error interno del servidor' },
+            { error: 'Error interno del servidor', details: error instanceof Error ? error.message : String(error) },
             { status: 500 }
         );
     }
