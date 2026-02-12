@@ -23,21 +23,21 @@ interface HeaderProps {
 }
 
 export const Header = ({ projectName }: HeaderProps) => {
-  const [isVisible, setIsVisible] = useState(false);
+  // const [isVisible, setIsVisible] = useState(false); // Removed for always-visible header
   const { data: session } = useSession();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      // Show header after scrolling past the hero (viewport height)
-      const scrolled = window.scrollY > window.innerHeight - 100;
-      setIsVisible(scrolled);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     // Show header after scrolling past the hero (viewport height)
+  //     const scrolled = window.scrollY > window.innerHeight - 100;
+  //     setIsVisible(scrolled);
+  //   };
 
-    window.addEventListener('scroll', handleScroll);
-    handleScroll(); // Check initial state
+  //   window.addEventListener('scroll', handleScroll);
+  //   handleScroll(); // Check initial state
 
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, []);
 
   const getInitials = (name: string) => {
     return name
@@ -50,8 +50,7 @@ export const Header = ({ projectName }: HeaderProps) => {
 
   return (
     <header
-      className={`bg-card/95 backdrop-blur-md border-b border-border fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'
-        }`}
+      className="bg-card/95 backdrop-blur-md border-b border-border fixed top-0 left-0 right-0 z-50 transition-none"
       style={{ height: 'var(--header-height)' }}
     >
       <div className="container mx-auto px-4 h-full flex items-center">
