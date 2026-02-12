@@ -12,6 +12,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/ui/password-input";
 import {
     Card,
     CardContent,
@@ -88,9 +89,8 @@ function ResetPasswordForm() {
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
                 <Label htmlFor="password">Nueva Contraseña</Label>
-                <Input
+                <PasswordInput
                     id="password"
-                    type="password"
                     className="bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-[#36595F]"
                     {...register("password")}
                 />
@@ -101,9 +101,8 @@ function ResetPasswordForm() {
 
             <div className="space-y-2">
                 <Label htmlFor="confirmPassword">Confirmar Contraseña</Label>
-                <Input
+                <PasswordInput
                     id="confirmPassword"
-                    type="password"
                     className="bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-[#36595F]"
                     {...register("confirmPassword")}
                 />

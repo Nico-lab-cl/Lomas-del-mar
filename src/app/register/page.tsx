@@ -177,9 +177,8 @@ export default function RegisterPage() {
                                         <FormLabel className="text-[#36595F]">Contraseña</FormLabel>
                                         <FormControl>
                                             <div className="relative">
-                                                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                                                <Input
-                                                    type="password"
+                                                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground z-10" />
+                                                <PasswordInput
                                                     placeholder="******"
                                                     className="pl-10 border-[#36595F]/20 focus-visible:ring-[#36595F] bg-white/50"
                                                     {...field}
@@ -198,9 +197,8 @@ export default function RegisterPage() {
                                         <FormLabel className="text-[#36595F]">Confirmar Contraseña</FormLabel>
                                         <FormControl>
                                             <div className="relative">
-                                                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                                                <Input
-                                                    type="password"
+                                                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground z-10" />
+                                                <PasswordInput
                                                     placeholder="******"
                                                     className="pl-10 border-[#36595F]/20 focus-visible:ring-[#36595F] bg-white/50"
                                                     {...field}

@@ -11,6 +11,7 @@ import { signIn } from 'next-auth/react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Label } from '@/components/ui/label';
 import {
     Card,
@@ -118,9 +119,8 @@ export default function LoginPage() {
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="password">Contraseña</Label>
-                            <Input
+                            <PasswordInput
                                 id="password"
-                                type="password"
                                 className="bg-white/5 border-white/10 text-white placeholder:text-gray-500 focus:border-[#36595F]"
                                 {...register('password')}
                             />
