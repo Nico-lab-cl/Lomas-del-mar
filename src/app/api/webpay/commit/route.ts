@@ -88,6 +88,54 @@ async function handleCommitRequest(req: NextRequest) {
                 where: { lot_id: txRow.lot_id }
             });
 
+            // ------------------------------------------------------------------
+            // AUTO-REGISTRATION / LINKING LOGIC
+            // ------------------------------------------------------------------
+            let generatedPassword: string | null = null;
+            let isNewUser = false;
+
+            try {
+                const buyerEmail = txRow.reservation.email;
+                const buyerName = txRow.reservation.name;
+
+                let user = await prisma.user.findUnique({
+                    where: { email: buyerEmail }
+                });
+
+                if (!user) {
+                    // Create new user
+                    const temporaryPassword = Math.random().toString(36).slice(-8);
+                    generatedPassword = temporaryPassword;
+                    const hashedPassword = await import('bcryptjs').then(bcrypt => bcrypt.hash(temporaryPassword, 10));
+
+                    console.log(`[AutoRegister] Creating new user for: ${buyerEmail}`);
+
+                    user = await prisma.user.create({
+                        data: {
+                            email: buyerEmail,
+                            name: buyerName,
+                            password: hashedPassword,
+                            role: 'USER',
+                        }
+                    });
+
+                    isNewUser = true;
+                    console.log(`[AutoRegister] CREDENTIALS FOR ${buyerEmail}: Password: ${generatedPassword}`);
+                } else {
+                    console.log(`[AutoRegister] Linking purchase to existing user: ${buyerEmail}`);
+                }
+
+                // Link Reservation to User
+                await prisma.reservation.update({
+                    where: { id: txRow.reservation_id },
+                    data: { buyer_id: user.id }
+                });
+
+            } catch (regError) {
+                console.error('[AutoRegister] Failed to link/create user:', regError);
+            }
+            // ------------------------------------------------------------------
+
             // Construct detailed payload for N8N using REAL DB data
             // We avoid computeLotDetailsFromId because DB IDs might not match hardcoded ranges
             const lot = txRow.lot;
@@ -120,6 +168,11 @@ async function handleCommitRequest(req: NextRequest) {
                 installments_number: String(commitRes.installments_number),
 
                 lot_price_label: lot.price_total_clp ? '' : 'Consultar',
+
+                // New User Credentials for Email (Handled by n8n)
+                user_is_new: isNewUser,
+                user_temp_password: generatedPassword || '',
+                login_url: `${process.env.NEXTAUTH_URL}/login`
             };
 
             // Trigger N8N (Non-blocking)
@@ -155,51 +208,6 @@ async function handleCommitRequest(req: NextRequest) {
             } else {
                 console.warn('[n8n] N8N_WEBHOOK_URL not configured, skipping webhook', { reservationId: txRow.reservation_id });
             }
-
-            // ------------------------------------------------------------------
-            // AUTO-REGISTRATION / LINKING LOGIC
-            // ------------------------------------------------------------------
-            try {
-                const buyerEmail = txRow.reservation.email;
-                const buyerName = txRow.reservation.name;
-
-                let user = await prisma.user.findUnique({
-                    where: { email: buyerEmail }
-                });
-
-                if (!user) {
-                    // Create new user
-                    const temporaryPassword = Math.random().toString(36).slice(-8);
-                    const hashedPassword = await import('bcryptjs').then(bcrypt => bcrypt.hash(temporaryPassword, 10));
-
-                    console.log(`[AutoRegister] Creating new user for: ${buyerEmail}`);
-
-                    user = await prisma.user.create({
-                        data: {
-                            email: buyerEmail,
-                            name: buyerName,
-                            password: hashedPassword,
-                            role: 'USER',
-                        }
-                    });
-
-                    // TODO: Send email with temporaryPassword
-                    console.log(`[AutoRegister] CREDENTIALS FOR ${buyerEmail}: Password: ${temporaryPassword}`);
-                } else {
-                    console.log(`[AutoRegister] Linking purchase to existing user: ${buyerEmail}`);
-                }
-
-                // Link Reservation to User
-                await prisma.reservation.update({
-                    where: { id: txRow.reservation_id },
-                    data: { buyer_id: user.id }
-                });
-
-            } catch (regError) {
-                console.error('[AutoRegister] Failed to link/create user:', regError);
-                // Don't fail the transaction if registration fails, just log it
-            }
-            // ------------------------------------------------------------------
 
             return NextResponse.redirect(`${WEBPAY_CONFIG.finalOkUrl}?lotId=${txRow.lot_id}&reservationId=${txRow.reservation_id}`);
 
