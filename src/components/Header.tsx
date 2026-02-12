@@ -72,9 +72,7 @@ export const Header = ({ projectName }: HeaderProps) => {
           </Link>
 
           <div className="flex items-center gap-2 md:gap-4">
-            <a href="/#plano" className="hidden md:inline-flex">
-              <Button variant="outline">Plano</Button>
-            </a>
+
 
             {session ? (
               <DropdownMenu>
@@ -168,25 +166,27 @@ export const Header = ({ projectName }: HeaderProps) => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Link href="/login">
-                <Button
-                  variant="default"
-                  size="sm"
-                  className="h-auto py-1 px-4 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg hover:shadow-xl transition-all border-0 flex flex-col items-start gap-0.5"
-                >
-                  <span className="font-bold text-sm leading-none">Iniciar Sesión</span>
-                  <span className="text-[10px] font-normal opacity-90 leading-none">Registrarse</span>
-                </Button>
-              </Link>
+              <div className="flex flex-col items-center gap-1">
+                <Link href="/login">
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="h-9 px-6 bg-[#36595F] hover:bg-[#2b464a] text-white shadow-md hover:shadow-lg transition-all rounded-full font-medium"
+                  >
+                    Iniciar Sesión
+                  </Button>
+                </Link>
+                <Link href="/register" className="text-[10px] text-muted-foreground hover:text-primary transition-colors underline decoration-dotted">
+                  Registrarse
+                </Link>
+              </div>
             )}
 
             <div className="hidden md:flex">
               <ThemeToggle />
             </div>
 
-            <a href="https://aliminspa.cl" target="_blank" rel="noopener noreferrer" className="hidden xl:inline-flex">
-              <Button variant="outline" className="text-xs">Portal Alimin</Button>
-            </a>
+
 
             <div className="md:hidden flex">
               <ThemeToggle />
