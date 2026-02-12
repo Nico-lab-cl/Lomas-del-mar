@@ -61,9 +61,10 @@ export default function LoginPage() {
                 const session = await response.json();
 
                 if (session?.user?.role === 'ADMIN') {
-                    router.push('/admin/dashboard');
+                    // Redirect to home/map for everyone initially
+                    router.push('/');
                 } else {
-                    router.push('/dashboard');
+                    router.push('/');
                 }
 
                 router.refresh();
