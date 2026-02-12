@@ -17,8 +17,7 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import { Loader2, User, Mail, Lock, ArrowRight } from 'lucide-react';
 
 const registerSchema = z.object({
     name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
@@ -63,15 +62,24 @@ export default function RegisterPage() {
             const result = await response.json();
 
             if (!response.ok) {
+                if (result.error === 'El correo electrónico ya está registrado') {
+                    form.setError('email', { message: 'El correo electrónico ya está registrado' });
+                    throw new Error('El correo electrónico ya está registrado');
+                }
                 throw new Error(result.error || 'Error al registrarse');
             }
 
             toast({
-                title: "Cuenta creada",
-                description: "Tu cuenta ha sido creada exitosamente. Por favor inicia sesión.",
+                title: "¡Bienvenido!",
+                description: "Tu cuenta ha sido creada exitosamente.",
+                className: "bg-[#36595F] text-white border-none",
             });
 
-            router.push('/login');
+            // Small delay for UX
+            setTimeout(() => {
+                router.push('/login');
+            }, 1000);
+
         } catch (error) {
             toast({
                 title: "Error",
@@ -84,25 +92,55 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-muted/40 px-4 py-8">
-            <Card className="w-full max-w-md shadow-lg">
-                <CardHeader className="space-y-1">
-                    <CardTitle className="text-2xl font-bold text-center">Crear Cuenta</CardTitle>
-                    <CardDescription className="text-center">
-                        Ingresa tus datos para registrarte en Lomas del Mar
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
+        <div className="min-h-screen flex w-full">
+            {/* Decorative Section (Hidden on mobile) */}
+            <div className="hidden lg:flex w-1/2 bg-[#36595F] items-center justify-center p-12 text-white relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#2A464B] to-[#36595F] opacity-50"></div>
+
+                {/* Decorative Circles */}
+                <div className="absolute -top-20 -left-20 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 right-0 w-80 h-80 bg-[#D4A373]/20 rounded-full blur-3xl"></div>
+
+                <div className="z-10 max-w-lg space-y-8 relative">
+                    <div className="space-y-4">
+                        <h1 className="text-6xl font-bold tracking-tight">
+                            Lomas del <span className="text-[#D4A373]">Mar</span>
+                        </h1>
+                        <p className="text-xl text-white/80 leading-relaxed">
+                            Tu refugio soñado en la costa te espera. Únete a nuestra comunidad y gestiona tu inversión de manera simple y segura.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Form Section */}
+            <div className="w-full lg:w-1/2 flex items-center justify-center bg-[#FDF9F3] p-8 lg:p-12 relative">
+                {/* Mobile Background Decoration */}
+                <div className="lg:hidden absolute inset-0 bg-[#36595F]/5 pointer-events-none"></div>
+
+                <div className="w-full max-w-md space-y-8 bg-white lg:bg-transparent p-6 rounded-2xl shadow-xl lg:shadow-none relative z-10">
+                    <div className="text-center space-y-2 lg:text-left">
+                        <h2 className="text-3xl font-bold text-[#36595F]">Crear Cuenta</h2>
+                        <p className="text-muted-foreground">Ingresa tus datos para comenzar</p>
+                    </div>
+
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             <FormField
                                 control={form.control}
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Nombre completo</FormLabel>
+                                        <FormLabel className="text-[#36595F]">Nombre completo</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Juan Pérez" {...field} />
+                                            <div className="relative">
+                                                <User className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                                                <Input
+                                                    placeholder="Juan Pérez"
+                                                    className="pl-10 border-[#36595F]/20 focus-visible:ring-[#36595F] bg-white/50"
+                                                    {...field}
+                                                />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -113,9 +151,16 @@ export default function RegisterPage() {
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Email</FormLabel>
+                                        <FormLabel className="text-[#36595F]">Email</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="nombre@ejemplo.com" {...field} />
+                                            <div className="relative">
+                                                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                                                <Input
+                                                    placeholder="nombre@ejemplo.com"
+                                                    className="pl-10 border-[#36595F]/20 focus-visible:ring-[#36595F] bg-white/50"
+                                                    {...field}
+                                                />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -126,9 +171,17 @@ export default function RegisterPage() {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Contraseña</FormLabel>
+                                        <FormLabel className="text-[#36595F]">Contraseña</FormLabel>
                                         <FormControl>
-                                            <Input type="password" placeholder="******" {...field} />
+                                            <div className="relative">
+                                                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                                                <Input
+                                                    type="password"
+                                                    placeholder="******"
+                                                    className="pl-10 border-[#36595F]/20 focus-visible:ring-[#36595F] bg-white/50"
+                                                    {...field}
+                                                />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -139,36 +192,53 @@ export default function RegisterPage() {
                                 name="confirmPassword"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Confirmar Contraseña</FormLabel>
+                                        <FormLabel className="text-[#36595F]">Confirmar Contraseña</FormLabel>
                                         <FormControl>
-                                            <Input type="password" placeholder="******" {...field} />
+                                            <div className="relative">
+                                                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                                                <Input
+                                                    type="password"
+                                                    placeholder="******"
+                                                    className="pl-10 border-[#36595F]/20 focus-visible:ring-[#36595F] bg-white/50"
+                                                    {...field}
+                                                />
+                                            </div>
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
 
-                            <Button type="submit" className="w-full" disabled={isLoading}>
+                            <Button
+                                type="submit"
+                                className="w-full bg-[#36595F] hover:bg-[#2A464B] text-white h-12 text-lg font-medium transition-all hover:scale-[1.02]"
+                                disabled={isLoading}
+                            >
                                 {isLoading ? (
                                     <>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                                         Registrando...
                                     </>
                                 ) : (
-                                    "Registrarse"
+                                    <>
+                                        Registrarse
+                                        <ArrowRight className="ml-2 h-5 w-5" />
+                                    </>
                                 )}
                             </Button>
                         </form>
                     </Form>
 
-                    <div className="mt-6 text-center text-sm">
-                        <span className="text-muted-foreground">¿Ya tienes una cuenta? </span>
-                        <Link href="/login" className="text-primary hover:underline font-medium">
-                            Inicia sesión
-                        </Link>
+                    <div className="mt-8 text-center">
+                        <p className="text-muted-foreground text-sm">
+                            ¿Ya tienes una cuenta?{' '}
+                            <Link href="/login" className="text-[#36595F] hover:text-[#D4A373] font-bold transition-colors">
+                                Inicia sesión aquí
+                            </Link>
+                        </p>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+            </div>
         </div>
     );
 }

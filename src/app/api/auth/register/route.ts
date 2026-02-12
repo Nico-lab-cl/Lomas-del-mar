@@ -1,9 +1,7 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { z, ZodError } from 'zod';
-
-const prisma = new PrismaClient();
 
 const registerSchema = z.object({
     name: z.string().min(2),
@@ -60,7 +58,5 @@ export async function POST(req: Request) {
             { error: 'Error interno del servidor' },
             { status: 500 }
         );
-    } finally {
-        await prisma.$disconnect();
     }
 }
