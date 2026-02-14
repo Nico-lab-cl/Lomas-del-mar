@@ -20,7 +20,7 @@ type ReservationWithDetails = Reservation & {
     seller: User | null
 }
 
-const STAGE_ORDER = ["RESERVA_PAGADA", "ESPERANDO_PIE", "PIE_PAGADO", "VENTA_CERRADA"]
+const STAGE_ORDER = ["RESERVA_PAGADA", "ESPERANDO_PIE", "PIE_PAGADO", "PAGO_CUOTAS", "VENTA_CERRADA"]
 
 export function AdminPipelineCard({
     reservation,

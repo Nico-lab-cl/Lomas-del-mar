@@ -16,7 +16,8 @@ type ReservationWithDetails = Reservation & {
 const STAGES = [
     { id: "RESERVA_PAGADA", label: "Reserva Pagada", color: "bg-blue-100 text-blue-800" },
     { id: "ESPERANDO_PIE", label: "Esperando Pie", color: "bg-yellow-100 text-yellow-800" },
-    { id: "PIE_PAGADO", label: "Pie Pagado / En Firma", color: "bg-purple-100 text-purple-800" },
+    { id: "PIE_PAGADO", label: "Pie Pagado", color: "bg-purple-100 text-purple-800" },
+    { id: "PAGO_CUOTAS", label: "Pago de Cuotas", color: "bg-indigo-100 text-indigo-800" },
     { id: "VENTA_CERRADA", label: "Venta Cerrada", color: "bg-green-100 text-green-800" }
 ]
 

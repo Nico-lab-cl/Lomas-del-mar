@@ -18,7 +18,7 @@ type ReservationWithDetails = Reservation & {
     buyer: User | null
 }
 
-const STAGE_ORDER = ["RESERVA_PAGADA", "ESPERANDO_PIE", "PIE_PAGADO", "VENTA_CERRADA"]
+const STAGE_ORDER = ["RESERVA_PAGADA", "ESPERANDO_PIE", "PIE_PAGADO", "PAGO_CUOTAS", "VENTA_CERRADA"]
 
 export function PipelineCard({ reservation, onMove }: { reservation: ReservationWithDetails, onMove: (stage: string) => void }) {
     const daysSince = differenceInDays(new Date(), new Date(reservation.created_at))

@@ -48,7 +48,7 @@ model Reservation {
   nationality     String?   @default("Chilena")
 
   // Pipeline Data
-  pipeline_stage  String    @default("RESERVA_PAGADA") // RESERVA_PAGADA, ESPERANDO_PIE, PIE_PAGADO, VENTA_CERRADA
+  pipeline_stage  String    @default("RESERVA_PAGADA") // RESERVA_PAGADA, ESPERANDO_PIE, PIE_PAGADO, PAGO_CUOTAS, VENTA_CERRADA
   notes           String?
   address_street  String?
   address_number  String?
