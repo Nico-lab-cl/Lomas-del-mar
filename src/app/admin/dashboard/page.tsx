@@ -1,19 +1,23 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { getAdminPipeline, getSellers } from "@/actions/dashboard"
+import { AdminPipeline } from "@/components/dashboard/AdminPipeline"
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+    const [pipelineResult, sellersResult] = await Promise.all([
+        getAdminPipeline(),
+        getSellers()
+    ])
+
+    if (pipelineResult.error) {
+        return <div className="p-8 text-center text-red-500 font-semibold">{pipelineResult.error}</div>
+    }
+
     return (
-        <div className="container mx-auto p-8">
-            <h1 className="text-3xl font-bold mb-8 text-[#36595F]">Panel de Administración</h1>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Bienvenido</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <p>Has iniciado sesión correctamente en el sistema.</p>
-                    </CardContent>
-                </Card>
-            </div>
+        <div className="h-full w-full">
+            <h2 className="text-2xl font-bold mb-6 text-[#36595F]">Control Global de Ventas</h2>
+            <AdminPipeline
+                initialData={pipelineResult.data as any}
+                sellers={sellersResult.data || []}
+            />
         </div>
     )
 }
