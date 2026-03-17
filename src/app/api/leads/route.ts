@@ -3,18 +3,37 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(req: Request) {
   const session = await getServerSession(authOptions as any);
 
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { searchParams } = new URL(req.url);
+  const page = parseInt(searchParams.get("page") || "1");
+  const limit = parseInt(searchParams.get("limit") || "10");
+  const skip = (page - 1) * limit;
+
   try {
-    const leads = await prisma.lead.findMany({
-      orderBy: { createdAt: "desc" },
+    const [leads, total] = await Promise.all([
+      prisma.lead.findMany({
+        skip,
+        take: limit,
+        orderBy: { createdAt: "desc" },
+      }),
+      prisma.lead.count()
+    ]);
+
+    return NextResponse.json({
+      leads,
+      pagination: {
+        total,
+        pages: Math.ceil(total / limit),
+        currentPage: page,
+        limit
+      }
     });
-    return NextResponse.json(leads);
   } catch (error) {
     console.error("Error fetching leads:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
