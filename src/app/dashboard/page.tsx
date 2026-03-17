@@ -194,7 +194,7 @@ function DashboardContent() {
       <ProfileSlider isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
 
       {/* Dashboard Top Header */}
-      <header className="bg-white px-6 pt-10 pb-6 border-b border-slate-100 sticky top-0 z-40">
+      <header className="bg-white px-6 pt-10 pb-6 border-b border-slate-100 sticky top-0 z-[70]">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
              {/* Profile Click Handler */}
