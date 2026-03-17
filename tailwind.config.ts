@@ -10,20 +10,27 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: "#228c8c",
-          dark: "#1a6b6b",
-          light: "#2db3b3",
+          DEFAULT: "#107B7A", // Stitch Official Teal
+          light: "#E6F4F1",
+          dark: "#0a5d5c",
         },
-        secondary: {
-          DEFAULT: "#35595f",
-          dark: "#2a474d",
-          light: "#46767e",
+        accent: {
+          DEFAULT: "#DFA32B", // Stitch Official Gold/Orange
+          light: "#FFF8E1",
         },
+        status: {
+          hot: "#4CAF50",
+          warm: "#DFA32B",
+          cold: "#E84E4E",
+        },
+        background: "#F5F7F9",
       },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      borderRadius: {
+        'stitch': '16px',
       },
+      boxShadow: {
+        'stitch': '0 4px 12px rgba(0, 0, 0, 0.05)',
+      }
     },
   },
   plugins: [],

@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
 
+import BottomNav from "@/components/BottomNav";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -17,8 +19,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+      <body className={`${inter.className} bg-slate-900`}>
+        <div className="mobile-container overflow-x-hidden">
+          <AuthProvider>
+            <main className="flex-1 pb-20">{children}</main>
+            <BottomNav />
+          </AuthProvider>
+        </div>
       </body>
     </html>
   );

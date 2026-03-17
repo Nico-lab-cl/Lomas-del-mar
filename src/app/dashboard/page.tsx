@@ -4,9 +4,9 @@ import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { 
-  LogOut, Phone, Mail, User, Search, Filter, 
-  LayoutDashboard, TrendingUp, Users, Calendar,
-  ExternalLink, MessageSquare, Bell
+  Plus, Search, Filter, Bell, User, 
+  ChevronRight, Phone, MessageSquare, Clock,
+  MoreVertical, Share2, Mail
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -27,6 +27,7 @@ export default function DashboardPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilter, setActiveFilter] = useState("TODOS");
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -50,170 +51,141 @@ export default function DashboardPage() {
     }
   };
 
-  const filteredLeads = leads.filter(lead => 
-    `${lead.firstName} ${lead.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lead.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lead.phone?.includes(searchTerm)
-  );
+  const getStatusColor = (status: string) => {
+    if (['CALIENTE', 'HOT', 'NEW'].includes(status)) return 'hot';
+    if (['SEGUIMIENTO', 'WARM'].includes(status)) return 'warm';
+    return 'cold';
+  };
+
+  const filteredLeads = leads.filter(lead => {
+    const matchesSearch = `${lead.firstName} ${lead.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         lead.phone?.includes(searchTerm);
+    
+    if (activeFilter === "TODOS") return matchesSearch;
+    if (activeFilter === "NUEVOS") return matchesSearch && lead.status === "NEW";
+    if (activeFilter === "CALIENTES") return matchesSearch && ['HOT', 'CALIENTE'].includes(lead.status);
+    return matchesSearch;
+  });
 
   if (status === "loading" || loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#020617]">
-        <div className="relative w-16 h-16">
-          <div className="absolute inset-0 border-4 border-teal-500/20 rounded-full" />
-          <div className="absolute inset-0 border-4 border-teal-500 border-t-transparent rounded-full animate-spin" />
-        </div>
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-100 flex pb-10">
-      {/* Sidebar - Hidden on mobile */}
-      <aside className="hidden lg:flex w-72 flex-col glass border-r border-slate-800/50 sticky top-0 h-screen p-6">
-        <div className="flex items-center gap-3 mb-12 px-2">
-          <div className="w-10 h-10 premium-gradient rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/20">
-            <LayoutDashboard className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-xl font-bold tracking-tight">ALIMIN <span className="text-teal-400">CRM</span></span>
-        </div>
-
-        <nav className="flex-1 space-y-2">
-          <button className="w-full flex items-center gap-3 px-4 py-3 bg-teal-500/10 text-teal-400 rounded-xl font-semibold transition-all">
-            <Users className="w-5 h-5" />
-            <span>Mis Leads</span>
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-xl font-medium transition-all group">
-            <TrendingUp className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            <span>Estadísticas</span>
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 rounded-xl font-medium transition-all group">
-            <Calendar className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            <span>Agenda</span>
-          </button>
-        </nav>
-
-        <div className="mt-auto pt-6 border-t border-slate-800/50">
-          <div className="flex items-center gap-3 px-2 mb-4">
-            <div className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center border border-slate-700">
-              <User className="w-6 h-6 text-slate-400" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold truncate">{session?.user?.name}</p>
-              <p className="text-xs text-slate-500 truncate">Asesor Comercial</p>
-            </div>
-          </div>
-          <button 
-            onClick={() => signOut()}
-            className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-xl font-medium transition-all"
-          >
-            <LogOut className="w-5 h-5" />
-            <span>Cerrar Sesión</span>
-          </button>
-        </div>
-      </aside>
-
-      <main className="flex-1 p-4 md:p-8 lg:p-12 max-w-7xl mx-auto w-full">
-        {/* Header Section */}
-        <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12 animate-in fade-in slide-in-from-top-4 duration-700">
-          <div>
-            <h1 className="text-4xl font-extrabold tracking-tight mb-2">Panel de <span className="text-gradient">Leads</span></h1>
-            <p className="text-slate-400 font-medium">Gestiona y contacta a tus clientes potenciales</p>
-          </div>
-          
+    <div className="h-full flex flex-col bg-[#F5F7F9]">
+      {/* Dashboard Top Header - Native App Style */}
+      <header className="bg-white px-6 pt-10 pb-6 border-b border-slate-100 sticky top-0 z-40">
+        <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
-            <button className="p-3 glass rounded-xl text-slate-400 hover:text-teal-400 hover:border-teal-500/30 transition-all relative group">
-              <Bell className="w-6 h-6" />
-              <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-teal-500 rounded-full border-2 border-slate-900" />
-            </button>
-            <button className="btn-premium flex items-center gap-2">
-              <Filter className="w-5 h-5" />
-              <span>Filtrar</span>
-            </button>
-          </div>
-        </header>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-150">
-          {[
-            { label: 'Total Leads', value: leads.length, color: 'text-blue-400', icon: Users },
-            { label: 'Nuevos (24h)', value: filteredLeads.filter(l => l.status === 'NEW').length, color: 'text-teal-400', icon: MessageSquare },
-            { label: 'Contactados', value: leads.filter(l => l.status !== 'NEW').length, color: 'text-purple-400', icon: TrendingUp },
-          ].map((stat, i) => (
-            <div key={i} className="glass-card p-6 border-l-4 border-l-teal-500/50">
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-slate-400 text-sm font-bold uppercase tracking-wider">{stat.label}</span>
-                <stat.icon className={clsx("w-5 h-5", stat.color)} />
-              </div>
-              <div className="text-3xl font-black">{stat.value}</div>
+            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
+              <User className="text-primary w-6 h-6" />
             </div>
-          ))}
+            <div>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Cuentas Pro</p>
+              <h1 className="text-lg font-black text-slate-800 leading-none">Hola, {session?.user?.name}</h1>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button className="p-2 text-slate-400 hover:text-primary transition-colors">
+              <Search size={22} />
+            </button>
+            <button className="p-2 text-slate-400 hover:text-primary transition-colors relative">
+               <Bell size={22} />
+               <span className="absolute top-2 right-2 w-2 h-2 bg-accent rounded-full border-2 border-white" />
+            </button>
+          </div>
         </div>
 
-        {/* Search & List */}
-        <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
-          <div className="relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-teal-500 transition-colors" />
-            <input
-              type="text"
-              placeholder="Buscar por nombre, email o teléfono..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-slate-900/50 border border-slate-800 rounded-2xl focus:ring-4 focus:ring-teal-500/10 focus:border-teal-500/50 outline-none transition-all shadow-xl"
-            />
+        <div className="flex items-end justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <h2 className="text-3xl font-black text-primary">Mis Leads</h2>
+            <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black rounded-lg uppercase tracking-wider">
+              {leads.length} ACTIVOS
+            </span>
           </div>
+          <button className="text-slate-400 p-1">
+            <MoreVertical size={20} />
+          </button>
+        </div>
+      </header>
 
-          <div className="grid grid-cols-1 gap-4">
-            {filteredLeads.map((lead, index) => (
-              <div
-                key={lead.id}
-                style={{ animationDelay: `${index * 50}ms` }}
-                className="glass-card p-5 md:p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:shadow-teal-500/5 hover:border-teal-500/20 group animate-in fade-in slide-in-from-right-4 duration-500"
-              >
-                <div className="flex items-center gap-5">
-                  <div className="w-14 h-14 rounded-2xl premium-gradient opacity-80 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                    <User className="w-8 h-8" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold group-hover:text-teal-400 transition-colors">{lead.firstName} {lead.lastName}</h3>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-slate-500 text-sm mt-1">
-                      <span className="flex items-center gap-1.5"><ExternalLink className="w-3.5 h-3.5" /> {lead.source || 'Directo'}</span>
-                      <span className="flex items-center gap-1.5 underline decoration-slate-700 underline-offset-4">{lead.email}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <a
-                    href={`https://wa.me/${lead.phone.replace(/\D/g, '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 rounded-xl font-bold transition-all border border-emerald-500/10"
-                  >
-                    <Phone className="w-4 h-4" />
-                    WhatsApp
-                  </a>
-                  <a
-                    href={`mailto:${lead.email}`}
-                    className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-teal-500/10 hover:bg-teal-500/20 text-teal-400 rounded-xl font-bold transition-all border border-teal-500/10"
-                  >
-                    <Mail className="w-4 h-4" />
-                    Email
-                  </a>
-                </div>
-              </div>
-            ))}
-
-            {filteredLeads.length === 0 && (
-              <div className="text-center py-20 glass-card">
-                <Search className="w-12 h-12 text-slate-800 mx-auto mb-4" />
-                <h3 className="text-slate-400 font-bold mb-1">No se encontraron leads</h3>
-                <p className="text-slate-600">Intenta con otros términos de búsqueda</p>
-              </div>
+      {/* Horizontal Filter Chips */}
+      <div className="overflow-x-auto no-scrollbar py-4 px-6 flex items-center gap-3">
+        {["TODOS", "NUEVOS", "CALIENTES", "EN SEGUIMIENTO"].map((filter) => (
+          <button
+            key={filter}
+            onClick={() => setActiveFilter(filter)}
+            className={clsx(
+              "whitespace-nowrap px-5 py-2.5 rounded-full text-[11px] font-black tracking-wider transition-all border shrink-0",
+              activeFilter === filter 
+                ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" 
+                : "bg-white text-slate-400 border-slate-200"
             )}
-          </div>
-        </div>
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+
+      {/* Leads List */}
+      <main className="flex-1 px-6 space-y-4 animate-in fade-in slide-in-from-bottom-6 duration-700">
+        {filteredLeads.map((lead, index) => {
+          const statusType = getStatusColor(lead.status);
+          return (
+            <div
+              key={lead.id}
+              style={{ animationDelay: `${index * 50}ms` }}
+              className={clsx(
+                "card-stitch flex items-center gap-4 relative overflow-hidden group animate-in slide-in-from-right-4 duration-500",
+                statusType === 'hot' ? "status-edge-hot" : statusType === 'warm' ? "status-edge-warm" : "status-edge-cold"
+              )}
+            >
+              <div className="w-12 h-12 bg-slate-50 flex-shrink-0 rounded-full flex items-center justify-center text-slate-400 border border-slate-100 group-hover:scale-110 transition-transform">
+                <User size={24} />
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between mb-1">
+                  <h3 className="text-base font-black text-slate-800 truncate">{lead.firstName} {lead.lastName}</h3>
+                  <span className="text-[9px] font-black text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded leading-none">
+                    {new Date(lead.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+                
+                <div className="flex items-center gap-3 text-slate-500 text-[11px] font-medium">
+                  <span className="flex items-center gap-1.5"><Clock size={12} />Registrado hace 2 hrs</span>
+                  <span className="flex items-center gap-1.5 text-primary opacity-80"><Share2 size={12} />{lead.source || 'WEB'}</span>
+                </div>
+              </div>
+              
+              <button className="w-10 h-10 bg-primary/5 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          );
+        })}
+
+        {filteredLeads.length === 0 && (
+           <div className="py-20 text-center">
+             <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+               <Search className="text-slate-300" size={32} />
+             </div>
+             <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Sin resultados encontrados</p>
+           </div>
+        )}
       </main>
+
+      {/* Floating Action Button - Stitch Style */}
+      <button className="fixed bottom-24 right-8 w-14 h-14 bg-accent text-white rounded-full flex items-center justify-center shadow-2xl shadow-accent/40 active:scale-90 transition-all z-50 animate-bounce cursor-pointer group hover:rotate-90">
+        <Plus size={32} strokeWidth={3} />
+        <span className="absolute right-16 bg-slate-800 text-white text-[10px] font-black px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap tracking-wider">
+          NUEVO LEAD
+        </span>
+      </button>
     </div>
   );
 }
