@@ -44,13 +44,13 @@ export async function GET(req: Request) {
 
   try {
     const [leads, total] = await Promise.all([
-      prisma.lead.findMany({
+      (prisma as any).lead.findMany({
         where,
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
       }),
-      prisma.lead.count({ where })
+      (prisma as any).lead.count({ where })
     ]);
 
     return NextResponse.json({
@@ -120,7 +120,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const newLead = await prisma.lead.create({
+    const newLead = await (prisma as any).lead.create({
       data: leadData,
     });
     
