@@ -3,8 +3,9 @@
 import { signIn, useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { User, ChevronRight, HelpCircle, ShieldCheck, Lock, Eye, EyeOff } from "lucide-react";
+import { User, ChevronDown, ShieldCheck, Lock, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import clsx from "clsx";
 
 interface DBUser {
   username: string;
@@ -18,6 +19,11 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [dbUsers, setDbUsers] = useState<DBUser[]>([]);
   const router = useRouter();
+
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -42,9 +48,7 @@ export default function LoginPage() {
     fetchUsers();
   }, []);
 
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const selectedProfile = dbUsers.find(p => p.username === selectedUser);
 
   const executeLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,70 +71,10 @@ export default function LoginPage() {
     }
   };
 
-  if (selectedUser) {
-    const userProfile = dbUsers.find(p => p.username === selectedUser);
-    return (
-      <div className="p-8 flex flex-col h-full animate-in fade-in slide-in-from-right-4 duration-500">
-        <button 
-          onClick={() => { setSelectedUser(null); setError(""); setPassword(""); }}
-          className="text-primary font-bold flex items-center gap-2 mb-10"
-        >
-          <ChevronRight className="rotate-180 w-5 h-5" />
-          Volver a perfiles
-        </button>
-
-        <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-primary/20">
-            <User className="w-10 h-10 text-primary" />
-          </div>
-          <h1 className="text-2xl font-black text-slate-800">Hola, {userProfile?.name?.split(' ')[0] || 'Asesor'}</h1>
-          <p className="text-slate-500 font-medium whitespace-nowrap">Ingresa tu contraseña para entrar</p>
-        </div>
-
-        <form onSubmit={executeLogin} className="space-y-6">
-          <div className="relative group">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-stitch pl-12 pr-12 text-lg tracking-widest"
-              placeholder="••••••••"
-              required
-              autoFocus
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors p-1"
-              tabIndex={-1}
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
-          </div>
-
-          {error && <p className="text-red-500 text-sm text-center font-bold px-4">{error}</p>}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="btn-stitch-primary w-full py-4 text-lg"
-          >
-            {loading ? (
-              <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-            ) : (
-              "Ingresar al CRM"
-            )}
-          </button>
-        </form>
-      </div>
-    );
-  }
-
   return (
     <div className="p-8 flex flex-col h-full animate-in fade-in duration-700">
       {/* Brand Header with Logo */}
-      <div className="flex flex-col items-center mb-12">
+      <div className="flex flex-col items-center mb-10">
         <div className="relative w-20 h-20 mb-4 drop-shadow-sm">
           <Image 
             src="/logo-alimin.png" 
@@ -145,49 +89,133 @@ export default function LoginPage() {
         </h1>
       </div>
 
-      <div className="mb-10 text-center">
+      <div className="mb-8 text-center">
         <h2 className="text-2xl font-black text-slate-800 mb-2">Bienvenido Asesor</h2>
-        <p className="text-slate-500 font-medium">Selecciona tu perfil para ingresar</p>
+        <p className="text-slate-500 font-medium">Selecciona tu perfil e ingresa tu contraseña</p>
       </div>
 
-      <div className="space-y-4 mb-12">
-        {dbUsers.map((profile) => (
+      <form onSubmit={executeLogin} className="space-y-5 flex-1 flex flex-col">
+        {/* User Dropdown Selector */}
+        <div className="relative">
+          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Perfil</label>
           <button
-            key={profile.username}
-            onClick={() => setSelectedUser(profile.username)}
-            className="card-stitch w-full flex items-center justify-between group"
+            type="button"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className={clsx(
+              "w-full flex items-center justify-between bg-white border rounded-2xl px-4 py-4 text-left transition-all shadow-sm",
+              isDropdownOpen ? "border-primary ring-4 ring-primary/10" : "border-slate-200 hover:border-slate-300"
+            )}
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center group-hover:bg-primary/10 transition-colors border border-primary/10">
-                <User className="w-6 h-6 text-primary" />
+            <div className="flex items-center gap-3">
+              <div className={clsx(
+                "w-10 h-10 rounded-full flex items-center justify-center border",
+                selectedUser ? "bg-primary/10 border-primary/20" : "bg-slate-50 border-slate-200"
+              )}>
+                <User className={clsx("w-5 h-5", selectedUser ? "text-primary" : "text-slate-400")} />
               </div>
-              <div className="text-left">
-                <p className="font-bold text-slate-800 leading-tight">{profile.name}</p>
-                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-0.5">{profile.role}</p>
+              <div>
+                <p className={clsx("font-bold text-sm", selectedUser ? "text-slate-800" : "text-slate-400")}>
+                  {selectedProfile?.name || "Seleccionar asesor..."}
+                </p>
+                {selectedProfile && (
+                  <p className="text-[10px] text-primary font-black uppercase tracking-widest">{selectedProfile.role}</p>
+                )}
               </div>
             </div>
-            <ChevronRight className="text-slate-300 group-hover:text-primary transition-colors h-5 w-5" />
+            <ChevronDown size={18} className={clsx("text-slate-400 transition-transform", isDropdownOpen && "rotate-180")} />
           </button>
-        ))}
 
-        {dbUsers.length === 0 && (
-          <div className="flex flex-col items-center py-10 opacity-50">
-             <div className="w-10 h-10 border-2 border-primary/20 border-t-primary rounded-full animate-spin mb-4" />
-             <p className="text-xs font-bold text-slate-400">CARGANDO ASESORES...</p>
-          </div>
-        )}
-      </div>
+          {isDropdownOpen && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-100 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] ring-1 ring-slate-900/5 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200 max-h-60 overflow-y-auto">
+              {dbUsers.map((profile) => (
+                <button
+                  key={profile.username}
+                  type="button"
+                  onClick={() => { setSelectedUser(profile.username); setIsDropdownOpen(false); setError(""); }}
+                  className={clsx(
+                    "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all",
+                    selectedUser === profile.username ? "bg-primary/5 text-primary" : "text-slate-600 hover:bg-slate-50"
+                  )}
+                >
+                  <div className={clsx(
+                    "w-8 h-8 rounded-full flex items-center justify-center",
+                    selectedUser === profile.username ? "bg-primary/10" : "bg-slate-100"
+                  )}>
+                    <User className={clsx("w-4 h-4", selectedUser === profile.username ? "text-primary" : "text-slate-400")} />
+                  </div>
+                  <div>
+                    <p className="font-bold text-sm leading-tight">{profile.name}</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest opacity-50">{profile.role}</p>
+                  </div>
+                </button>
+              ))}
 
-      <div className="mt-auto text-center space-y-4">
-        <p className="text-sm text-slate-400 font-medium">
-          ¿No estás en la lista? <button className="text-primary font-bold hover:underline">Contactar soporte</button>
-        </p>
-        
-        <div className="flex items-center justify-center gap-2 py-4 px-6 bg-slate-100 rounded-2xl text-[10px] text-slate-400 font-black uppercase tracking-widest">
-          <ShieldCheck size={14} className="text-slate-300" />
-          Acceso Restringido Pro
+              {dbUsers.length === 0 && (
+                <div className="flex flex-col items-center py-6 opacity-50">
+                  <div className="w-6 h-6 border-2 border-primary/20 border-t-primary rounded-full animate-spin mb-2" />
+                  <p className="text-[10px] font-bold text-slate-400">CARGANDO ASESORES...</p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-      </div>
+
+        {/* Password Input */}
+        <div>
+          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Contraseña</label>
+          <div className="relative group">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-white border border-slate-200 rounded-2xl py-4 pl-12 pr-12 text-lg tracking-widest font-medium focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all shadow-sm"
+              placeholder="••••••••"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors p-1"
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+        </div>
+
+        {error && <p className="text-red-500 text-sm text-center font-bold px-4">{error}</p>}
+
+        {/* Login Button */}
+        <button
+          type="submit"
+          disabled={loading || !selectedUser}
+          className={clsx(
+            "w-full py-4 rounded-2xl text-lg font-black uppercase tracking-wider transition-all shadow-lg active:scale-[0.98]",
+            selectedUser
+              ? "bg-primary text-white shadow-primary/20 hover:bg-primary/90"
+              : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
+          )}
+        >
+          {loading ? (
+            <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin mx-auto" />
+          ) : (
+            "Ingresar al CRM"
+          )}
+        </button>
+
+        {/* Footer */}
+        <div className="mt-auto text-center space-y-4 pt-4">
+          <p className="text-sm text-slate-400 font-medium">
+            ¿No estás en la lista? <button type="button" className="text-primary font-bold hover:underline">Contactar soporte</button>
+          </p>
+          
+          <div className="flex items-center justify-center gap-2 py-4 px-6 bg-slate-100 rounded-2xl text-[10px] text-slate-400 font-black uppercase tracking-widest">
+            <ShieldCheck size={14} className="text-slate-300" />
+            Acceso Restringido Pro
+          </div>
+        </div>
+      </form>
     </div>
   );
 }
