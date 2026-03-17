@@ -20,7 +20,8 @@
     "tailwind-merge": "^2.2.1",
     "@auth/prisma-adapter": "^2.11.1",
     "@prisma/client": "^6.4.1",
-    "next-auth": "^4.24.5"
+    "next-auth": "^4.24.5",
+    "sharp": "^0.33.2"
   },
   "devDependencies": {
     "@types/next-auth": "^3.13.0",

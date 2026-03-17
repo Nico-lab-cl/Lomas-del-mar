@@ -279,15 +279,15 @@ function DashboardContent() {
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Filter className="text-red-500" size={32} />
               </div>
-              <h3 className="text-red-900 font-black text-xs uppercase tracking-widest mb-2">Error en la Base de Datos</h3>
+              <h3 className="text-red-900 font-black text-xs uppercase tracking-widest mb-2">Error de Sincronización</h3>
               <p className="text-red-600/70 text-xs font-bold leading-relaxed mb-6">
-                {fetchError.includes("column") ? "Faltan columnas en la base de datos. Por favor, ejecuta la migración de esquema." : fetchError}
+                Faltan columnas en la base de datos. Por favor, ejecuta el contenido del archivo <code className="bg-red-100 px-1 rounded">scripts/sync_db.sql</code> en tu base de datos para corregir esto.
               </p>
               <button 
                 onClick={() => fetchLeads(currentPage, searchTerm, activeProject, dateFilter)}
-                className="w-full bg-red-500 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-red-500/20 active:scale-95 transition-all"
+                className="w-full bg-red-500 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-red-500/20 active:scale-95 transition-all mb-3"
               >
-                Reintentar Conexión
+                Reintentar Después de Ejecutar SQL
               </button>
             </div>
           </div>
