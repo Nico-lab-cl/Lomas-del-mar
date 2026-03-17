@@ -43,6 +43,7 @@ model Lead {
   notes        String?
   visited      Boolean   @default(false)
   interests    String?
+  rating       String?   @default("FRIO")
   lastNoteAt   DateTime?
   
   // UTM Parameters for web leads

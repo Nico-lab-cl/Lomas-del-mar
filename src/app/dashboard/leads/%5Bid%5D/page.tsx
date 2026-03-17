@@ -6,7 +6,8 @@ import {
   ChevronLeft, Phone, MessageSquare, Mail, 
   MapPin, User, ChevronRight,
   MoreVertical, Edit2, CheckCircle2, AlertCircle,
-  StickyNote, LayoutGrid, Globe, Compass, Target, Layers
+  StickyNote, LayoutGrid, Globe, Compass, Target, Layers,
+  Meh, Smile, Laugh
 } from "lucide-react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -28,6 +29,7 @@ interface Lead {
   utmCampaign?: string;
   utmContent?: string;
   utmTerm?: string;
+  rating?: string;
   createdAt: string;
   assignedTo?: {
     name: string;
@@ -77,6 +79,25 @@ function LeadDetailContent() {
       }
     } catch (err) {
       console.error("Error updating status");
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleRatingUpdate = async (newRating: string) => {
+    if (!lead || isUpdating) return;
+    setIsUpdating(true);
+    try {
+      const res = await fetch(`/api/leads/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rating: newRating }),
+      });
+      if (res.ok) {
+        setLead({ ...lead, rating: newRating });
+      }
+    } catch (err) {
+      console.error("Error updating rating");
     } finally {
       setIsUpdating(false);
     }
@@ -141,15 +162,17 @@ function LeadDetailContent() {
     );
   }
 
-  const getStatusColor = (status: string) => {
-    if (['MUY INTERESADO', 'HOT'].includes(status)) return '#22C55E';
-    if (['INTERESADO', 'INTERES', 'WARM'].includes(status)) return '#FB923C';
+  const getStatusColor = (status: string, rating?: string) => {
+    const currentStatus = rating || status;
+    if (['VENTA', 'MUY INTERESADO', 'HOT'].includes(currentStatus)) return '#22C55E';
+    if (['INTERESADO', 'INTERES', 'WARM'].includes(currentStatus)) return '#FB923C';
     return '#94A3B8';
   };
 
-  const getStatusLabel = (status: string) => {
-    if (['MUY INTERESADO', 'HOT'].includes(status)) return 'MUY INTERESADO';
-    if (['INTERESADO', 'INTERES', 'WARM'].includes(status)) return 'INTERESADO';
+  const getStatusLabel = (status: string, rating?: string) => {
+    const currentStatus = rating || status;
+    if (['VENTA', 'MUY INTERESADO', 'HOT'].includes(currentStatus)) return 'VENTA';
+    if (['INTERESADO', 'INTERES', 'WARM'].includes(currentStatus)) return 'INTERESADO';
     return 'FRIO';
   };
 
@@ -186,10 +209,10 @@ function LeadDetailContent() {
         <div className="flex items-center gap-2 mb-4">
           <span 
             className="w-2.5 h-2.5 rounded-full animate-pulse" 
-            style={{ backgroundColor: getStatusColor(lead.status) }} 
+            style={{ backgroundColor: getStatusColor(lead.status, lead.rating) }} 
           />
           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-            {getStatusLabel(lead.status)} • {lead.source || 'WEB'}
+            {getStatusLabel(lead.status, lead.rating)} • {lead.source || 'WEB'}
           </span>
         </div>
 
@@ -230,9 +253,9 @@ function LeadDetailContent() {
           <InfoRow 
             icon={CheckCircle2} 
             label="Estado" 
-            value={getStatusLabel(lead.status)} 
+            value={getStatusLabel(lead.status, lead.rating)} 
             badge 
-            badgeColor={getStatusColor(lead.status)} 
+            badgeColor={getStatusColor(lead.status, lead.rating)} 
           />
         </div>
 
@@ -265,6 +288,45 @@ function LeadDetailContent() {
             defaultValue={lead.notes}
             onBlur={(e) => handleNoteUpdate(e.target.value)}
           />
+        </div>
+
+        {/* Rating Section (Emoji picker) */}
+        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+          <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+             Calificar Interés
+          </h3>
+          <div className="flex justify-around items-center gap-4">
+            <button 
+              onClick={() => handleRatingUpdate('FRIO')}
+              className={clsx(
+                "flex flex-col items-center gap-2 transition-all p-3 rounded-2xl",
+                lead.rating === 'FRIO' ? "bg-slate-50 scale-110" : "opacity-40"
+              )}
+            >
+              <Meh size={32} className="text-[#94A3B8]" />
+              <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">FRIO</span>
+            </button>
+            <button 
+              onClick={() => handleRatingUpdate('INTERESADO')}
+              className={clsx(
+                "flex flex-col items-center gap-2 transition-all p-3 rounded-2xl",
+                lead.rating === 'INTERESADO' ? "bg-orange-50 scale-110" : "opacity-40"
+              )}
+            >
+              <Smile size={32} className="text-[#FB923C]" />
+              <span className="text-[9px] font-black text-orange-600 uppercase tracking-widest">INTERESADO</span>
+            </button>
+            <button 
+              onClick={() => handleRatingUpdate('VENTA')}
+              className={clsx(
+                "flex flex-col items-center gap-2 transition-all p-3 rounded-2xl",
+                lead.rating === 'VENTA' ? "bg-green-50 scale-110" : "opacity-40"
+              )}
+            >
+              <Laugh size={32} className="text-[#22C55E]" />
+              <span className="text-[9px] font-black text-green-600 uppercase tracking-widest">VENTA</span>
+            </button>
+          </div>
         </div>
 
         {/* Visit Toggle */}

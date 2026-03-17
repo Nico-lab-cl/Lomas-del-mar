@@ -1,13 +1,14 @@
 "use client";
 
+import React, { useEffect, useState, useCallback, Suspense } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { useEffect, useState, useCallback, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { 
   Plus, Search, Filter, Bell, User as UserIcon, 
   ChevronRight, Phone, MessageSquare, Clock,
   MoreVertical, Share2, Mail, ChevronLeft, ChevronDown,
-  LayoutGrid, Globe, Megaphone, Calendar
+  LayoutGrid, Globe, Megaphone, Calendar,
+  Meh, Smile, Laugh
 } from "lucide-react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -20,6 +21,7 @@ interface Lead {
   phone: string;
   email: string;
   status: string;
+  rating?: string;
   createdAt: string;
   source: string;
   isExternal?: boolean;
@@ -59,15 +61,17 @@ function DashboardContent() {
   const [dateFilter, setDateFilter] = useState("TODOS");
   const [currentPage, setCurrentPage] = useState(1);
   const [activeStatus, setActiveStatus] = useState("TODOS");
+  const [activeRating, setActiveRating] = useState("TODOS");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isVisitsActive, setIsVisitsActive] = useState(false);
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
   const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false);
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
+  const [isRatingDropdownOpen, setIsRatingDropdownOpen] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   // Helper to fetch leads with all current filters
-  const fetchLeads = useCallback(async (page: number, q: string, project: string, dateRange: string, statusFilter: string, visitsOnly: boolean) => {
+  const fetchLeads = useCallback(async (page: number, q: string, project: string, dateRange: string, statusFilter: string, ratingFilter: string, visitsOnly: boolean) => {
     setLoading(true);
     try {
       // Optimizamos búsqueda: quitamos espacios extras y normalizamos
@@ -77,6 +81,7 @@ function DashboardContent() {
       if (normalizedQuery) url += `&q=${encodeURIComponent(normalizedQuery)}`;
       if (project !== "TODOS") url += `&source=${encodeURIComponent(project)}`;
       if (statusFilter !== "TODOS") url += `&status=${encodeURIComponent(statusFilter)}`;
+      if (ratingFilter !== "TODOS") url += `&rating=${encodeURIComponent(ratingFilter)}`;
       if (visitsOnly) url += `&visited=true`;
       
       const { start, end } = getDateRange(dateRange);
@@ -122,12 +127,12 @@ function DashboardContent() {
       router.push("/login");
     } else if (status === "authenticated") {
       const delayDebounceFn = setTimeout(() => {
-        fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus, isVisitsActive);
+        fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive);
       }, 500);
 
       return () => clearTimeout(delayDebounceFn);
     }
-  }, [status, router, currentPage, searchTerm, activeProject, dateFilter, activeStatus, isVisitsActive, fetchLeads]);
+  }, [status, router, currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive, fetchLeads]);
 
   const getDateRange = (filter: string) => {
     const now = new Date();
@@ -153,10 +158,11 @@ function DashboardContent() {
     return { start, end };
   };
 
-  const getStatusColor = (status: string) => {
-    if (['MUY INTERESADO', 'HOT'].includes(status)) return 'hot';
-    if (['INTERESADO', 'INTERES', 'WARM'].includes(status)) return 'warm';
-    if (['FRIO', 'COLD', 'NEW'].includes(status)) return 'cold';
+  const getStatusColor = (status: string, rating?: string) => {
+    const current = rating || status;
+    if (['VENTA', 'MUY INTERESADO', 'HOT'].includes(current)) return 'hot';
+    if (['INTERESADO', 'INTERES', 'WARM'].includes(current)) return 'warm';
+    if (['FRIO', 'COLD', 'NEW'].includes(current)) return 'cold';
     return 'cold';
   };
 
@@ -176,10 +182,17 @@ function DashboardContent() {
   ];
 
   const statusFilters = [
-    { id: "TODOS", name: "Todos los Intereses", color: "bg-slate-400" },
-    { id: "FRIO", name: "Frio", color: "bg-[#94A3B8]" }, // Azul grisáceo
-    { id: "INTERES", name: "Interés", color: "bg-[#FB923C]" }, // Naranja
-    { id: "MUY INTERESADO", name: "Muy Interesado", color: "bg-[#22C55E]" }, // Verde
+    { id: "TODOS", name: "Todos los Estados", color: "bg-slate-400" },
+    { id: "NUEVO", name: "Nuevo", color: "bg-blue-400" },
+    { id: "CONTACTADO", name: "Contactado", color: "bg-orange-400" },
+    { id: "VISITA", name: "Visita", color: "bg-green-400" },
+  ];
+
+  const ratingFilters = [
+    { id: "TODOS", name: "Todos los Intereses", icon: Meh, color: "text-slate-400" },
+    { id: "FRIO", name: "Frio", icon: Meh, color: "text-[#94A3B8]" },
+    { id: "INTERESADO", name: "Interesado", icon: Smile, color: "text-[#FB923C]" },
+    { id: "VENTA", name: "Venta", icon: Laugh, color: "text-[#22C55E]" },
   ];
 
   if (status === "loading") {
@@ -277,19 +290,20 @@ function DashboardContent() {
       </header>
 
       {/* Dropdown Filters Row */}
-      <div className="py-4 px-6 flex items-center gap-2 relative z-50">
+      <div className="py-2 px-6 flex items-center gap-2 relative z-50 overflow-x-auto no-scrollbar">
         {/* Period Dropdown */}
         <div className="relative shrink-0">
           <button 
             onClick={() => {
               setIsPeriodDropdownOpen(!isPeriodDropdownOpen);
               setIsStatusDropdownOpen(false);
+              setIsRatingDropdownOpen(false);
             }}
-            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[11px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95"
+            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[10px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95"
           >
-            <Calendar size={14} className="text-primary" />
+            <Calendar size={12} className="text-primary" />
             {dateFilters.find(f => f.id === dateFilter)?.name || "Periodo"}
-            <ChevronDown size={14} className={clsx("transition-transform", isPeriodDropdownOpen && "rotate-180")} />
+            <ChevronDown size={12} className={clsx("transition-transform", isPeriodDropdownOpen && "rotate-180")} />
           </button>
 
           {isPeriodDropdownOpen && (
@@ -310,18 +324,53 @@ function DashboardContent() {
           )}
         </div>
 
-        {/* Interest Dropdown */}
+        {/* Rating Dropdown (Interés) */}
+        <div className="relative shrink-0">
+          <button 
+            onClick={() => {
+              setIsRatingDropdownOpen(!isRatingDropdownOpen);
+              setIsStatusDropdownOpen(false);
+              setIsPeriodDropdownOpen(false);
+            }}
+            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[10px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95"
+          >
+            {activeRating === "TODOS" ? <Filter size={12} /> : React.createElement(ratingFilters.find(f => f.id === activeRating)?.icon || Meh, { size: 12, className: ratingFilters.find(f => f.id === activeRating)?.color })}
+            {ratingFilters.find(f => f.id === activeRating)?.name || "Interés"}
+            <ChevronDown size={12} className={clsx("transition-transform", isRatingDropdownOpen && "rotate-180")} />
+          </button>
+
+          {isRatingDropdownOpen && (
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              {ratingFilters.map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => { setActiveRating(f.id); setIsRatingDropdownOpen(false); setCurrentPage(1); }}
+                  className={clsx(
+                    "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-[11px] font-bold transition-all",
+                    activeRating === f.id ? "bg-primary/5 text-primary" : "text-slate-500 hover:bg-slate-50"
+                  )}
+                >
+                  <f.icon size={16} className={f.color} />
+                  {f.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Status Dropdown */}
         <div className="relative shrink-0">
           <button 
             onClick={() => {
               setIsStatusDropdownOpen(!isStatusDropdownOpen);
               setIsPeriodDropdownOpen(false);
+              setIsRatingDropdownOpen(false);
             }}
-            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[11px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95"
+            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[10px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95"
           >
             <div className={clsx("w-2 h-2 rounded-full", statusFilters.find(f => f.id === activeStatus)?.color)} />
-            {statusFilters.find(f => f.id === activeStatus)?.name || "Interés"}
-            <ChevronDown size={14} className={clsx("transition-transform", isStatusDropdownOpen && "rotate-180")} />
+            {statusFilters.find(f => f.id === activeStatus)?.name || "Estado"}
+            <ChevronDown size={12} className={clsx("transition-transform", isStatusDropdownOpen && "rotate-180")} />
           </button>
 
           {isStatusDropdownOpen && (
@@ -362,7 +411,7 @@ function DashboardContent() {
                 Faltan columnas en la base de datos. Por favor, ejecuta el contenido del archivo <code className="bg-red-100 px-1 rounded">scripts/sync_db.sql</code> en tu base de datos para corregir esto.
               </p>
               <button 
-                onClick={() => fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus, isVisitsActive)}
+                onClick={() => fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive)}
                 className="w-full bg-red-500 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-red-500/20 active:scale-95 transition-all mb-3"
               >
                 Reintentar Después de Ejecutar SQL
@@ -372,7 +421,10 @@ function DashboardContent() {
         ) : (
           <>
             {leads.map((lead, index) => {
-              const statusType = getStatusColor(lead.status);
+              const statusType = getStatusColor(lead.status, lead.rating);
+              const RatingIcon = lead.rating === 'VENTA' ? Laugh : lead.rating === 'INTERESADO' ? Smile : Meh;
+              const ratingColor = lead.rating === 'VENTA' ? 'text-green-500' : lead.rating === 'INTERESADO' ? 'text-orange-500' : 'text-slate-300';
+
               return (
                 <div
                   key={lead.id}
@@ -385,8 +437,11 @@ function DashboardContent() {
                   )}
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div className="w-12 h-12 bg-slate-50 flex-shrink-0 rounded-full flex items-center justify-center text-slate-400 border border-slate-100 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 bg-slate-50 flex-shrink-0 rounded-full flex items-center justify-center text-slate-400 border border-slate-100 group-hover:scale-110 transition-transform relative">
                     <UserIcon size={24} />
+                    <div className="absolute -top-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
+                       <RatingIcon size={12} className={ratingColor} />
+                    </div>
                   </div>
                   
                   <div className="flex-1 min-w-0">

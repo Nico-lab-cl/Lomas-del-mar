@@ -60,6 +60,7 @@ export async function PATCH(
         notes: data.notes,
         visited: data.visited,
         interests: data.interests,
+        rating: data.rating,
         lastNoteAt: data.notes ? new Date() : undefined,
       },
     });
