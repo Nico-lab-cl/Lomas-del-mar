@@ -19,9 +19,9 @@ const config: Config = {
           light: "#FFF8E1",
         },
         status: {
-          hot: "#4CAF50",
-          warm: "#DFA32B",
-          cold: "#E84E4E",
+          hot: "#22C55E", // Green (Muy Interesado)
+          warm: "#FB923C", // Orange (Interés)
+          cold: "#94A3B8", // Blue-gray (Frio)
         },
         background: "#F5F7F9",
       },

@@ -57,17 +57,24 @@ function DashboardContent() {
   const [activeProject, setActiveProject] = useState("TODOS");
   const [dateFilter, setDateFilter] = useState("TODOS");
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeStatus, setActiveStatus] = useState("TODOS");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
+  const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false);
+  const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   // Helper to fetch leads with all current filters
-  const fetchLeads = useCallback(async (page: number, q: string, project: string, dateRange: string) => {
+  const fetchLeads = useCallback(async (page: number, q: string, project: string, dateRange: string, statusFilter: string) => {
     setLoading(true);
     try {
+      // Optimizamos búsqueda: quitamos espacios extras y normalizamos
+      const normalizedQuery = q.trim().replace(/\s+/g, ' ');
+
       let url = `/api/leads?page=${page}&limit=10`;
-      if (q) url += `&q=${encodeURIComponent(q)}`;
+      if (normalizedQuery) url += `&q=${encodeURIComponent(normalizedQuery)}`;
       if (project !== "TODOS") url += `&source=${encodeURIComponent(project)}`;
+      if (statusFilter !== "TODOS") url += `&status=${encodeURIComponent(statusFilter)}`;
       
       const { start, end } = getDateRange(dateRange);
       if (start) url += `&startDate=${start}`;
@@ -104,12 +111,12 @@ function DashboardContent() {
       router.push("/login");
     } else if (status === "authenticated") {
       const delayDebounceFn = setTimeout(() => {
-        fetchLeads(currentPage, searchTerm, activeProject, dateFilter);
+        fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus);
       }, 500);
 
       return () => clearTimeout(delayDebounceFn);
     }
-  }, [status, router, currentPage, searchTerm, activeProject, dateFilter, fetchLeads]);
+  }, [status, router, currentPage, searchTerm, activeProject, dateFilter, activeStatus, fetchLeads]);
 
   const getDateRange = (filter: string) => {
     const now = new Date();
@@ -136,8 +143,9 @@ function DashboardContent() {
   };
 
   const getStatusColor = (status: string) => {
-    if (['CALIENTE', 'HOT', 'NEW'].includes(status)) return 'hot';
-    if (['SEGUIMIENTO', 'WARM'].includes(status)) return 'warm';
+    if (['MUY INTERESADO', 'HOT'].includes(status)) return 'hot';
+    if (['INTERESADO', 'INTERES', 'WARM'].includes(status)) return 'warm';
+    if (['FRIO', 'COLD', 'NEW'].includes(status)) return 'cold';
     return 'cold';
   };
 
@@ -148,7 +156,20 @@ function DashboardContent() {
     { id: "lomasdelmar", name: "Lomas del Mar", icon: LayoutGrid },
   ];
 
-  const dateFilters = ["TODOS", "HOY", "AYER", "ESTA SEMANA", "30 DIAS"];
+  const dateFilters = [
+    { id: "TODOS", name: "Todos los Periodos" },
+    { id: "HOY", name: "Hoy" },
+    { id: "AYER", name: "Ayer" },
+    { id: "ESTA SEMANA", name: "Esta Semana" },
+    { id: "30 DIAS", name: "Últimos 30 días" },
+  ];
+
+  const statusFilters = [
+    { id: "TODOS", name: "Todos los Intereses", color: "bg-slate-400" },
+    { id: "FRIO", name: "Frio", color: "bg-[#94A3B8]" }, // Azul grisáceo
+    { id: "INTERES", name: "Interés", color: "bg-[#FB923C]" }, // Naranja
+    { id: "MUY INTERESADO", name: "Muy Interesado", color: "bg-[#22C55E]" }, // Verde
+  ];
 
   if (status === "loading") {
     return (
@@ -244,26 +265,72 @@ function DashboardContent() {
         </div>
       </header>
 
-      {/* Date Filter Chips */}
-      <div className="overflow-x-auto no-scrollbar py-4 px-6 flex items-center gap-3">
-        <div className="flex items-center gap-2 pr-2 border-r border-slate-200">
-           <Calendar size={14} className="text-slate-400" />
-           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Periodo:</span>
-        </div>
-        {dateFilters.map((filter) => (
-          <button
-            key={filter}
-            onClick={() => { setDateFilter(filter); setCurrentPage(1); }}
-            className={clsx(
-              "whitespace-nowrap px-5 py-2.5 rounded-full text-[11px] font-black tracking-wider transition-all border shrink-0",
-              dateFilter === filter 
-                ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" 
-                : "bg-white text-slate-400 border-slate-200"
-            )}
+      {/* Dropdown Filters Row */}
+      <div className="py-4 px-6 flex items-center gap-2 overflow-x-auto no-scrollbar">
+        {/* Period Dropdown */}
+        <div className="relative shrink-0">
+          <button 
+            onClick={() => {
+              setIsPeriodDropdownOpen(!isPeriodDropdownOpen);
+              setIsStatusDropdownOpen(false);
+            }}
+            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[11px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95"
           >
-            {filter}
+            <Calendar size={14} className="text-primary" />
+            {dateFilters.find(f => f.id === dateFilter)?.name || "Periodo"}
+            <ChevronDown size={14} className={clsx("transition-transform", isPeriodDropdownOpen && "rotate-180")} />
           </button>
-        ))}
+
+          {isPeriodDropdownOpen && (
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              {dateFilters.map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => { setDateFilter(f.id); setIsPeriodDropdownOpen(false); setCurrentPage(1); }}
+                  className={clsx(
+                    "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-[11px] font-bold transition-all",
+                    dateFilter === f.id ? "bg-primary/5 text-primary" : "text-slate-500 hover:bg-slate-50"
+                  )}
+                >
+                  {f.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Interest Dropdown */}
+        <div className="relative shrink-0">
+          <button 
+            onClick={() => {
+              setIsStatusDropdownOpen(!isStatusDropdownOpen);
+              setIsPeriodDropdownOpen(false);
+            }}
+            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[11px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95"
+          >
+            <div className={clsx("w-2 h-2 rounded-full", statusFilters.find(f => f.id === activeStatus)?.color)} />
+            {statusFilters.find(f => f.id === activeStatus)?.name || "Interés"}
+            <ChevronDown size={14} className={clsx("transition-transform", isStatusDropdownOpen && "rotate-180")} />
+          </button>
+
+          {isStatusDropdownOpen && (
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              {statusFilters.map((f) => (
+                <button
+                  key={f.id}
+                  onClick={() => { setActiveStatus(f.id); setIsStatusDropdownOpen(false); setCurrentPage(1); }}
+                  className={clsx(
+                    "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-[11px] font-bold transition-all",
+                    activeStatus === f.id ? "bg-primary/5 text-primary" : "text-slate-500 hover:bg-slate-50"
+                  )}
+                >
+                  <div className={clsx("w-2 h-2 rounded-full", f.color)} />
+                  {f.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Leads List */}
@@ -284,7 +351,7 @@ function DashboardContent() {
                 Faltan columnas en la base de datos. Por favor, ejecuta el contenido del archivo <code className="bg-red-100 px-1 rounded">scripts/sync_db.sql</code> en tu base de datos para corregir esto.
               </p>
               <button 
-                onClick={() => fetchLeads(currentPage, searchTerm, activeProject, dateFilter)}
+                onClick={() => fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus)}
                 className="w-full bg-red-500 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-red-500/20 active:scale-95 transition-all mb-3"
               >
                 Reintentar Después de Ejecutar SQL

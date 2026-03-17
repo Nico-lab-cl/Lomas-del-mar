@@ -18,6 +18,7 @@ export async function GET(req: Request) {
   const skip = (page - 1) * limit;
   
   const source = searchParams.get("source");
+  const status = searchParams.get("status");
   const search = searchParams.get("q");
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
@@ -27,6 +28,10 @@ export async function GET(req: Request) {
   
   if (source && source !== "TODOS") {
     where.source = source;
+  }
+
+  if (status && status !== "TODOS") {
+    where.status = status;
   }
 
   if (search) {
