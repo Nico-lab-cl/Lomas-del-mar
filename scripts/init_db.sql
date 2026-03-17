@@ -36,15 +36,14 @@ CREATE TABLE IF NOT EXISTS "Lead" (
     CONSTRAINT "Lead_pkey" PRIMARY KEY ("id")
 );
 
--- Insert initial admin user (password should be hashed in a real app, 
--- but I will provide a placeholder or use the requested one)
--- Using 'nicolas' as password for now as per user request
+-- Insert initial users (Admins and Advisors)
 INSERT INTO "User" ("id", "username", "password", "name", "role", "updatedAt")
-VALUES (
-    'initial-admin-id', 
-    'nicolas', 
-    'nicolas', 
-    'Nicolas', 
-    'ADMIN', 
-    CURRENT_TIMESTAMP
-) ON CONFLICT ("username") DO NOTHING;
+VALUES 
+    (gen_random_uuid()::text, 'admin@aliminspa.cl', 'patricio.alimin2026', 'Admin Alimin', 'ADMIN', CURRENT_TIMESTAMP),
+    (gen_random_uuid()::text, 'marcela.e@aliminspa.cl', 'marcela.alimin2026', 'Marcela E', 'ASESOR', CURRENT_TIMESTAMP),
+    (gen_random_uuid()::text, 'Orlando.c@aliminspa.cl', 'orlando.alimin2026', 'Orlando C', 'ASESOR', CURRENT_TIMESTAMP),
+    (gen_random_uuid()::text, 'Barbara.a@aliminspa.cl', 'barbara.alimin2026', 'Barbara A', 'ASESOR', CURRENT_TIMESTAMP)
+ON CONFLICT ("username") DO UPDATE SET
+    "password" = EXCLUDED."password",
+    "role" = EXCLUDED."role",
+    "updatedAt" = CURRENT_TIMESTAMP;
