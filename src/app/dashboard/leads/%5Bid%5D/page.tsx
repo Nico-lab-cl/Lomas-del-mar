@@ -1,15 +1,14 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { 
   ChevronLeft, Phone, MessageSquare, Mail, 
-  Clock, Calendar, MapPin, User, ChevronRight,
+  MapPin, User, ChevronRight,
   MoreVertical, Edit2, CheckCircle2, AlertCircle,
-  ArrowRight, StickyNote, LayoutGrid
+  StickyNote, LayoutGrid
 } from "lucide-react";
 import clsx from "clsx";
-import Image from "next/image";
 
 interface Lead {
   id: string;
@@ -23,10 +22,20 @@ interface Lead {
   visited: boolean;
   interests: string;
   createdAt: string;
+  ciudad?: string;
+  label?: string;
+  isExternal?: boolean;
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
 }
 
-export default function LeadDetailPage({ params }: { params: { id: string } }) {
+function LeadDetailContent({ id }: { id: string }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isExternal = searchParams.get("external") === "true";
+  const externalEmail = searchParams.get("email");
+
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +44,11 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     async function fetchLead() {
       try {
-        const res = await fetch(`/api/leads/${params.id}`);
+        const url = isExternal 
+          ? `/api/leads/${id}?external=true&email=${externalEmail}`
+          : `/api/leads/${id}`;
+          
+        const res = await fetch(url);
         if (res.ok) {
           const data = await res.json();
           setLead(data);
@@ -49,16 +62,22 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
       }
     }
     fetchLead();
-  }, [params.id]);
+  }, [id, isExternal, externalEmail]);
 
   const handleStatusUpdate = async (newStatus: string) => {
     if (!lead || isUpdating) return;
     setIsUpdating(true);
     try {
-      const res = await fetch(`/api/leads/${params.id}`, {
+      const res = await fetch(`/api/leads/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus }),
+        body: JSON.stringify({ 
+          status: newStatus,
+          isExternal: lead.isExternal,
+          email: lead.email,
+          firstName: lead.firstName,
+          source: lead.source
+        }),
       });
       if (res.ok) {
         setLead({ ...lead, status: newStatus });
@@ -74,10 +93,16 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
     if (!lead || isUpdating) return;
     setIsUpdating(true);
     try {
-      const res = await fetch(`/api/leads/${params.id}`, {
+      const res = await fetch(`/api/leads/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ visited: !lead.visited }),
+        body: JSON.stringify({ 
+          visited: !lead.visited,
+          isExternal: lead.isExternal,
+          email: lead.email,
+          firstName: lead.firstName,
+          source: lead.source
+        }),
       });
       if (res.ok) {
         setLead({ ...lead, visited: !lead.visited });
@@ -124,9 +149,7 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
           <ChevronLeft size={24} />
         </button>
         <h1 className="text-sm font-black uppercase tracking-[0.2em] text-slate-800">Ficha del Lead</h1>
-        <button className="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400">
-          <MoreVertical size={20} />
-        </button>
+        <div className="w-10 h-10 flex items-center justify-center" />
       </header>
 
       {/* Profile Header */}
@@ -141,34 +164,53 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
                 <CheckCircle2 size={16} />
               </div>
             )}
+            {lead.label && (
+              <div className="absolute -top-1 -right-1 bg-primary text-white text-[8px] font-black px-2 py-1 rounded-lg border-2 border-white shadow-sm">
+                {lead.label}
+              </div>
+            )}
           </div>
           <h2 className="text-2xl font-black text-slate-800 leading-tight mb-1">
             {lead.firstName} {lead.lastName}
           </h2>
-          <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-widest">
-            <span className="text-primary/70">{lead.source}</span>
-            <span>•</span>
-            <span>Registrado {new Date(lead.createdAt).toLocaleDateString()}</span>
+          <div className="flex flex-col items-center gap-1">
+            <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-widest">
+              <span className="text-primary/70">{lead.source || 'Sin Proyecto'}</span>
+              <span>•</span>
+              <span>{new Date(lead.createdAt).toLocaleDateString()}</span>
+            </div>
+            {lead.ciudad && (
+              <div className="flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">
+                <MapPin size={10} className="text-primary/50" />
+                {lead.ciudad}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="grid grid-cols-3 gap-4 mt-8">
           <a 
-            href={`tel:${lead.phone}`}
-            className="flex flex-col items-center gap-2 group"
+            href={lead.phone ? `tel:${lead.phone}` : "#"}
+            className={clsx(
+              "flex flex-col items-center gap-2 group",
+              !lead.phone && "opacity-30 pointer-events-none"
+            )}
           >
             <div className="w-14 h-14 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center shadow-sm group-active:scale-90 transition-all">
-              <Phone size={24} fill="currentColor" className="fill-blue-500/10" />
+              <Phone size={24} />
             </div>
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Llamar</span>
           </a>
           <a 
-            href={`https://wa.me/${lead.phone.replace(/\+/g, '')}`}
-            className="flex flex-col items-center gap-2 group"
+            href={lead.phone ? `https://wa.me/${lead.phone.replace(/\+/g, '')}` : "#"}
+            className={clsx(
+              "flex flex-col items-center gap-2 group",
+              !lead.phone && "opacity-30 pointer-events-none"
+            )}
           >
             <div className="w-14 h-14 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center shadow-sm group-active:scale-90 transition-all">
-              <MessageSquare size={24} fill="currentColor" className="fill-green-500/10" />
+              <MessageSquare size={24} />
             </div>
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">WhatsApp</span>
           </a>
@@ -177,7 +219,7 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
             className="flex flex-col items-center gap-2 group"
           >
             <div className="w-14 h-14 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center shadow-sm group-active:scale-90 transition-all">
-              <Mail size={24} fill="currentColor" className="fill-red-500/10" />
+              <Mail size={24} />
             </div>
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Email</span>
           </a>
@@ -200,8 +242,8 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
             </div>
           </div>
           
-          <div className="flex justify-between items-center px-2">
-            {["FRIO", "INTERES", "MUY INTERESADO"].map((s, idx) => (
+          <div className="flex justify-between items-center px-4">
+            {["FRIO", "INTERES", "MUY INTERESADO"].map((s) => (
               <button
                 key={s}
                 onClick={() => handleStatusUpdate(s)}
@@ -220,7 +262,6 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
                 )}>{s}</span>
               </button>
             ))}
-            <div className="absolute left-[calc(1.5rem+3.5rem)] right-[calc(1.5rem+3.5rem)] h-[2px] bg-slate-100 -z-10 top-[calc(6.5rem)]" />
           </div>
         </div>
 
@@ -252,15 +293,32 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
            </div>
         </div>
 
+        {/* Marketing UTM Info */}
+        {(lead.utm_source || lead.utm_medium) && (
+          <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Marketing & UTMs</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="bg-slate-50 p-3 rounded-2xl">
+                <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Source</p>
+                <p className="text-[11px] font-bold text-slate-600 truncate">{lead.utm_source || '-'}</p>
+              </div>
+              <div className="bg-slate-50 p-3 rounded-2xl">
+                <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Medium</p>
+                <p className="text-[11px] font-bold text-slate-600 truncate">{lead.utm_medium || '-'}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Interests & Projects */}
         <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100">
           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Intereses y Proyecto</h3>
           <div className="flex flex-wrap gap-2">
             <span className="bg-slate-50 text-slate-600 px-4 py-2 rounded-xl text-xs font-bold border border-slate-100 flex items-center gap-2">
               <LayoutGrid size={14} className="text-primary" />
-              {lead.source}
+              {lead.source || 'Sin Proyecto'}
             </span>
-            {lead.interests?.split(',').map((interest, idx) => (
+            {lead.interests?.split(',').filter(Boolean).map((interest: string, idx: number) => (
               <span key={idx} className="bg-primary/5 text-primary px-4 py-2 rounded-xl text-xs font-bold border border-primary/10">
                 {interest.trim()}
               </span>
@@ -295,5 +353,17 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
          </button>
       </div>
     </div>
+  );
+}
+
+export default function LeadDetailPage({ params }: { params: { id: string } }) {
+  return (
+    <Suspense fallback={
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+      </div>
+    }>
+      <LeadDetailContent id={params.id} />
+    </Suspense>
   );
 }
