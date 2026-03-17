@@ -205,8 +205,8 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
           <InfoRow label="Teléfono" value={lead.phone} icon={Smartphone} />
           <InfoRow label="Correo Electrónico" value={lead.email} icon={Mail} />
           <InfoRow 
-            label={lead.source?.toUpperCase() === "META" ? "Formulario" : "Proyecto de Interés"} 
-            value={lead.source?.toUpperCase() === "META" ? (lead.formId || "General") : (lead.interests || "General")} 
+            label={lead.source?.toUpperCase() === "META" ? "Anuncio Meta" : "Proyecto de Interés"} 
+            value={lead.source?.toUpperCase() === "META" ? (lead.adName || lead.adId || "General") : (lead.interests || "General")} 
             icon={Landscape} 
           />
           
