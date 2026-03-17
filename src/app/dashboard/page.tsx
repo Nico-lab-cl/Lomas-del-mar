@@ -255,6 +255,8 @@ export default function DashboardPage() {
       {/* Leads List */}
       <main className="flex-1 px-6 space-y-4 pb-12 min-h-[500px]">
         {loading ? (
+          <div className="flex flex-col items-center py-20 opacity-30">
+            <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4" />
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Actualizando lista...</p>
           </div>
         ) : fetchError ? (
