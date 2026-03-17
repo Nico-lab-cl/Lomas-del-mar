@@ -147,8 +147,11 @@ export async function POST(req: Request) {
       utmSource: data.utmSource,
       utmMedium: data.utmMedium,
       utmCampaign: data.utmCampaign,
-      utmContent: data.utmContent || data.form_id,
-      utmTerm: data.utmTerm || data.ad_id,
+      utmContent: data.utmContent,
+      utmTerm: data.utmTerm,
+      adId: data.adId || data.ad_id,
+      adName: data.adName || data.ad_name,
+      formId: data.formId || data.form_id,
       interests: data.interests,
     };
 

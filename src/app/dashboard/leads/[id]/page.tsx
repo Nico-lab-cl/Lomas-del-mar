@@ -1,11 +1,10 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { 
   ArrowLeft, MoreVertical, Phone, MessageSquare, 
   Mail, User as UserIcon, Smartphone, Map as MapIcon, 
   Edit3, Save, ChevronRight, Tent as Landscape,
-  Meh, Smile, Laugh
+  Meh, Smile, Laugh, Megaphone, ExternalLink
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -22,6 +21,9 @@ interface Lead {
   rating?: string;
   notes: string;
   interests: string;
+  adId?: string;
+  adName?: string;
+  formId?: string;
 }
 
 export default function LeadDetailPage({ params }: { params: { id: string } }) {
@@ -202,7 +204,24 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
           <InfoRow label="Nombre Completo" value={`${lead.firstName} ${lead.lastName}`} icon={UserIcon} />
           <InfoRow label="Teléfono" value={lead.phone} icon={Smartphone} />
           <InfoRow label="Correo Electrónico" value={lead.email} icon={Mail} />
-          <InfoRow label="Proyecto de Interés" value={lead.interests || "General"} icon={Landscape} border={false} />
+          <InfoRow label="Proyecto de Interés" value={lead.interests || "General"} icon={Landscape} />
+          
+          {(lead.adId || lead.adName) && (
+            <div className="border-t border-primary/5 bg-slate-50/50 p-4 flex justify-between items-center group cursor-pointer hover:bg-slate-50 transition-colors"
+                 onClick={() => lead.adId && window.open(`https://www.facebook.com/ads/library/?id=${lead.adId}`)}>
+              <div className="flex flex-col">
+                <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Anuncio de Meta</p>
+                <p className="text-slate-900 text-sm font-bold mt-0.5 truncate max-w-[200px]">
+                  {lead.adName || `ID: ${lead.adId}`}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest bg-primary/10 px-3 py-1.5 rounded-lg group-hover:bg-primary/20 transition-all">
+                <Megaphone size={14} />
+                <span>Ver Anuncio</span>
+                <ExternalLink size={12} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

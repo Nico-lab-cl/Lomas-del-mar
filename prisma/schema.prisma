@@ -52,6 +52,9 @@ model Lead {
   utmCampaign  String?
   utmContent   String?
   utmTerm      String?
+  adId         String?
+  adName       String?
+  formId       String?
 
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
