@@ -423,7 +423,11 @@ function DashboardContent() {
             {leads.map((lead, index) => {
               const statusType = getStatusColor(lead.status, lead.rating);
               const RatingIcon = lead.rating === 'VENTA' ? Laugh : lead.rating === 'INTERESADO' ? Smile : Meh;
-              const ratingColor = lead.rating === 'VENTA' ? 'text-green-500' : lead.rating === 'INTERESADO' ? 'text-orange-500' : 'text-slate-300';
+              const ratingStyle = lead.rating === 'VENTA' 
+                ? { color: 'text-green-600', bg: 'bg-green-100' } 
+                : lead.rating === 'INTERESADO' 
+                  ? { color: 'text-orange-500', bg: 'bg-orange-100' } 
+                  : { color: 'text-slate-500', bg: 'bg-slate-100' };
 
               return (
                 <div
@@ -439,9 +443,11 @@ function DashboardContent() {
                 >
                   <div className="w-12 h-12 bg-slate-50 flex-shrink-0 rounded-full flex items-center justify-center text-slate-400 border border-slate-100 group-hover:scale-110 transition-transform relative">
                     <UserIcon size={24} />
-                    <div className="absolute -top-1 -right-1 bg-white rounded-full p-0.5 shadow-sm">
-                       <RatingIcon size={12} className={ratingColor} />
-                    </div>
+                    {lead.rating && (
+                      <div className={clsx("absolute -top-1 -right-1 rounded-full p-1 shadow-sm border border-white", ratingStyle.bg)}>
+                        <RatingIcon size={10} className={ratingStyle.color} strokeWidth={3} />
+                      </div>
+                    )}
                   </div>
                   
                   <div className="flex-1 min-w-0">
