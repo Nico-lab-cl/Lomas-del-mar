@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { 
   ArrowLeft, MoreVertical, Phone, MessageSquare, 
   Mail, User as UserIcon, Smartphone, Map as MapIcon, 
   Edit3, Save, ChevronRight, Tent as Landscape,
-  Meh, Smile, Laugh, Megaphone, ExternalLink, History
+  Meh, Smile, Laugh, Megaphone, ExternalLink, History,
+  ChevronDown, UserCheck
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -25,15 +27,29 @@ interface Lead {
   adName?: string;
   formId?: string;
   lastActivity?: string;
+  assignedToId?: string;
+  assignedTo?: { name: string; image?: string };
+}
+
+interface UserOption {
+  id: string;
+  name: string;
+  role: string;
 }
 
 export default function LeadDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
+  const { data: session } = useSession();
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
   const [note, setNote] = useState("");
   const [savingNote, setSavingNote] = useState(false);
   const [updatingRating, setUpdatingRating] = useState(false);
+  const [users, setUsers] = useState<UserOption[]>([]);
+  const [isAssignDropdownOpen, setIsAssignDropdownOpen] = useState(false);
+  const [assigningLead, setAssigningLead] = useState(false);
+
+  const isAdmin = (session?.user as any)?.role === "ADMIN";
 
   useEffect(() => {
     fetch(`/api/leads/${params.id}`)
@@ -44,6 +60,37 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
       })
       .finally(() => setLoading(false));
   }, [params.id]);
+
+  // Fetch users for admin assignment
+  useEffect(() => {
+    if (isAdmin) {
+      fetch("/api/users")
+        .then(res => res.json())
+        .then(data => setUsers(data))
+        .catch(err => console.error("Failed to fetch users", err));
+    }
+  }, [isAdmin]);
+
+  const handleAssignLead = async (userId: string) => {
+    if (!lead || assigningLead) return;
+    setAssigningLead(true);
+    try {
+      const res = await fetch(`/api/leads/${lead.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ assignedToId: userId }),
+      });
+      if (res.ok) {
+        const user = users.find(u => u.id === userId);
+        setLead({ ...lead, assignedToId: userId, assignedTo: user ? { name: user.name } : undefined });
+      }
+    } catch (error) {
+      console.error("Error assigning lead:", error);
+    } finally {
+      setAssigningLead(false);
+      setIsAssignDropdownOpen(false);
+    }
+  };
 
   const handleSaveNote = async () => {
     setSavingNote(true);
@@ -263,6 +310,79 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
                 <Megaphone size={14} />
                 <span>Ver Anuncio</span>
                 <ExternalLink size={12} />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Lead Owner / Assignment */}
+      <div className="px-4 py-2 mb-2">
+        <h3 className="text-slate-900 text-[10px] font-black uppercase tracking-widest px-1 pb-3 opacity-40">Propietario del Lead</h3>
+        <div className="bg-white rounded-2xl overflow-hidden border border-primary/5 shadow-sm">
+          {isAdmin ? (
+            <div className="relative">
+              <button
+                onClick={() => setIsAssignDropdownOpen(!isAssignDropdownOpen)}
+                className={clsx(
+                  "w-full flex items-center justify-between p-4 transition-all",
+                  isAssignDropdownOpen ? "bg-primary/5" : "hover:bg-slate-50"
+                )}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={clsx(
+                    "w-10 h-10 rounded-full flex items-center justify-center border",
+                    lead.assignedTo ? "bg-primary/10 border-primary/20" : "bg-red-50 border-red-200"
+                  )}>
+                    <UserCheck size={18} className={lead.assignedTo ? "text-primary" : "text-red-400"} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">
+                      {lead.assignedTo ? "Asignado a" : "Sin Asignar"}
+                    </p>
+                    <p className={clsx("text-sm font-bold mt-0.5", lead.assignedTo ? "text-slate-800" : "text-red-500")}>
+                      {lead.assignedTo?.name || "Seleccionar asesor..."}
+                    </p>
+                  </div>
+                </div>
+                <ChevronDown size={18} className={clsx("text-slate-400 transition-transform", isAssignDropdownOpen && "rotate-180")} />
+              </button>
+
+              {isAssignDropdownOpen && (
+                <div className="border-t border-primary/5 p-2 max-h-48 overflow-y-auto animate-in fade-in slide-in-from-top-1 duration-200">
+                  {users.map(user => (
+                    <button
+                      key={user.id}
+                      onClick={() => handleAssignLead(user.id)}
+                      disabled={assigningLead}
+                      className={clsx(
+                        "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all text-sm",
+                        lead.assignedToId === user.id ? "bg-primary/5 text-primary font-bold" : "text-slate-600 hover:bg-slate-50"
+                      )}
+                    >
+                      <div className={clsx(
+                        "w-8 h-8 rounded-full flex items-center justify-center",
+                        lead.assignedToId === user.id ? "bg-primary/10" : "bg-slate-100"
+                      )}>
+                        <UserIcon size={14} className={lead.assignedToId === user.id ? "text-primary" : "text-slate-400"} />
+                      </div>
+                      <div>
+                        <p className="font-bold leading-tight">{user.name}</p>
+                        <p className="text-[10px] font-black uppercase tracking-widest opacity-50">{user.role}</p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-3 p-4">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-primary/10 border border-primary/20">
+                <UserCheck size={18} className="text-primary" />
+              </div>
+              <div>
+                <p className="text-[10px] text-slate-400 font-black uppercase tracking-widest">Asignado a</p>
+                <p className="text-sm font-bold text-slate-800 mt-0.5">{lead.assignedTo?.name || "Mi cartera"}</p>
               </div>
             </div>
           )}

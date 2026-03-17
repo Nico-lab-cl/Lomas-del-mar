@@ -13,6 +13,11 @@ export async function GET(
   try {
     const lead = await (prisma as any).lead.findUnique({
       where: { id: params.id },
+      include: {
+        assignedTo: {
+          select: { name: true, image: true },
+        },
+      },
     });
     return NextResponse.json(lead);
   } catch (error) {
@@ -34,6 +39,11 @@ export async function PATCH(
       data: {
         ...data,
         lastNoteAt: data.notes ? new Date() : undefined,
+      },
+      include: {
+        assignedTo: {
+          select: { name: true, image: true },
+        },
       },
     });
     return NextResponse.json(updatedLead);
