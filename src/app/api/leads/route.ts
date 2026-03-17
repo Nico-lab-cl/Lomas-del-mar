@@ -137,6 +137,7 @@ export async function GET(req: Request) {
         const local = localMap.get(l.email) as any;
         return {
           ...l,
+          createdAt: l.created_at, // Map snake_case to camelCase for UI
           status: local?.status || "FRIO",
           notes: local?.notes || "",
           visited: local?.visited || false,

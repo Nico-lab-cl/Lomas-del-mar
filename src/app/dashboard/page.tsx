@@ -22,6 +22,7 @@ interface Lead {
   status: string;
   createdAt: string;
   source: string;
+  isExternal?: boolean;
 }
 
 interface Pagination {
@@ -375,7 +376,12 @@ function DashboardContent() {
               return (
                 <div
                   key={lead.id}
-                  onClick={() => router.push(`/dashboard/leads/${lead.id}`)}
+                  onClick={() => {
+                    const url = lead.isExternal 
+                      ? `/dashboard/leads/${lead.id}?external=true&email=${lead.email}`
+                      : `/dashboard/leads/${lead.id}`;
+                    router.push(url);
+                  }}
                   className={clsx(
                     "card-stitch flex items-center gap-4 relative overflow-hidden group animate-in fade-in slide-in-from-bottom-4 duration-500 cursor-pointer",
                     statusType === 'hot' ? "status-edge-hot" : statusType === 'warm' ? "status-edge-warm" : "status-edge-cold"
