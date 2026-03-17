@@ -375,8 +375,9 @@ function DashboardContent() {
               return (
                 <div
                   key={lead.id}
+                  onClick={() => router.push(`/dashboard/leads/${lead.id}`)}
                   className={clsx(
-                    "card-stitch flex items-center gap-4 relative overflow-hidden group animate-in fade-in slide-in-from-bottom-4 duration-500",
+                    "card-stitch flex items-center gap-4 relative overflow-hidden group animate-in fade-in slide-in-from-bottom-4 duration-500 cursor-pointer",
                     statusType === 'hot' ? "status-edge-hot" : statusType === 'warm' ? "status-edge-warm" : "status-edge-cold"
                   )}
                   style={{ animationDelay: `${index * 50}ms` }}
