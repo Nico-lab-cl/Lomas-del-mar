@@ -147,8 +147,9 @@ export async function POST(req: Request) {
       utmSource: data.utmSource,
       utmMedium: data.utmMedium,
       utmCampaign: data.utmCampaign,
-      utmContent: data.utmContent,
-      utmTerm: data.utmTerm,
+      utmContent: data.utmContent || data.form_id,
+      utmTerm: data.utmTerm || data.ad_id,
+      interests: data.interests,
     };
 
     // If it comes from Meta field_data array
@@ -167,6 +168,11 @@ export async function POST(req: Request) {
             break;
           case "email": leadData.email = value.toLowerCase(); break;
           case "phone_number": leadData.phone = value; break;
+          case "proyecto": 
+          case "interes":
+          case "proyecto_de_interes":
+            leadData.interests = value;
+            break;
         }
       });
     }
