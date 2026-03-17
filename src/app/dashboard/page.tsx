@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { 
   Plus, Search, Filter, Bell, User as UserIcon, 
   ChevronRight, Phone, MessageSquare, Clock,
@@ -70,6 +70,14 @@ export default function DashboardPage() {
       setLoading(false);
     }
   }, []);
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("menu") === "profile") {
+      setIsProfileOpen(true);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (status === "unauthenticated") {

@@ -62,9 +62,13 @@ export async function GET(req: Request) {
         limit
       }
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching leads:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      error: "Internal Server Error", 
+      details: error.message,
+      code: error.code // Prisma error code if any
+    }, { status: 500 });
   }
 }
 
