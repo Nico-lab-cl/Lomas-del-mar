@@ -1,13 +1,23 @@
 import admin from "firebase-admin";
 
-const serviceAccount = JSON.parse(
-  process.env.FIREBASE_SERVICE_ACCOUNT_KEY || "{}"
-);
+let serviceAccount: any = null;
+try {
+  const key = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+  if (key) {
+    serviceAccount = JSON.parse(key);
+  }
+} catch (e) {
+  console.warn("Firebase: Could not parse FIREBASE_SERVICE_ACCOUNT_KEY");
+}
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-  });
+if (!admin.apps.length && serviceAccount && serviceAccount.project_id && !serviceAccount.project_id.includes("PEGAR")) {
+  try {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+    });
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+  }
 }
 
 export const sendNotification = async (token: string, title: string, body: string) => {

@@ -7,10 +7,22 @@ RUN npm install
 # Stage 2: Build the application
 FROM node:18-alpine AS builder
 WORKDIR /app
+
+# Define build arguments
+ARG DATABASE_URL
+ARG NEXTAUTH_SECRET
+ARG NEXTAUTH_URL
+ARG FIREBASE_SERVICE_ACCOUNT_KEY
+
+# Set them as environment variables for the build process
+ENV DATABASE_URL=$DATABASE_URL
+ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+ENV NEXTAUTH_URL=$NEXTAUTH_URL
+ENV FIREBASE_SERVICE_ACCOUNT_KEY=$FIREBASE_SERVICE_ACCOUNT_KEY
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-# We need the DATABASE_URL during build time for Prisma if you use it in getStaticProps/getStaticPaths, 
-# but for App Router it's mostly runtime. However, generating the client is necessary.
+
 RUN npx prisma generate
 RUN npm run build
 
@@ -20,6 +32,7 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
+# Only copy if they exist
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
