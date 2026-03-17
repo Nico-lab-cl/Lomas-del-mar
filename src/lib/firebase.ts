@@ -10,7 +10,13 @@ try {
   console.warn("Firebase: Could not parse FIREBASE_SERVICE_ACCOUNT_KEY");
 }
 
-if (!admin.apps.length && serviceAccount && serviceAccount.project_id && !serviceAccount.project_id.includes("PEGAR")) {
+if (!admin.apps.length && 
+    serviceAccount && 
+    serviceAccount.project_id && 
+    !serviceAccount.project_id.includes("PEGAR") &&
+    serviceAccount.private_key &&
+    !serviceAccount.private_key.includes("PEGAR")
+) {
   try {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccount),
