@@ -361,7 +361,7 @@ function DashboardContent() {
                 Faltan columnas en la base de datos. Por favor, ejecuta el contenido del archivo <code className="bg-red-100 px-1 rounded">scripts/sync_db.sql</code> en tu base de datos para corregir esto.
               </p>
               <button 
-                onClick={() => fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus)}
+                onClick={() => fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus, isVisitsActive)}
                 className="w-full bg-red-500 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-red-500/20 active:scale-95 transition-all mb-3"
               >
                 Reintentar Después de Ejecutar SQL
