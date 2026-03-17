@@ -45,7 +45,7 @@ function LeadDetailContent({ id }: { id: string }) {
     async function fetchLead() {
       try {
         const url = isExternal 
-          ? `/api/leads/${id}?external=true&email=${externalEmail}`
+          ? `/api/leads/${encodeURIComponent(id)}?external=true&email=${encodeURIComponent(externalEmail || "")}`
           : `/api/leads/${id}`;
           
         const res = await fetch(url);

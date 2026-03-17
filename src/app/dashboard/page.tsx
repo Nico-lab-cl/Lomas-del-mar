@@ -378,7 +378,7 @@ function DashboardContent() {
                   key={lead.id}
                   onClick={() => {
                     const url = lead.isExternal 
-                      ? `/dashboard/leads/${lead.id}?external=true&email=${lead.email}`
+                      ? `/dashboard/leads/${encodeURIComponent(lead.id)}?external=true&email=${encodeURIComponent(lead.email)}`
                       : `/dashboard/leads/${lead.id}`;
                     router.push(url);
                   }}

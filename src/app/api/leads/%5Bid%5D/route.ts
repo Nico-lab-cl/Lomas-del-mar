@@ -29,12 +29,12 @@ export async function GET(
         SELECT id, nombre as "firstName", '' as "lastName", email, celular as phone, 
                proyecto as "source", ciudad, created_at, 'WEB' as label,
                utm_source, utm_medium, utm_campaign, utm_content, utm_term
-        FROM leads WHERE email = $1
+        FROM leads WHERE LOWER(email) = LOWER($1)
         UNION ALL
         SELECT id, '' as "firstName", '' as "lastName", email, '' as phone, 
                'Newsletter' as "source", '' as ciudad, created_at, 'BOLETÍN' as label,
                null, null, null, null, null
-        FROM newsletter_subscribers WHERE email = $1
+        FROM newsletter_subscribers WHERE LOWER(email) = LOWER($1)
         LIMIT 1
       `, [email]);
 
