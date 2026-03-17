@@ -234,7 +234,7 @@ function DashboardContent() {
           </div>
         </div>
 
-        <div className="flex items-end justify-between mb-4">
+        <div className="flex items-end justify-between mb-4 relative z-[60]">
           <div className="flex flex-col gap-1">
             <h2 className="text-3xl font-black text-primary">{isVisitsActive ? "Visitas de Terrenos" : "Mis Leads"}</h2>
             <div className="flex items-center gap-2">
@@ -255,7 +255,7 @@ function DashboardContent() {
             </button>
 
             {isProjectDropdownOpen && (
-              <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+              <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-slate-100 rounded-3xl shadow-2xl p-3 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
                 {projects.map((p) => (
                   <button
                     key={p.id}
