@@ -171,11 +171,13 @@ export async function POST(req: Request) {
       });
     }
 
-    const newLead = await (prisma as any).lead.create({
-      data: leadData,
+    const lead = await (prisma as any).lead.upsert({
+      where: { email: leadData.email },
+      update: leadData,
+      create: leadData,
     });
     
-    return NextResponse.json(newLead);
+    return NextResponse.json(lead);
   } catch (error) {
     console.error("Error creating lead:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
