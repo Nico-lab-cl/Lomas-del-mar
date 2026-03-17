@@ -5,8 +5,8 @@ import { Pool } from "pg";
  * This pool connects to the remote PostgreSQL database to fetch web leads and newsletter subscribers.
  */
 
-// We use the external connection string provided by the user
-const externalConnectionString = "postgres://nicolas:zampullido20@84.247.162.186:5433/aliminspa?sslmode=disable";
+// Use environment variable for security
+const externalConnectionString = process.env.EXTERNAL_DB_URL;
 
 let pool: Pool | null = null;
 
