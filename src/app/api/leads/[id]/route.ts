@@ -11,7 +11,7 @@ export async function GET(
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const lead = await prisma.lead.findUnique({
+    const lead = await (prisma as any).lead.findUnique({
       where: { id: params.id },
     });
     return NextResponse.json(lead);
@@ -29,7 +29,7 @@ export async function PATCH(
 
   try {
     const data = await req.json();
-    const updatedLead = await prisma.lead.update({
+    const updatedLead = await (prisma as any).lead.update({
       where: { id: params.id },
       data: {
         ...data,

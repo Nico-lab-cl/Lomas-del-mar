@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { 
   ArrowLeft, MoreVertical, Phone, MessageSquare, 
   Mail, User as UserIcon, Smartphone, Map as MapIcon, 
-  Edit3, Save, ChevronRight, Landscape
+  Edit3, Save, ChevronRight, Tent as Landscape
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";

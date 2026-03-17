@@ -15,7 +15,7 @@ export async function POST(
     
     // In a real app we might create a separate Visit record, 
     // but for now we update the lead's status and tracking fields
-    const updatedLead = await prisma.lead.update({
+    const updatedLead = await (prisma as any).lead.update({
       where: { id: params.id },
       data: {
         visited: true,
