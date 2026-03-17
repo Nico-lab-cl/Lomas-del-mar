@@ -14,15 +14,43 @@ export async function GET(req: Request) {
   const page = parseInt(searchParams.get("page") || "1");
   const limit = parseInt(searchParams.get("limit") || "10");
   const skip = (page - 1) * limit;
+  
+  const source = searchParams.get("source");
+  const search = searchParams.get("q");
+  const startDate = searchParams.get("startDate");
+  const endDate = searchParams.get("endDate");
+
+  // Build where clause
+  let where: any = {};
+  
+  if (source && source !== "TODOS") {
+    where.source = source;
+  }
+
+  if (search) {
+    where.OR = [
+      { firstName: { contains: search, mode: 'insensitive' } },
+      { lastName: { contains: search, mode: 'insensitive' } },
+      { phone: { contains: search } },
+      { email: { contains: search, mode: 'insensitive' } },
+    ];
+  }
+
+  if (startDate || endDate) {
+    where.createdAt = {};
+    if (startDate) where.createdAt.gte = new Date(startDate);
+    if (endDate) where.createdAt.lte = new Date(endDate);
+  }
 
   try {
     const [leads, total] = await Promise.all([
       prisma.lead.findMany({
+        where,
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
       }),
-      prisma.lead.count()
+      prisma.lead.count({ where })
     ]);
 
     return NextResponse.json({

@@ -1,15 +1,17 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { 
-  Plus, Search, Filter, Bell, User, 
+  Plus, Search, Filter, Bell, User as UserIcon, 
   ChevronRight, Phone, MessageSquare, Clock,
-  MoreVertical, Share2, Mail, ChevronLeft
+  MoreVertical, Share2, Mail, ChevronLeft, ChevronDown,
+  LayoutGrid, Globe, Megaphone, Calendar
 } from "lucide-react";
 import clsx from "clsx";
 import Image from "next/image";
+import ProfileSlider from "@/components/ProfileSlider";
 
 interface Lead {
   id: string;
@@ -32,25 +34,31 @@ interface Pagination {
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  
+  // State
   const [leads, setLeads] = useState<Lead[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilter, setActiveFilter] = useState("TODOS");
+  const [activeProject, setActiveProject] = useState("TODOS");
+  const [dateFilter, setDateFilter] = useState("TODOS");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    } else if (status === "authenticated") {
-      fetchLeads(currentPage);
-    }
-  }, [status, router, currentPage]);
-
-  const fetchLeads = async (page: number) => {
+  // Helper to fetch leads with all current filters
+  const fetchLeads = useCallback(async (page: number, q: string, project: string, dateRange: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/leads?page=${page}&limit=10`);
+      let url = `/api/leads?page=${page}&limit=10`;
+      if (q) url += `&q=${encodeURIComponent(q)}`;
+      if (project !== "TODOS") url += `&source=${encodeURIComponent(project)}`;
+      
+      const { start, end } = getDateRange(dateRange);
+      if (start) url += `&startDate=${start}`;
+      if (end) url += `&endDate=${end}`;
+
+      const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         setLeads(data.leads);
@@ -61,6 +69,42 @@ export default function DashboardPage() {
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    } else if (status === "authenticated") {
+      const delayDebounceFn = setTimeout(() => {
+        fetchLeads(currentPage, searchTerm, activeProject, dateFilter);
+      }, 500);
+
+      return () => clearTimeout(delayDebounceFn);
+    }
+  }, [status, router, currentPage, searchTerm, activeProject, dateFilter, fetchLeads]);
+
+  const getDateRange = (filter: string) => {
+    const now = new Date();
+    let start: string | null = null;
+    let end: string | null = null;
+
+    if (filter === "HOY") {
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      start = today.toISOString();
+    } else if (filter === "AYER") {
+      const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+      const endOfYesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      start = yesterday.toISOString();
+      end = endOfYesterday.toISOString();
+    } else if (filter === "ESTA SEMANA") {
+      const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+      start = startOfWeek.toISOString();
+    } else if (filter === "30 DIAS") {
+      const thirtyDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
+      start = thirtyDaysAgo.toISOString();
+    }
+
+    return { start, end };
   };
 
   const getStatusColor = (status: string) => {
@@ -69,12 +113,14 @@ export default function DashboardPage() {
     return 'cold';
   };
 
-  const handlePageChange = (newPage: number) => {
-    if (pagination && newPage >= 1 && newPage <= pagination.pages) {
-      setCurrentPage(newPage);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
+  const projects = [
+    { id: "TODOS", name: "Todos los Proyectos", icon: LayoutGrid },
+    { id: "CAMPANAS", name: "Campañas Meta", icon: Megaphone },
+    { id: "web aliminspa.cl", name: "web aliminspa.cl", icon: Globe },
+    { id: "lomasdelmar", name: "Lomas del Mar", icon: LayoutGrid },
+  ];
+
+  const dateFilters = ["TODOS", "HOY", "AYER", "ESTA SEMANA", "30 DIAS"];
 
   if (status === "loading") {
     return (
@@ -86,18 +132,24 @@ export default function DashboardPage() {
 
   return (
     <div className="h-full flex flex-col bg-[#F5F7F9]">
+      <ProfileSlider isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+
       {/* Dashboard Top Header */}
       <header className="bg-white px-6 pt-10 pb-6 border-b border-slate-100 sticky top-0 z-40">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 overflow-hidden">
+             {/* Profile Click Handler */}
+            <button 
+              onClick={() => setIsProfileOpen(true)}
+              className="relative w-10 h-10 overflow-hidden group active:scale-95 transition-all"
+            >
               <Image 
                 src="/logo-alimin.png" 
                 alt="Alimin Logo" 
                 fill 
-                className="object-contain"
+                className="object-contain group-hover:scale-110 transition-transform"
               />
-            </div>
+            </button>
             <div>
               <p className="text-[10px] font-black text-primary uppercase tracking-widest leading-none mb-1">CRM ALIMIN</p>
               <h1 className="text-lg font-black text-slate-800 leading-none truncate max-w-[150px]">
@@ -106,38 +158,77 @@ export default function DashboardPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="p-2 text-slate-400 hover:text-primary transition-colors">
-              <Search size={22} />
-            </button>
+            <div className="relative">
+               <input 
+                  type="text"
+                  placeholder="Buscar lead..."
+                  value={searchTerm}
+                  onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
+                  className="bg-slate-100 border-none rounded-full py-2 pl-10 pr-4 text-xs font-medium w-40 focus:w-56 focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+               />
+               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            </div>
             <button className="p-2 text-slate-400 hover:text-primary transition-colors relative">
                <Bell size={22} />
-               <span className="absolute top-2 right-2 w-2 h-2 bg-accent rounded-full border-2 border-white" />
+               <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-pulse" />
             </button>
           </div>
         </div>
 
-        <div className="flex items-end justify-between mb-2">
-          <div className="flex items-center gap-2">
+        <div className="flex items-end justify-between mb-4">
+          <div className="flex flex-col gap-1">
             <h2 className="text-3xl font-black text-primary">Mis Leads</h2>
-            <span className="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-black rounded-lg uppercase tracking-wider">
-              {pagination?.total || 0} TOTAL
-            </span>
+            <div className="flex items-center gap-2">
+               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">
+                 {pagination?.total || 0} REGISTROS ENCONTRADOS
+               </span>
+            </div>
           </div>
-          <button className="text-slate-400 p-1">
-            <MoreVertical size={20} />
-          </button>
+          
+          {/* Project Dropdown Selector */}
+          <div className="relative">
+            <button 
+              onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
+              className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-4 py-2 rounded-xl text-xs font-black text-slate-600 hover:bg-slate-100 transition-all active:scale-95"
+            >
+              {projects.find(p => p.id === activeProject)?.name || "Proyecto"}
+              <ChevronDown size={14} className={clsx("transition-transform", isProjectDropdownOpen && "rotate-180")} />
+            </button>
+
+            {isProjectDropdownOpen && (
+              <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                {projects.map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={() => { setActiveProject(p.id); setIsProjectDropdownOpen(false); setCurrentPage(1); }}
+                    className={clsx(
+                      "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-xs font-bold transition-all",
+                      activeProject === p.id ? "bg-primary/5 text-primary" : "text-slate-500 hover:bg-slate-50"
+                    )}
+                  >
+                    <p.icon size={16} />
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
-      {/* Filter Chips */}
+      {/* Date Filter Chips */}
       <div className="overflow-x-auto no-scrollbar py-4 px-6 flex items-center gap-3">
-        {["TODOS", "NUEVOS", "CALIENTES", "EN SEGUIMIENTO"].map((filter) => (
+        <div className="flex items-center gap-2 pr-2 border-r border-slate-200">
+           <Calendar size={14} className="text-slate-400" />
+           <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">Periodo:</span>
+        </div>
+        {dateFilters.map((filter) => (
           <button
             key={filter}
-            onClick={() => { setActiveFilter(filter); setCurrentPage(1); }}
+            onClick={() => { setDateFilter(filter); setCurrentPage(1); }}
             className={clsx(
               "whitespace-nowrap px-5 py-2.5 rounded-full text-[11px] font-black tracking-wider transition-all border shrink-0",
-              activeFilter === filter 
+              dateFilter === filter 
                 ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" 
                 : "bg-white text-slate-400 border-slate-200"
             )}
@@ -152,7 +243,7 @@ export default function DashboardPage() {
         {loading ? (
           <div className="flex flex-col items-center py-20 opacity-30">
             <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4" />
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Cargando leads...</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Actualizando lista...</p>
           </div>
         ) : (
           <>
@@ -168,7 +259,7 @@ export default function DashboardPage() {
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   <div className="w-12 h-12 bg-slate-50 flex-shrink-0 rounded-full flex items-center justify-center text-slate-400 border border-slate-100 group-hover:scale-110 transition-transform">
-                    <User size={24} />
+                    <UserIcon size={24} />
                   </div>
                   
                   <div className="flex-1 min-w-0">
@@ -180,8 +271,10 @@ export default function DashboardPage() {
                     </div>
                     
                     <div className="flex items-center gap-3 text-slate-500 text-[10px] font-bold">
-                      <span className="flex items-center gap-1"><Clock size={10} />2h ago</span>
-                      <span className="flex items-center gap-1 text-primary/70 uppercase tracking-tighter"><Share2 size={10} />{lead.source || 'WEB'}</span>
+                      <span className="flex items-center gap-1"><Clock size={10} />{new Date(lead.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                      <span className="flex items-center gap-1 text-primary/70 uppercase tracking-tighter truncate max-w-[100px]">
+                        <Share2 size={10} />{lead.source || 'WEB'}
+                      </span>
                     </div>
                   </div>
                   
@@ -197,7 +290,7 @@ export default function DashboardPage() {
                 <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Search className="text-slate-300" size={32} />
                 </div>
-                <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Sin leads encontrados</p>
+                <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">No hay leads para estos filtros</p>
               </div>
             )}
 
@@ -205,7 +298,7 @@ export default function DashboardPage() {
             {pagination && pagination.pages > 1 && (
               <div className="flex items-center justify-between pt-6 pb-2">
                 <button
-                  onClick={() => handlePageChange(currentPage - 1)}
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
                   className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
                 >
@@ -219,7 +312,7 @@ export default function DashboardPage() {
                 </div>
 
                 <button
-                  onClick={() => handlePageChange(currentPage + 1)}
+                  onClick={() => setCurrentPage(prev => Math.min(pagination.pages, prev + 1))}
                   disabled={currentPage === pagination.pages}
                   className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
                 >
