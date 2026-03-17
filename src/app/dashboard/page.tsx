@@ -325,11 +325,11 @@ export default function DashboardPage() {
       </main>
 
       {/* FAB */}
-      <button className="fixed bottom-24 right-8 w-14 h-14 bg-accent text-white rounded-full flex items-center justify-center shadow-2xl shadow-accent/40 active:scale-90 transition-all z-50 cursor-pointer group hover:rotate-90">
+      <button 
+        onClick={() => router.push("/dashboard/leads/new")}
+        className="fixed bottom-6 right-6 w-16 h-16 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center active:scale-90 transition-all z-40 border-4 border-white"
+      >
         <Plus size={32} strokeWidth={3} />
-        <span className="absolute right-16 bg-slate-800 text-white text-[10px] font-black px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap tracking-wider">
-          NUEVO LEAD
-        </span>
       </button>
     </div>
   );

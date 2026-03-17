@@ -4,9 +4,9 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
 
-  if (!session) {
+  if (!session || !session.user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const { name, phone, image } = await req.json();
     
     const updatedUser = await prisma.user.update({
-      where: { id: (session.user as any).id },
+      where: { id: session.user.id },
       data: {
         name,
         phone,

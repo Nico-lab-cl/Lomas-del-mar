@@ -39,6 +39,10 @@ model Lead {
   lastActivity String?
   assignedToId String?
   assignedTo   User?    @relation("AssignedLeads", fields: [assignedToId], references: [id])
+  notes        String?
+  visited      Boolean  @default(false)
+  interests    String?
+  lastNoteAt   DateTime?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
