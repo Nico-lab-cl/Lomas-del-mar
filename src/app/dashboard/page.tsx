@@ -45,6 +45,7 @@ export default function DashboardPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   // Helper to fetch leads with all current filters
   const fetchLeads = useCallback(async (page: number, q: string, project: string, dateRange: string) => {
@@ -63,9 +64,14 @@ export default function DashboardPage() {
         const data = await res.json();
         setLeads(data.leads);
         setPagination(data.pagination);
+        setFetchError(null);
+      } else {
+        const errorData = await res.json();
+        setFetchError(errorData.details || errorData.error || "Error desconocido");
       }
     } catch (error) {
       console.error("Failed to fetch leads");
+      setFetchError("Error de conexión con el servidor");
     } finally {
       setLoading(false);
     }
@@ -249,9 +255,25 @@ export default function DashboardPage() {
       {/* Leads List */}
       <main className="flex-1 px-6 space-y-4 pb-12 min-h-[500px]">
         {loading ? (
-          <div className="flex flex-col items-center py-20 opacity-30">
-            <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4" />
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Actualizando lista...</p>
+          </div>
+        ) : fetchError ? (
+          <div className="py-20 text-center px-6">
+            <div className="bg-red-50 border border-red-100 rounded-3xl p-8 max-w-sm mx-auto shadow-xl shadow-red-500/5">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Filter className="text-red-500" size={32} />
+              </div>
+              <h3 className="text-red-900 font-black text-xs uppercase tracking-widest mb-2">Error en la Base de Datos</h3>
+              <p className="text-red-600/70 text-xs font-bold leading-relaxed mb-6">
+                {fetchError.includes("column") ? "Faltan columnas en la base de datos. Por favor, ejecuta la migración de esquema." : fetchError}
+              </p>
+              <button 
+                onClick={() => fetchLeads(currentPage, searchTerm, activeProject, dateFilter)}
+                className="w-full bg-red-500 text-white font-black py-4 rounded-2xl text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-red-500/20 active:scale-95 transition-all"
+              >
+                Reintentar Conexión
+              </button>
+            </div>
           </div>
         ) : (
           <>
