@@ -266,7 +266,7 @@ function DashboardContent() {
       </header>
 
       {/* Dropdown Filters Row */}
-      <div className="py-4 px-6 flex items-center gap-2 overflow-x-auto no-scrollbar">
+      <div className="py-4 px-6 flex items-center gap-2 relative z-50">
         {/* Period Dropdown */}
         <div className="relative shrink-0">
           <button 
