@@ -56,12 +56,17 @@ export async function GET(req: Request) {
   }
 
   if (search) {
-    where.OR = [
-      { firstName: { contains: search, mode: 'insensitive' } },
-      { lastName: { contains: search, mode: 'insensitive' } },
-      { phone: { contains: search } },
-      { email: { contains: search, mode: 'insensitive' } },
-    ];
+    const tokens = search.trim().split(/\s+/);
+    if (tokens.length > 0) {
+      where.AND = tokens.map(token => ({
+        OR: [
+          { firstName: { contains: token, mode: 'insensitive' } },
+          { lastName: { contains: token, mode: 'insensitive' } },
+          { phone: { contains: token } },
+          { email: { contains: token, mode: 'insensitive' } },
+        ]
+      }));
+    }
   }
 
   if (startDate || endDate) {
