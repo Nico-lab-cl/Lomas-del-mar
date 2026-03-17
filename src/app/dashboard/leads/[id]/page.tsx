@@ -204,7 +204,11 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
           <InfoRow label="Nombre Completo" value={`${lead.firstName} ${lead.lastName}`} icon={UserIcon} />
           <InfoRow label="Teléfono" value={lead.phone} icon={Smartphone} />
           <InfoRow label="Correo Electrónico" value={lead.email} icon={Mail} />
-          <InfoRow label="Proyecto de Interés" value={lead.interests || "General"} icon={Landscape} />
+          <InfoRow 
+            label={lead.source?.toUpperCase() === "META" ? "Formulario" : "Proyecto de Interés"} 
+            value={lead.source?.toUpperCase() === "META" ? (lead.formId || "General") : (lead.interests || "General")} 
+            icon={Landscape} 
+          />
           
           {(lead.adId || lead.adName) && (
             <div className="border-t border-primary/5 bg-slate-50/50 p-4 flex justify-between items-center group cursor-pointer hover:bg-slate-50 transition-colors"
