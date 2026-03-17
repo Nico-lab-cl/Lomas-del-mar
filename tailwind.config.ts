@@ -9,8 +9,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#228c8c",
-        secondary: "#35595f",
+        primary: {
+          DEFAULT: "#228c8c",
+          dark: "#1a6b6b",
+          light: "#2db3b3",
+        },
+        secondary: {
+          DEFAULT: "#35595f",
+          dark: "#2a474d",
+          light: "#46767e",
+        },
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
     },
   },
