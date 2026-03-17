@@ -6,7 +6,7 @@ import {
   ChevronLeft, Phone, MessageSquare, Mail, 
   Clock, Calendar, MapPin, User, ChevronRight,
   MoreVertical, Edit2, CheckCircle2, AlertCircle,
-  ArrowRight, StickyNote
+  ArrowRight, StickyNote, LayoutGrid
 } from "lucide-react";
 import clsx from "clsx";
 import Image from "next/image";
