@@ -3,7 +3,7 @@
 import { signIn, useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { User, ChevronRight, HelpCircle, ShieldCheck, Lock } from "lucide-react";
+import { User, ChevronRight, HelpCircle, ShieldCheck, Lock, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 
 interface DBUser {
@@ -44,6 +44,7 @@ export default function LoginPage() {
 
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const executeLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,17 +88,25 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={executeLogin} className="space-y-6">
-          <div className="relative">
-            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+          <div className="relative group">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="input-stitch pl-12 text-lg tracking-widest"
+              className="input-stitch pl-12 pr-12 text-lg tracking-widest"
               placeholder="••••••••"
               required
               autoFocus
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors p-1"
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
           {error && <p className="text-red-500 text-sm text-center font-bold px-4">{error}</p>}
