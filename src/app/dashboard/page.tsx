@@ -9,6 +9,7 @@ import {
   MoreVertical, Share2, Mail
 } from "lucide-react";
 import clsx from "clsx";
+import Image from "next/image";
 
 interface Lead {
   id: string;
@@ -81,12 +82,17 @@ export default function DashboardPage() {
       <header className="bg-white px-6 pt-10 pb-6 border-b border-slate-100 sticky top-0 z-40">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
-              <User className="text-primary w-6 h-6" />
+            <div className="relative w-10 h-10 overflow-hidden">
+              <Image 
+                src="/logo-alimin.png" 
+                alt="Alimin Logo" 
+                fill 
+                className="object-contain"
+              />
             </div>
             <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Cuentas Pro</p>
-              <h1 className="text-lg font-black text-slate-800 leading-none">Hola, {session?.user?.name}</h1>
+              <p className="text-[10px] font-black text-primary uppercase tracking-widest leading-none mb-1">CRM ALIMIN</p>
+              <h1 className="text-lg font-black text-slate-800 leading-none">Hola, {session?.user?.name?.split(' ')[0]}</h1>
             </div>
           </div>
           <div className="flex items-center gap-2">
