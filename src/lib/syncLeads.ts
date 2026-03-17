@@ -8,14 +8,14 @@ export async function syncExternalLeads() {
     // 1. Fetch from External DB
     const res = await queryExternal(`
       SELECT id, nombre as "firstName", '' as "lastName", email, celular as phone, 
-             proyecto as "source", ciudad as city, created_at as "createdAt",
+             proyecto as "externalProject", ciudad as city, created_at as "createdAt",
              utm_source as "utmSource", utm_medium as "utmMedium", 
              utm_campaign as "utmCampaign", utm_content as "utmContent", 
              utm_term as "utmTerm"
       FROM leads
       UNION ALL
       SELECT id, '' as "firstName", '' as "lastName", email, '' as phone, 
-             'Newsletter' as "source", '' as city, created_at as "createdAt",
+             'Newsletter' as "externalProject", '' as city, created_at as "createdAt",
              null as "utmSource", null as "utmMedium", 
              null as "utmCampaign", null as "utmContent", 
              null as "utmTerm"
@@ -36,21 +36,22 @@ export async function syncExternalLeads() {
           update: {
             firstName: ext.firstName,
             phone: ext.phone,
-            source: ext.source === 'Newsletter' ? 'Newsletter' : 'web aliminspa.cl',
+            source: ext.externalProject === 'Newsletter' ? 'Newsletter' : 'web aliminspa.cl',
             city: ext.city,
+            interests: ext.externalProject !== 'Newsletter' ? ext.externalProject : undefined,
             utmSource: ext.utmSource,
             utmMedium: ext.utmMedium,
             utmCampaign: ext.utmCampaign,
             utmContent: ext.utmContent,
             utmTerm: ext.utmTerm,
-            // Only update createdAt if it doesn't exist (handled by create)
           },
           create: {
             email: ext.email.toLowerCase(),
             firstName: ext.firstName,
             phone: ext.phone,
-            source: ext.source === 'Newsletter' ? 'Newsletter' : 'web aliminspa.cl',
+            source: ext.externalProject === 'Newsletter' ? 'Newsletter' : 'web aliminspa.cl',
             city: ext.city,
+            interests: ext.externalProject !== 'Newsletter' ? ext.externalProject : undefined,
             utmSource: ext.utmSource,
             utmMedium: ext.utmMedium,
             utmCampaign: ext.utmCampaign,

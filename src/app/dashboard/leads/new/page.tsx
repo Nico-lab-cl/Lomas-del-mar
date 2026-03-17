@@ -41,7 +41,7 @@ export default function NewLeadPage() {
       <header className="flex items-center p-4 border-b border-slate-200 bg-white sticky top-0 z-10">
         <button 
           onClick={() => router.back()}
-          className="p-2 -ml-2 text-primary hover:bg-primary/5 rounded-full transition-colors"
+          className="p-2 -ml-2 text-[#D4AF37] hover:bg-[#D4AF37]/5 rounded-full transition-colors"
         >
           <ArrowLeft size={24} />
         </button>

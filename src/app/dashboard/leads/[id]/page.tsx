@@ -111,7 +111,7 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
       <div className="flex items-center bg-[#f6f8f8] p-4 border-b border-primary/10 justify-between sticky top-0 z-10">
         <button 
           onClick={() => router.back()}
-          className="text-primary flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+          className="text-[#D4AF37] flex size-10 shrink-0 items-center justify-center rounded-full bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 transition-colors"
         >
           <ArrowLeft size={20} />
         </button>
@@ -201,7 +201,8 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
         <div className="bg-white rounded-2xl overflow-hidden border border-primary/5 shadow-sm">
           <InfoRow label="Nombre Completo" value={`${lead.firstName} ${lead.lastName}`} icon={UserIcon} />
           <InfoRow label="Teléfono" value={lead.phone} icon={Smartphone} />
-          <InfoRow label="Correo Electrónico" value={lead.email} icon={Mail} border={false} />
+          <InfoRow label="Correo Electrónico" value={lead.email} icon={Mail} />
+          <InfoRow label="Proyecto de Interés" value={lead.interests || "General"} icon={Landscape} border={false} />
         </div>
       </div>
 

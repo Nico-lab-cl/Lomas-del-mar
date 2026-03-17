@@ -43,7 +43,7 @@ export default function VisitRegistrationPage({ params }: { params: { id: string
         <header className="flex items-center p-4 border-b border-primary/10 justify-between sticky top-0 bg-white/80 backdrop-blur-md z-10">
           <button 
             onClick={() => router.back()}
-            className="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors"
+            className="text-[#D4AF37] hover:bg-[#D4AF37]/10 p-2 rounded-full transition-colors"
           >
             <ArrowLeft size={24} />
           </button>
