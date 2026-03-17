@@ -66,8 +66,9 @@ export async function GET(req: Request) {
   }
 
   // Role-based filtering
-  if (session?.user && (session.user as any).role !== "ADMIN") {
-     where.assignedToId = (session.user as any).id;
+  const userSession = session as any;
+  if (userSession?.user && userSession.user.role !== "ADMIN") {
+     where.assignedToId = userSession.user.id;
   }
 
   try {
