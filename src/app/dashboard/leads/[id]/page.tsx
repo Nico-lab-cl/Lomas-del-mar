@@ -175,20 +175,20 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
         <h3 className="text-slate-900 text-[10px] font-black uppercase tracking-widest px-1 pb-3 opacity-40">Nivel de Interés</h3>
         <div className="bg-white rounded-2xl p-4 border border-primary/5 shadow-sm flex justify-around items-center">
           {[
-            { id: 'FRIO', icon: Meh, color: lead.rating === 'FRIO' ? 'text-slate-500 scale-125 bg-slate-50 shadow-inner translate-y-[-2px]' : 'text-slate-300 opacity-40 grayscale', label: 'Frío' },
-            { id: 'INTERESADO', icon: Smile, color: lead.rating === 'INTERESADO' ? 'text-orange-400 scale-125 bg-orange-50 shadow-inner translate-y-[-2px]' : 'text-slate-300 opacity-40 grayscale', label: 'Interés' },
-            { id: 'VENTA', icon: Laugh, color: lead.rating === 'VENTA' ? 'text-green-500 scale-125 bg-green-50 shadow-inner translate-y-[-2px]' : 'text-slate-300 opacity-40 grayscale', label: 'Venta' }
+            { id: 'FRIO', icon: Meh, color: lead.rating === 'FRIO' ? 'text-slate-500 scale-125 bg-slate-100 shadow-md translate-y-[-2px]' : 'text-slate-400 bg-slate-50 opacity-60 hover:opacity-100', label: 'Frío' },
+            { id: 'INTERESADO', icon: Smile, color: lead.rating === 'INTERESADO' ? 'text-orange-500 scale-125 bg-orange-100 shadow-md translate-y-[-2px]' : 'text-orange-300 bg-orange-50 opacity-60 hover:opacity-100', label: 'Interés' },
+            { id: 'VENTA', icon: Laugh, color: lead.rating === 'VENTA' ? 'text-green-600 scale-125 bg-green-100 shadow-md translate-y-[-2px]' : 'text-green-300 bg-green-50 opacity-60 hover:opacity-100', label: 'Venta' }
           ].map((item) => (
             <button
               key={item.id}
               onClick={() => handleRatingUpdate(item.id)}
               disabled={updatingRating}
               className={clsx(
-                "flex flex-col items-center gap-2 transition-all p-3 rounded-2xl",
+                "flex flex-col items-center gap-2 transition-all p-3 rounded-2xl min-w-[80px]",
                 item.color
               )}
             >
-              <item.icon size={32} />
+              <item.icon size={32} strokeWidth={lead.rating === item.id ? 2.5 : 2} />
               <span className="text-[10px] font-black uppercase tracking-wider">{item.label}</span>
             </button>
           ))}
@@ -201,7 +201,7 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
         <div className="bg-white rounded-2xl overflow-hidden border border-primary/5 shadow-sm">
           <InfoRow label="Nombre Completo" value={`${lead.firstName} ${lead.lastName}`} icon={UserIcon} />
           <InfoRow label="Teléfono" value={lead.phone} icon={Smartphone} />
-          <InfoRow label="Proyecto de Interés" value={lead.interests || "General"} icon={Landscape} border={false} />
+          <InfoRow label="Correo Electrónico" value={lead.email} icon={Mail} border={false} />
         </div>
       </div>
 
