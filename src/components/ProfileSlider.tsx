@@ -2,9 +2,10 @@
 
 import { signOut, useSession } from "next-auth/react";
 import { 
-  X, LogOut, Settings, User, Bell, 
-  Shield, HelpCircle, ChevronRight, Moon
+  X, LogOut, Settings, User as UserIcon, Bell, 
+  Shield, HelpCircle, ChevronRight, Moon, Camera, Save, Phone
 } from "lucide-react";
+import { useState, useEffect } from "react";
 import clsx from "clsx";
 import Image from "next/image";
 
@@ -14,11 +15,56 @@ interface ProfileSliderProps {
 }
 
 export default function ProfileSlider({ isOpen, onClose }: ProfileSliderProps) {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
+  const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
+  // Form State
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    image: ""
+  });
+
+  useEffect(() => {
+    if (session?.user) {
+      setFormData({
+        name: session.user.name || "",
+        phone: (session.user as any).phone || "",
+        image: session.user.image || ""
+      });
+    }
+  }, [session]);
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/users/profile", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        // Update local session
+        await update({
+          ...session,
+          user: {
+            ...session?.user,
+            ...formData
+          }
+        });
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
-      {/* Backdrop */}
       <div 
         className={clsx(
           "fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] transition-opacity duration-300",
@@ -27,7 +73,6 @@ export default function ProfileSlider({ isOpen, onClose }: ProfileSliderProps) {
         onClick={onClose}
       />
 
-      {/* Slider */}
       <div 
         className={clsx(
           "fixed top-0 right-0 h-full w-[85%] max-w-[400px] bg-white z-[70] shadow-2xl transition-transform duration-500 ease-out flex flex-col",
@@ -44,45 +89,119 @@ export default function ProfileSlider({ isOpen, onClose }: ProfileSliderProps) {
           </button>
 
           <div className="flex flex-col items-center text-center">
-            <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mb-4 border-2 border-white/30 truncate">
-               <User size={40} className="text-white" />
+            <div className="relative group">
+              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mb-4 border-2 border-white/30 overflow-hidden">
+                {formData.image ? (
+                  <Image src={formData.image} alt="Profile" fill className="object-cover" />
+                ) : (
+                  <UserIcon size={48} className="text-white" />
+                )}
+              </div>
+              {isEditing && (
+                <button className="absolute bottom-4 right-0 p-2 bg-accent text-white rounded-full shadow-lg hover:scale-110 transition-all border-2 border-white">
+                  <Camera size={14} />
+                </button>
+              )}
             </div>
-            <h2 className="text-xl font-black">{session?.user?.name || "Asesor Alimin"}</h2>
-            <p className="text-sm font-bold text-white/70 uppercase tracking-widest">
-              {session?.user?.email || "Admin"}
+            {isEditing ? (
+              <input 
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                className="bg-white/10 border border-white/20 rounded-lg px-2 py-1 text-center font-black text-white outline-none focus:bg-white/20"
+                placeholder="Tu nombre"
+              />
+            ) : (
+              <h2 className="text-xl font-black">{session?.user?.name || "Asesor Alimin"}</h2>
+            )}
+            <p className="text-sm font-bold text-white/70 uppercase tracking-widest mt-1">
+              {(session?.user as any).role || "ASESOR"}
             </p>
           </div>
         </div>
 
         {/* Menu Items */}
         <div className="flex-1 overflow-y-auto py-6 px-4 space-y-2">
-          <p className="px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Cuenta & Seguridad</p>
-          
-          <MenuButton icon={User} label="Configuración de Perfil" />
-          <MenuButton icon={Shield} label="Seguridad & Privacidad" />
-          <MenuButton icon={Bell} label="Notificaciones Push" badge="On" />
-          
-          <div className="h-px bg-slate-100 my-4" />
-          
-          <p className="px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Preferencias</p>
-          <MenuButton icon={Moon} label="Modo Oscuro" toggle />
-          <MenuButton icon={HelpCircle} label="Ayuda & Soporte" />
-
-          <div className="mt-8">
-            <button 
-              onClick={() => signOut({ callbackUrl: "/login" })}
-              className="w-full flex items-center gap-4 px-4 py-4 text-red-500 font-bold hover:bg-red-50 rounded-2xl transition-all"
-            >
-              <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
-                <LogOut size={20} />
+          {isEditing ? (
+            <div className="space-y-4 px-2">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Información de Contacto</p>
+              
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase ml-1">Teléfono</label>
+                <div className="relative">
+                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                  <input 
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                    placeholder="+56 9 ..."
+                    className="w-full bg-slate-100 border-none rounded-2xl py-4 pl-12 pr-4 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  />
+                </div>
               </div>
-              <span>Cerrar Sesión</span>
-            </button>
-          </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] font-black text-slate-400 uppercase ml-1">URL de Foto</label>
+                <div className="relative">
+                  <Camera className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                  <input 
+                    value={formData.image}
+                    onChange={(e) => setFormData({...formData, image: e.target.value})}
+                    placeholder="https://..."
+                    className="w-full bg-slate-100 border-none rounded-2xl py-4 pl-12 pr-4 text-xs font-bold outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  />
+                </div>
+              </div>
+
+              <button 
+                onClick={handleSave}
+                disabled={loading}
+                className="w-full bg-accent text-white py-4 rounded-2xl font-black flex items-center justify-center gap-2 shadow-xl shadow-accent/20 active:scale-95 transition-all mt-6"
+              >
+                {loading ? <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : <Save size={18} />}
+                GUARDAR CAMBIOS
+              </button>
+
+              <button 
+                onClick={() => setIsEditing(false)}
+                className="w-full py-4 text-slate-400 text-xs font-black uppercase tracking-widest"
+              >
+                CANCELAR
+              </button>
+            </div>
+          ) : (
+            <>
+              <p className="px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Cuenta & Seguridad</p>
+              
+              <MenuButton 
+                icon={UserIcon} 
+                label="Editar Perfil" 
+                onClick={() => setIsEditing(true)}
+              />
+              <MenuButton icon={Shield} label="Seguridad & Privacidad" />
+              <MenuButton icon={Bell} label="Notificaciones Push" badge="On" />
+              
+              <div className="h-px bg-slate-100 my-4" />
+              
+              <p className="px-4 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Preferencias</p>
+              <MenuButton icon={Moon} label="Modo Oscuro" toggle />
+              <MenuButton icon={HelpCircle} label="Ayuda & Soporte" />
+
+              <div className="mt-8">
+                <button 
+                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  className="w-full flex items-center gap-4 px-4 py-4 text-red-500 font-bold hover:bg-red-50 rounded-2xl transition-all"
+                >
+                  <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+                    <LogOut size={20} />
+                  </div>
+                  <span>Cerrar Sesión</span>
+                </button>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Footer Branding */}
-        <div className="p-8 text-center border-t border-slate-50">
+        <div className="p-8 text-center border-t border-slate-50 mt-auto">
           <div className="flex items-center justify-center gap-2 mb-2">
              <Image src="/logo-alimin.png" alt="Logo" width={24} height={24} className="opacity-40" />
              <span className="text-[10px] font-black text-slate-300 tracking-tighter uppercase">CRM ALIMIN v2.0.4</span>
@@ -94,9 +213,12 @@ export default function ProfileSlider({ isOpen, onClose }: ProfileSliderProps) {
   );
 }
 
-function MenuButton({ icon: Icon, label, badge, toggle }: any) {
+function MenuButton({ icon: Icon, label, badge, toggle, onClick }: any) {
   return (
-    <button className="w-full flex items-center justify-between px-4 py-4 hover:bg-slate-50 rounded-2xl transition-all group">
+    <button 
+      onClick={onClick}
+      className="w-full flex items-center justify-between px-4 py-4 hover:bg-slate-50 rounded-2xl transition-all group"
+    >
       <div className="flex items-center gap-4">
         <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
           <Icon size={20} />

@@ -12,6 +12,8 @@ model User {
   username  String   @unique
   password  String
   name      String?
+  image     String?
+  phone     String?
   role      Role     @default(ASESOR)
   leads     Lead[]   @relation("AssignedLeads")
   createdAt DateTime @default(now())

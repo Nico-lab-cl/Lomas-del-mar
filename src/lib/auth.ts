@@ -34,15 +34,18 @@ export const authOptions: NextAuthOptions = {
           where: { username: credentials.username },
         });
 
-        if (user && user.password === credentials.password) {
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.username,
-            role: String(user.role),
-          };
+        if (!user || user.password !== credentials.password) {
+          return null;
         }
-        return null;
+
+        return {
+          id: user.id,
+          username: user.username,
+          name: user.name,
+          image: user.image,
+          role: user.role,
+          phone: user.phone,
+        } as any;
       },
     }),
   ],
@@ -50,17 +53,31 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }: any) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
-        token.role = user.role;
-        token.id = user.id;
+        token.id = (user as any).id;
+        token.username = (user as any).username;
+        token.role = (user as any).role;
+        token.phone = (user as any).phone;
+        token.image = (user as any).image;
       }
+      
+      // Update token if session is updated manually
+      if (trigger === "update" && session) {
+        token.name = session.name;
+        token.phone = session.phone;
+        token.image = session.image;
+      }
+      
       return token;
     },
-    async session({ session, token }: any) {
-      if (session.user) {
-        session.user.role = token.role;
-        session.user.id = token.id;
+    async session({ session, token }) {
+      if (token) {
+        (session.user as any).id = token.id;
+        (session.user as any).username = token.username;
+        (session.user as any).role = token.role;
+        (session.user as any).phone = token.phone;
+        (session.user as any).image = token.image;
       }
       return session;
     },
