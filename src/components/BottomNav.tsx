@@ -10,8 +10,7 @@ export default function BottomNav() {
 
   const navItems = [
     { label: "LEADS", icon: Users, href: "/dashboard" },
-    { label: "AGENDA", icon: Calendar, href: "#" },
-    { label: "CLIENTES", icon: LayoutGrid, href: "#" },
+    { label: "VISITAS", icon: LayoutGrid, href: "/dashboard?menu=visits" },
     { label: "PERFIL", icon: UserCircle, href: "/dashboard?menu=profile" },
   ];
 

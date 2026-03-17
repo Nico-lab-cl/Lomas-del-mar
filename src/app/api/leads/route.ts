@@ -19,6 +19,7 @@ export async function GET(req: Request) {
   
   const source = searchParams.get("source");
   const status = searchParams.get("status");
+  const visited = searchParams.get("visited");
   const search = searchParams.get("q");
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
@@ -32,6 +33,10 @@ export async function GET(req: Request) {
 
   if (status && status !== "TODOS") {
     where.status = status;
+  }
+
+  if (visited === "true") {
+    where.visited = true;
   }
 
   if (search) {

@@ -59,13 +59,14 @@ function DashboardContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeStatus, setActiveStatus] = useState("TODOS");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isVisitsActive, setIsVisitsActive] = useState(false);
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
   const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false);
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   // Helper to fetch leads with all current filters
-  const fetchLeads = useCallback(async (page: number, q: string, project: string, dateRange: string, statusFilter: string) => {
+  const fetchLeads = useCallback(async (page: number, q: string, project: string, dateRange: string, statusFilter: string, visitsOnly: boolean) => {
     setLoading(true);
     try {
       // Optimizamos búsqueda: quitamos espacios extras y normalizamos
@@ -75,6 +76,7 @@ function DashboardContent() {
       if (normalizedQuery) url += `&q=${encodeURIComponent(normalizedQuery)}`;
       if (project !== "TODOS") url += `&source=${encodeURIComponent(project)}`;
       if (statusFilter !== "TODOS") url += `&status=${encodeURIComponent(statusFilter)}`;
+      if (visitsOnly) url += `&visited=true`;
       
       const { start, end } = getDateRange(dateRange);
       if (start) url += `&startDate=${start}`;
@@ -101,8 +103,16 @@ function DashboardContent() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    if (searchParams.get("menu") === "profile") {
+    const menu = searchParams.get("menu");
+    if (menu === "profile") {
       setIsProfileOpen(true);
+      setIsVisitsActive(false);
+    } else if (menu === "visits") {
+      setIsVisitsActive(true);
+      setIsProfileOpen(false);
+    } else {
+      setIsVisitsActive(false);
+      setIsProfileOpen(false);
     }
   }, [searchParams]);
 
@@ -111,12 +121,12 @@ function DashboardContent() {
       router.push("/login");
     } else if (status === "authenticated") {
       const delayDebounceFn = setTimeout(() => {
-        fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus);
+        fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus, isVisitsActive);
       }, 500);
 
       return () => clearTimeout(delayDebounceFn);
     }
-  }, [status, router, currentPage, searchTerm, activeProject, dateFilter, activeStatus, fetchLeads]);
+  }, [status, router, currentPage, searchTerm, activeProject, dateFilter, activeStatus, isVisitsActive, fetchLeads]);
 
   const getDateRange = (filter: string) => {
     const now = new Date();
@@ -226,10 +236,10 @@ function DashboardContent() {
 
         <div className="flex items-end justify-between mb-4">
           <div className="flex flex-col gap-1">
-            <h2 className="text-3xl font-black text-primary">Mis Leads</h2>
+            <h2 className="text-3xl font-black text-primary">{isVisitsActive ? "Visitas de Terrenos" : "Mis Leads"}</h2>
             <div className="flex items-center gap-2">
                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">
-                 {pagination?.total || 0} REGISTROS ENCONTRADOS
+                 {pagination?.total || 0} {isVisitsActive ? "VISITAS ENCONTRADAS" : "REGISTROS ENCONTRADOS"}
                </span>
             </div>
           </div>
