@@ -290,7 +290,7 @@ function DashboardContent() {
       </header>
 
       {/* Dropdown Filters Row */}
-      <div className="py-2 px-6 flex items-center gap-2 relative z-50 overflow-x-auto no-scrollbar">
+      <div className="py-2 px-6 flex items-center gap-2 relative z-[80] overflow-visible">
         {/* Period Dropdown */}
         <div className="relative shrink-0">
           <button 
@@ -307,7 +307,7 @@ function DashboardContent() {
           </button>
 
           {isPeriodDropdownOpen && (
-            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute top-full left-0 mt-3 w-48 bg-white border border-slate-100 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] ring-1 ring-slate-900/5 p-2 z-[110] animate-in fade-in slide-in-from-top-2 duration-200">
               {dateFilters.map((f) => (
                 <button
                   key={f.id}
@@ -340,7 +340,7 @@ function DashboardContent() {
           </button>
 
           {isRatingDropdownOpen && (
-            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute top-full left-0 mt-3 w-48 bg-white border border-slate-100 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] ring-1 ring-slate-900/5 p-2 z-[110] animate-in fade-in slide-in-from-top-2 duration-200">
               {ratingFilters.map((f) => (
                 <button
                   key={f.id}
@@ -374,7 +374,7 @@ function DashboardContent() {
           </button>
 
           {isStatusDropdownOpen && (
-            <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute top-full right-0 mt-3 w-48 bg-white border border-slate-100 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.15)] ring-1 ring-slate-900/5 p-2 z-[110] animate-in fade-in slide-in-from-top-2 duration-200">
               {statusFilters.map((f) => (
                 <button
                   key={f.id}
