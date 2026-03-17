@@ -30,22 +30,27 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.username || !credentials?.password) return null;
 
-        const user = await prisma.user.findUnique({
-          where: { username: credentials.username },
-        });
+        try {
+          const user = await prisma.user.findUnique({
+            where: { username: credentials.username },
+          });
 
-        if (!user || user.password !== credentials.password) {
+          if (!user || user.password !== credentials.password) {
+            return null;
+          }
+
+          return {
+            id: user.id,
+            username: user.username,
+            name: user.name,
+            image: user.image,
+            role: user.role,
+            phone: user.phone,
+          } as any;
+        } catch (error) {
+          console.error("Auth: Database error during authorize", error);
           return null;
         }
-
-        return {
-          id: user.id,
-          username: user.username,
-          name: user.name,
-          image: user.image,
-          role: user.role,
-          phone: user.phone,
-        } as any;
       },
     }),
   ],
