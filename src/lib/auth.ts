@@ -33,6 +33,14 @@ export const authOptions: NextAuthOptions = {
         try {
           const user = await (prisma as any).user.findUnique({
             where: { username: credentials.username },
+            select: {
+              id: true,
+              username: true,
+              password: true,
+              name: true,
+              role: true,
+              // We omit image and phone here to avoid crashes if columns are missing
+            }
           });
 
           if (!user || user.password !== credentials.password) {
