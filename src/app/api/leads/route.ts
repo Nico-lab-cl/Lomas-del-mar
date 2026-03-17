@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
-import { queryExternal } from "@/lib/externalDb";
+import { syncExternalLeads } from "@/lib/syncLeads";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +24,16 @@ export async function GET(req: Request) {
   const search = searchParams.get("q");
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
+
+  // --- TRIGGER SYNC if source is web aliminspa.cl ---
+  if (source === "web aliminspa.cl") {
+    try {
+      console.log("Triggering on-demand sync for external leads...");
+      await syncExternalLeads();
+    } catch (syncErr) {
+      console.error("Sync failed, continuing with existing local data", syncErr);
+    }
+  }
 
   // Build where clause
   let where: any = {};
@@ -55,113 +65,11 @@ export async function GET(req: Request) {
     if (endDate) where.createdAt.lte = new Date(endDate);
   }
 
-  // --- CONTEXT SWITCH: EXTERNAL DB (WEB ALIMINSPA.CL) ---
-  if (source === "web aliminspa.cl") {
-    try {
-      // 1. Fetch leads from external DB
-      let externalLeads: any[] = [];
-      const offset = (page - 1) * limit;
-      
-      // Timezone adjustment for Chile (UTC-3)
-      const chileOffset = "INTERVAL '3 hours'";
-      
-      // Filtering logic for external SQL
-      let leadsQuery = `
-        SELECT id, nombre as "firstName", '' as "lastName", email, celular as phone, 
-               'WEB' as "label", created_at, proyecto as "source", ciudad
-        FROM leads 
-        WHERE 1=1
-      `;
-      let newsletterQuery = `
-        SELECT id, '' as "firstName", '' as "lastName", email, '' as phone, 
-               'BOLETÍN' as "label", created_at, 'Newsletter' as "source", '' as ciudad
-        FROM newsletter_subscribers 
-        WHERE 1=1
-      `;
-
-      const params: any[] = [];
-      let paramIdx = 1;
-
-      if (search) {
-        const s = `%${search}%`;
-        leadsQuery += ` AND (nombre ILIKE $${paramIdx} OR email ILIKE $${paramIdx} OR celular ILIKE $${paramIdx})`;
-        newsletterQuery += ` AND (email ILIKE $${paramIdx})`;
-        params.push(s);
-        paramIdx++;
-      }
-
-      if (startDate) {
-        leadsQuery += ` AND created_at >= $${paramIdx}`;
-        newsletterQuery += ` AND created_at >= $${paramIdx}`;
-        params.push(new Date(startDate));
-        paramIdx++;
-      }
-
-      if (endDate) {
-        leadsQuery += ` AND created_at <= $${paramIdx}`;
-        newsletterQuery += ` AND created_at <= $${paramIdx}`;
-        params.push(new Date(endDate));
-        paramIdx++;
-      }
-
-      // Unified query combining both tables
-      const combinedQuery = `
-        (${leadsQuery}) UNION ALL (${newsletterQuery})
-        ORDER BY created_at DESC
-        LIMIT $${paramIdx} OFFSET $${paramIdx + 1}
-      `;
-      params.push(limit, offset);
-
-      const countQuery = `SELECT COUNT(*) FROM ((${leadsQuery}) UNION ALL (${newsletterQuery})) as combined`;
-      const countParams = params.slice(0, paramIdx - 1);
-
-      const [res, countRes] = await Promise.all([
-        queryExternal(combinedQuery, params),
-        queryExternal(countQuery, countParams)
-      ]);
-
-      const total = parseInt(countRes.rows[0].count);
-      const rawExternalLeads = res.rows;
-
-      // 2. Hybrid Merge: Fetch local notes/status from local CRM Prisma DB
-      const emails = rawExternalLeads.map(l => l.email).filter(Boolean);
-      const localData = await (prisma as any).lead.findMany({
-        where: { email: { in: emails } },
-        select: { email: true, status: true, notes: true, visited: true, interests: true }
-      });
-
-      // Map local data for quick lookup
-      const localMap = new Map(localData.map((l: any) => [l.email, l]));
-
-      const leads = rawExternalLeads.map(l => {
-        const local = localMap.get(l.email) as any;
-        return {
-          ...l,
-          createdAt: l.created_at, // Map snake_case to camelCase for UI
-          status: local?.status || "FRIO",
-          notes: local?.notes || "",
-          visited: local?.visited || false,
-          interests: local?.interests || "",
-          isExternal: true
-        };
-      });
-
-      return NextResponse.json({
-        leads,
-        pagination: {
-          total,
-          pages: Math.ceil(total / limit),
-          currentPage: page,
-          limit
-        }
-      });
-    } catch (err: any) {
-      console.error("External Fetch Error:", err);
-      return NextResponse.json({ error: "Error de conexión con la base externa de Aliminspa", details: err.message }, { status: 500 });
-    }
+  // Role-based filtering
+  if (session?.user && (session.user as any).role !== "ADMIN") {
+     where.assignedToId = (session.user as any).id;
   }
 
-  // --- LOCAL DB FLOW (Default) ---
   try {
     const [leads, total] = await Promise.all([
       (prisma as any).lead.findMany({
@@ -169,8 +77,16 @@ export async function GET(req: Request) {
         skip,
         take: limit,
         orderBy: { createdAt: "desc" },
+        include: {
+          assignedTo: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+        },
       }),
-      (prisma as any).lead.count({ where })
+      (prisma as any).lead.count({ where }),
     ]);
 
     return NextResponse.json({
@@ -179,15 +95,14 @@ export async function GET(req: Request) {
         total,
         pages: Math.ceil(total / limit),
         currentPage: page,
-        limit
-      }
+        limit,
+      },
     });
   } catch (error: any) {
-    console.error("Error fetching leads:", error);
+    console.error("Leads API Error:", error);
     return NextResponse.json({ 
-      error: "Internal Server Error", 
-      details: error.message,
-      code: error.code // Prisma error code if any
+      error: "Error al obtener los leads", 
+      details: error.message 
     }, { status: 500 });
   }
 }
@@ -207,17 +122,22 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
     
-    // Parsing logic for Meta leads (n8n field_data)
     let leadData: any = {
       contactId: data.contactId || data.lead_id,
       firstName: data.firstName,
       lastName: data.lastName,
       phone: data.phone,
-      email: data.email,
+      email: data.email?.toLowerCase(),
       businessName: data.businessName,
+      city: data.city,
       source: data.source || "WEB",
       tags: data.tags,
       lastActivity: data.lastActivity,
+      utmSource: data.utmSource,
+      utmMedium: data.utmMedium,
+      utmCampaign: data.utmCampaign,
+      utmContent: data.utmContent,
+      utmTerm: data.utmTerm,
     };
 
     // If it comes from Meta field_data array
@@ -234,7 +154,7 @@ export async function POST(req: Request) {
             leadData.firstName = parts[0];
             leadData.lastName = parts.slice(1).join(" ");
             break;
-          case "email": leadData.email = value; break;
+          case "email": leadData.email = value.toLowerCase(); break;
           case "phone_number": leadData.phone = value; break;
         }
       });

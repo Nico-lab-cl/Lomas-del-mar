@@ -377,10 +377,7 @@ function DashboardContent() {
                 <div
                   key={lead.id}
                   onClick={() => {
-                    const url = lead.isExternal 
-                      ? `/dashboard/leads/${encodeURIComponent(lead.id)}?external=true&email=${encodeURIComponent(lead.email)}`
-                      : `/dashboard/leads/${lead.id}`;
-                    router.push(url);
+                    router.push(`/dashboard/leads/${lead.id}`);
                   }}
                   className={clsx(
                     "card-stitch flex items-center gap-4 relative overflow-hidden group animate-in fade-in slide-in-from-bottom-4 duration-500 cursor-pointer",

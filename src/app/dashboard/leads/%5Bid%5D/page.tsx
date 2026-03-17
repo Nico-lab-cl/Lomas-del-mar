@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { 
   ChevronLeft, Phone, MessageSquare, Mail, 
   MapPin, User, ChevronRight,
   MoreVertical, Edit2, CheckCircle2, AlertCircle,
-  StickyNote, LayoutGrid
+  StickyNote, LayoutGrid, Globe, Compass, Target, Layers
 } from "lucide-react";
 import clsx from "clsx";
+import Image from "next/image";
 
 interface Lead {
   id: string;
@@ -21,21 +22,23 @@ interface Lead {
   notes: string;
   visited: boolean;
   interests: string;
+  city?: string;
+  utmSource?: string;
+  utmMedium?: string;
+  utmCampaign?: string;
+  utmContent?: string;
+  utmTerm?: string;
   createdAt: string;
-  ciudad?: string;
-  label?: string;
-  isExternal?: boolean;
-  utm_source?: string;
-  utm_medium?: string;
-  utm_campaign?: string;
+  assignedTo?: {
+    name: string;
+    image?: string;
+  };
 }
 
-function LeadDetailContent({ id }: { id: string }) {
+function LeadDetailContent() {
+  const { id } = useParams();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const isExternal = searchParams.get("external") === "true";
-  const externalEmail = searchParams.get("email");
-
+  
   const [lead, setLead] = useState<Lead | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,11 +47,7 @@ function LeadDetailContent({ id }: { id: string }) {
   useEffect(() => {
     async function fetchLead() {
       try {
-        const url = isExternal 
-          ? `/api/leads/${encodeURIComponent(id)}?external=true&email=${encodeURIComponent(externalEmail || "")}`
-          : `/api/leads/${id}`;
-          
-        const res = await fetch(url);
+        const res = await fetch(`/api/leads/${id}`);
         if (res.ok) {
           const data = await res.json();
           setLead(data);
@@ -61,8 +60,8 @@ function LeadDetailContent({ id }: { id: string }) {
         setLoading(false);
       }
     }
-    fetchLead();
-  }, [id, isExternal, externalEmail]);
+    if (id) fetchLead();
+  }, [id]);
 
   const handleStatusUpdate = async (newStatus: string) => {
     if (!lead || isUpdating) return;
@@ -71,13 +70,7 @@ function LeadDetailContent({ id }: { id: string }) {
       const res = await fetch(`/api/leads/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          status: newStatus,
-          isExternal: lead.isExternal,
-          email: lead.email,
-          firstName: lead.firstName,
-          source: lead.source
-        }),
+        body: JSON.stringify({ status: newStatus }),
       });
       if (res.ok) {
         setLead({ ...lead, status: newStatus });
@@ -96,13 +89,7 @@ function LeadDetailContent({ id }: { id: string }) {
       const res = await fetch(`/api/leads/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          visited: !lead.visited,
-          isExternal: lead.isExternal,
-          email: lead.email,
-          firstName: lead.firstName,
-          source: lead.source
-        }),
+        body: JSON.stringify({ visited: !lead.visited }),
       });
       if (res.ok) {
         setLead({ ...lead, visited: !lead.visited });
@@ -111,6 +98,22 @@ function LeadDetailContent({ id }: { id: string }) {
       console.error("Error updating visited status");
     } finally {
       setIsUpdating(false);
+    }
+  };
+
+  const handleNoteUpdate = async (note: string) => {
+    if (!lead) return;
+    try {
+      const res = await fetch(`/api/leads/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notes: note }),
+      });
+      if (res.ok) {
+        setLead({ ...lead, notes: note });
+      }
+    } catch (err) {
+      console.error("Error updating notes");
     }
   };
 
@@ -138,6 +141,18 @@ function LeadDetailContent({ id }: { id: string }) {
     );
   }
 
+  const getStatusColor = (status: string) => {
+    if (['MUY INTERESADO', 'HOT'].includes(status)) return '#22C55E';
+    if (['INTERESADO', 'INTERES', 'WARM'].includes(status)) return '#FB923C';
+    return '#94A3B8';
+  };
+
+  const getStatusLabel = (status: string) => {
+    if (['MUY INTERESADO', 'HOT'].includes(status)) return 'MUY INTERESADO';
+    if (['INTERESADO', 'INTERES', 'WARM'].includes(status)) return 'INTERESADO';
+    return 'FRIO';
+  };
+
   return (
     <div className="min-h-screen bg-[#F5F7F9] flex flex-col pb-24">
       {/* Header */}
@@ -148,222 +163,195 @@ function LeadDetailContent({ id }: { id: string }) {
         >
           <ChevronLeft size={24} />
         </button>
-        <h1 className="text-sm font-black uppercase tracking-[0.2em] text-slate-800">Ficha del Lead</h1>
-        <div className="w-10 h-10 flex items-center justify-center" />
+        <h1 className="text-sm font-black text-slate-800 uppercase tracking-widest">Ficha del Lead</h1>
+        <button className="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400">
+          <MoreVertical size={20} />
+        </button>
       </header>
 
-      {/* Profile Header */}
-      <section className="bg-white px-6 py-8 mb-4 border-b border-slate-100">
-        <div className="flex flex-col items-center text-center">
-          <div className="relative w-24 h-24 mb-4">
-            <div className="w-full h-full bg-primary/10 rounded-full flex items-center justify-center text-primary">
-              <User size={48} strokeWidth={1.5} />
+      {/* Profile Section */}
+      <div className="bg-white px-6 py-8 flex flex-col items-center text-center">
+        <div className="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center mb-4 relative overflow-hidden ring-4 ring-primary/5">
+          {lead.assignedTo?.image ? (
+            <Image src={lead.assignedTo.image} alt="User" fill className="object-cover" />
+          ) : (
+            <div className="text-3xl font-black text-primary uppercase">
+              {lead.firstName?.[0] || 'L'}{lead.lastName?.[0] || ''}
             </div>
-            {lead.visited && (
-              <div className="absolute bottom-1 right-1 bg-green-500 text-white p-1.5 rounded-full border-4 border-white">
-                <CheckCircle2 size={16} />
-              </div>
-            )}
-            {lead.label && (
-              <div className="absolute -top-1 -right-1 bg-primary text-white text-[8px] font-black px-2 py-1 rounded-lg border-2 border-white shadow-sm">
-                {lead.label}
-              </div>
-            )}
-          </div>
-          <h2 className="text-2xl font-black text-slate-800 leading-tight mb-1">
-            {lead.firstName} {lead.lastName}
-          </h2>
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-widest">
-              <span className="text-primary/70">{lead.source || 'Sin Proyecto'}</span>
-              <span>•</span>
-              <span>{new Date(lead.createdAt).toLocaleDateString()}</span>
-            </div>
-            {lead.ciudad && (
-              <div className="flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">
-                <MapPin size={10} className="text-primary/50" />
-                {lead.ciudad}
-              </div>
-            )}
-          </div>
+          )}
+        </div>
+        <h2 className="text-2xl font-black text-slate-800 mb-1 uppercase italic">
+          {lead.firstName} {lead.lastName}
+        </h2>
+        <div className="flex items-center gap-2 mb-4">
+          <span 
+            className="w-2.5 h-2.5 rounded-full animate-pulse" 
+            style={{ backgroundColor: getStatusColor(lead.status) }} 
+          />
+          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            {getStatusLabel(lead.status)} • {lead.source || 'WEB'}
+          </span>
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-3 gap-4 mt-8">
-          <a 
-            href={lead.phone ? `tel:${lead.phone}` : "#"}
-            className={clsx(
-              "flex flex-col items-center gap-2 group",
-              !lead.phone && "opacity-30 pointer-events-none"
-            )}
-          >
-            <div className="w-14 h-14 bg-blue-50 text-blue-500 rounded-2xl flex items-center justify-center shadow-sm group-active:scale-90 transition-all">
-              <Phone size={24} />
-            </div>
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Llamar</span>
-          </a>
-          <a 
-            href={lead.phone ? `https://wa.me/${lead.phone.replace(/\+/g, '')}` : "#"}
-            className={clsx(
-              "flex flex-col items-center gap-2 group",
-              !lead.phone && "opacity-30 pointer-events-none"
-            )}
-          >
-            <div className="w-14 h-14 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center shadow-sm group-active:scale-90 transition-all">
-              <MessageSquare size={24} />
-            </div>
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">WhatsApp</span>
-          </a>
-          <a 
+        <div className="flex gap-4 w-full justify-center">
+          <ActionButton 
+            icon={Phone} 
+            color="bg-primary" 
+            label="Llamar" 
+            href={`tel:${lead.phone}`}
+          />
+          <ActionButton 
+            icon={MessageSquare} 
+            color="bg-[#25D366]" 
+            label="WhatsApp" 
+            href={`https://wa.me/${lead.phone?.replace('+', '')}`}
+          />
+          <ActionButton 
+            icon={Mail} 
+            color="bg-[#EA4335]" 
+            label="Email" 
             href={`mailto:${lead.email}`}
-            className="flex flex-col items-center gap-2 group"
-          >
-            <div className="w-14 h-14 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center shadow-sm group-active:scale-90 transition-all">
-              <Mail size={24} />
-            </div>
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Email</span>
-          </a>
+          />
         </div>
-      </section>
+      </div>
 
-      {/* Details Sections */}
-      <div className="px-6 space-y-4">
-        {/* Status Tracker */}
-        <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Estado del Lead</h3>
-            <div className={clsx(
-              "px-3 py-1 rounded-full text-[10px] font-black tracking-widest",
-              lead.status === "MUY INTERESADO" ? "bg-green-100 text-green-600" :
-              lead.status === "INTERES" ? "bg-orange-100 text-orange-600" :
-              "bg-slate-100 text-slate-500"
-            )}>
-              {lead.status}
-            </div>
-          </div>
-          
-          <div className="flex justify-between items-center px-4">
-            {["FRIO", "INTERES", "MUY INTERESADO"].map((s) => (
-              <button
-                key={s}
-                onClick={() => handleStatusUpdate(s)}
-                className={clsx(
-                  "relative flex flex-col items-center gap-2 transition-all",
-                  isUpdating && "opacity-50 cursor-not-allowed"
-                )}
-              >
-                <div className={clsx(
-                  "w-4 h-4 rounded-full border-2 transition-all",
-                  lead.status === s ? "bg-primary border-primary scale-125 shadow-lg shadow-primary/20" : "bg-white border-slate-200"
-                )} />
-                <span className={clsx(
-                  "text-[8px] font-black uppercase tracking-tighter",
-                  lead.status === s ? "text-primary" : "text-slate-300"
-                )}>{s}</span>
-              </button>
-            ))}
-          </div>
+      {/* Info Sections */}
+      <div className="px-6 py-6 space-y-6">
+        {/* Contact info card */}
+        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col gap-6">
+          <InfoRow icon={Phone} label="Teléfono" value={lead.phone || 'No registrado'} />
+          <InfoRow icon={Mail} label="Email" value={lead.email || 'No registrado'} />
+          {lead.city && (
+             <InfoRow icon={MapPin} label="Ciudad" value={lead.city} />
+          )}
+          <InfoRow icon={Globe} label="Fuente" value={lead.source || 'Web Aliminspa'} />
+          <InfoRow 
+            icon={CheckCircle2} 
+            label="Estado" 
+            value={getStatusLabel(lead.status)} 
+            badge 
+            badgeColor={getStatusColor(lead.status)} 
+          />
         </div>
 
-        {/* Visit Status */}
-        <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100">
-           <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                 <div className="w-12 h-12 bg-primary/5 rounded-2xl flex items-center justify-center text-primary">
-                    <MapPin size={24} />
-                 </div>
-                 <div>
-                    <h3 className="text-sm font-black text-slate-800">Visita a Terreno</h3>
-                    <p className="text-[10px] font-bold text-slate-400">{lead.visited ? "Asistencia confirmada" : "Pendiente de visita"}</p>
-                 </div>
-              </div>
-              <button 
-                onClick={toggleVisited}
-                className={clsx(
-                  "w-12 h-6 rounded-full relative transition-all duration-300",
-                  lead.visited ? "bg-primary" : "bg-slate-200",
-                  isUpdating && "opacity-50"
-                )}
-              >
-                <div className={clsx(
-                  "absolute top-1 w-4 h-4 bg-white rounded-full transition-all duration-300",
-                  lead.visited ? "left-7" : "left-1"
-                )} />
-              </button>
-           </div>
-        </div>
-
-        {/* Marketing UTM Info */}
-        {(lead.utm_source || lead.utm_medium) && (
-          <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Marketing & UTMs</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-slate-50 p-3 rounded-2xl">
-                <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Source</p>
-                <p className="text-[11px] font-bold text-slate-600 truncate">{lead.utm_source || '-'}</p>
-              </div>
-              <div className="bg-slate-50 p-3 rounded-2xl">
-                <p className="text-[8px] font-black text-slate-400 uppercase mb-1">Medium</p>
-                <p className="text-[11px] font-bold text-slate-600 truncate">{lead.utm_medium || '-'}</p>
-              </div>
+        {/* UTM Parameters Card (Only if they exist) */}
+        {(lead.utmSource || lead.utmMedium || lead.utmCampaign) && (
+          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+            <h3 className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-6 flex items-center gap-2">
+              <Compass size={14} /> Atribución Marketing
+            </h3>
+            <div className="grid grid-cols-1 gap-4">
+              {lead.utmSource && <UTMRow icon={Target} label="Source" value={lead.utmSource} />}
+              {lead.utmMedium && <UTMRow icon={Layers} label="Medium" value={lead.utmMedium} />}
+              {lead.utmCampaign && <UTMRow icon={Layers} label="Campaign" value={lead.utmCampaign} />}
+              {lead.utmContent && <UTMRow icon={StickyNote} label="Content" value={lead.utmContent} />}
             </div>
           </div>
         )}
 
-        {/* Interests & Projects */}
-        <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4">Intereses y Proyecto</h3>
-          <div className="flex flex-wrap gap-2">
-            <span className="bg-slate-50 text-slate-600 px-4 py-2 rounded-xl text-xs font-bold border border-slate-100 flex items-center gap-2">
-              <LayoutGrid size={14} className="text-primary" />
-              {lead.source || 'Sin Proyecto'}
-            </span>
-            {lead.interests?.split(',').filter(Boolean).map((interest: string, idx: number) => (
-              <span key={idx} className="bg-primary/5 text-primary px-4 py-2 rounded-xl text-xs font-bold border border-primary/10">
-                {interest.trim()}
-              </span>
-            ))}
+        {/* Notes Section */}
+        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] flex items-center gap-2">
+              <StickyNote size={14} /> Notas del Asesor
+            </h3>
+            <button className="text-primary font-black text-[10px] uppercase">Editar</button>
           </div>
+          <textarea 
+            className="w-full bg-slate-50 rounded-2xl p-4 text-xs font-medium text-slate-600 outline-none border-none h-32 resize-none"
+            placeholder="Escribe tus observaciones aquí..."
+            defaultValue={lead.notes}
+            onBlur={(e) => handleNoteUpdate(e.target.value)}
+          />
         </div>
 
-        {/* Notes Section */}
-        <div className="bg-white rounded-[32px] p-6 shadow-sm border border-slate-100">
-          <div className="flex items-center justify-between mb-4">
-             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Observaciones y Notas</h3>
-             <button className="text-primary p-2 active:scale-90 transition-all">
-                <Edit2 size={16} />
-             </button>
-          </div>
-          <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
-             <div className="flex items-start gap-3">
-                <StickyNote size={18} className="text-primary/50 mt-1" />
-                <p className="text-xs font-bold text-slate-600 leading-relaxed italic">
-                  "{lead.notes || "No hay observaciones registradas para este lead."}"
-                </p>
-             </div>
-          </div>
-        </div>
+        {/* Visit Toggle */}
+        <button 
+          onClick={toggleVisited}
+          disabled={isUpdating}
+          className={clsx(
+            "w-full py-5 rounded-3xl font-black flex items-center justify-center gap-3 transition-all",
+            lead.visited 
+              ? "bg-slate-100 text-slate-400" 
+              : "bg-primary text-white shadow-xl shadow-primary/20 scale-100 active:scale-95"
+          )}
+        >
+          {lead.visited ? <CheckCircle2 size={20} /> : <LayoutGrid size={20} />}
+          {lead.visited ? "VISITA COMPLETADA" : "REGISTRAR VISITA A TERRENO"}
+        </button>
       </div>
-      
-      {/* Bottom Floating Footer Action */}
-      <div className="fixed bottom-6 left-6 right-6 z-40 max-w-[432px] mx-auto">
-         <button className="w-full bg-primary text-white font-black py-5 rounded-[24px] shadow-2xl shadow-primary/30 flex items-center justify-center gap-3 active:scale-[0.98] transition-all">
-            REGISTRAR ACTIVIDAD
-            <ChevronRight size={20} />
-         </button>
+
+      {/* Bottom info */}
+      <div className="text-center px-8 text-[9px] font-bold text-slate-300 uppercase tracking-widest">
+        Ingresado el {new Date(lead.createdAt).toLocaleDateString('es-CL', { day: '2-digit', month: 'long', year: 'numeric' })}
       </div>
     </div>
   );
 }
 
-export default function LeadDetailPage({ params }: { params: { id: string } }) {
+function ActionButton({ icon: Icon, color, label, href }: any) {
+  return (
+    <a 
+      href={href}
+      className="flex flex-col items-center gap-2 group"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <div className={clsx(
+        "w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg active:scale-90 transition-all",
+        color
+      )}>
+        <Icon size={20} />
+      </div>
+      <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{label}</span>
+    </a>
+  );
+}
+
+function InfoRow({ icon: Icon, label, value, badge, badgeColor }: any) {
+  return (
+    <div className="flex items-center gap-4">
+      <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-400">
+        <Icon size={18} />
+      </div>
+      <div className="flex flex-col">
+        <span className="text-[9px] font-black text-slate-300 uppercase tracking-widest leading-none mb-1">{label}</span>
+        {badge ? (
+           <div className="flex items-center gap-2">
+             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: badgeColor }} />
+             <span className="text-xs font-black text-slate-800 uppercase italic">{value}</span>
+           </div>
+        ) : (
+          <span className="text-xs font-black text-slate-800 uppercase italic">{value}</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function UTMRow({ icon: Icon, label, value }: any) {
+  return (
+    <div className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
+      <div className="flex items-center gap-3">
+        <Icon size={12} className="text-primary/40" />
+        <span className="text-[9px] font-bold text-slate-400 uppercase">{label}</span>
+      </div>
+      <span className="text-[10px] font-black text-slate-700 truncate max-w-[150px]">{value}</span>
+    </div>
+  );
+}
+
+export default function LeadDetailPage() {
+  const { id } = useParams();
+  
   return (
     <Suspense fallback={
       <div className="flex min-h-screen items-center justify-center bg-white">
         <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
       </div>
     }>
-      <LeadDetailContent id={params.id} />
+      <LeadDetailContent />
     </Suspense>
   );
 }

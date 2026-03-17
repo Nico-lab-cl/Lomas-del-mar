@@ -26,23 +26,32 @@ enum Role {
 }
 
 model Lead {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   contactId    String?
   firstName    String?
   lastName     String?
   phone        String?
-  email        String?
+  email        String?   @unique
   businessName String?
+  city         String?
   source       String?
-  status       String   @default("NEW")
+  status       String    @default("NEW")
   tags         String?
   lastActivity String?
   assignedToId String?
-  assignedTo   User?    @relation("AssignedLeads", fields: [assignedToId], references: [id])
+  assignedTo   User?     @relation("AssignedLeads", fields: [assignedToId], references: [id])
   notes        String?
-  visited      Boolean  @default(false)
+  visited      Boolean   @default(false)
   interests    String?
   lastNoteAt   DateTime?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  
+  // UTM Parameters for web leads
+  utmSource    String?
+  utmMedium    String?
+  utmCampaign  String?
+  utmContent   String?
+  utmTerm      String?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
