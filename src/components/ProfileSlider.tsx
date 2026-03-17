@@ -187,7 +187,7 @@ export default function ProfileSlider({ isOpen, onClose }: ProfileSliderProps) {
 
               <div className="mt-8">
                 <button
-                  onClick={() => signOut({ callbackUrl: "/login" })}
+                  onClick={() => signOut({ callbackUrl: "/" })}
                   className="w-full flex items-center gap-4 px-4 py-4 text-red-500 font-bold hover:bg-red-50 rounded-2xl transition-all"
                 >
                   <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
