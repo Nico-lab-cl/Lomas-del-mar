@@ -24,7 +24,7 @@ export default function BottomNav() {
             href={item.href}
             className={clsx(
               "flex flex-col items-center gap-1 transition-all rounded-xl p-2",
-              isActive ? "text-primary scale-110" : "text-slate-400 opacity-60"
+              isActive ? "text-[#D4AF37] scale-110" : "text-slate-400 opacity-60"
             )}
           >
             <item.icon size={24} strokeWidth={isActive ? 2.5 : 2} />

@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { 
   ArrowLeft, MoreVertical, Phone, MessageSquare, 
   Mail, User as UserIcon, Smartphone, Map as MapIcon, 
-  Edit3, Save, ChevronRight, Tent as Landscape
+  Edit3, Save, ChevronRight, Tent as Landscape,
+  Meh, Smile, Laugh
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -18,6 +19,7 @@ interface Lead {
   email: string;
   source: string;
   status: string;
+  rating?: string;
   notes: string;
   interests: string;
 }
@@ -28,6 +30,7 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(true);
   const [note, setNote] = useState("");
   const [savingNote, setSavingNote] = useState(false);
+  const [updatingRating, setUpdatingRating] = useState(false);
 
   useEffect(() => {
     fetch(`/api/leads/${params.id}`)
@@ -55,6 +58,25 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
     }
   };
 
+  const handleRatingUpdate = async (newRating: string) => {
+    if (!lead || updatingRating) return;
+    setUpdatingRating(true);
+    try {
+      const res = await fetch(`/api/leads/${lead.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rating: newRating }),
+      });
+      if (res.ok) {
+        setLead({ ...lead, rating: newRating });
+      }
+    } catch (error) {
+      console.error("Error updating rating:", error);
+    } finally {
+      setUpdatingRating(false);
+    }
+  };
+
   if (loading) return (
     <div className="flex items-center justify-center min-h-screen bg-slate-50">
       <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
@@ -62,6 +84,26 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
   );
 
   if (!lead) return <div>Lead not found</div>;
+
+  const getStatusColor = (status: string, rating?: string) => {
+    if (rating === "VENTA") return "bg-green-500 text-white shadow-green-100";
+    if (rating === "INTERESADO") return "bg-orange-400 text-white shadow-orange-100";
+    if (rating === "FRIO") return "bg-slate-400 text-white shadow-slate-100";
+    
+    switch (status) {
+      case "NEW": return "bg-primary text-white shadow-primary/20";
+      case "CONTACTED": return "bg-blue-500 text-white shadow-blue-100";
+      case "VISITED": return "bg-emerald-500 text-white shadow-emerald-100";
+      default: return "bg-slate-400 text-white shadow-slate-100";
+    }
+  };
+
+  const getStatusLabel = (status: string, rating?: string) => {
+    if (rating === "VENTA") return "VENTA";
+    if (rating === "INTERESADO") return "INTERESADO";
+    if (rating === "FRIO") return "FRIO";
+    return status === 'NEW' ? 'Nuevo Lead' : status;
+  };
 
   return (
     <div className="relative flex h-auto min-h-screen w-full flex-col bg-[#f6f8f8] overflow-x-hidden pb-24">
@@ -92,8 +134,11 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
               <p className="text-slate-900 text-2xl font-bold leading-tight tracking-tight text-center">
                 {lead.firstName} {lead.lastName}
               </p>
-              <span className="mt-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest">
-                {lead.status === 'NEW' ? 'Nuevo Lead' : lead.status}
+              <span className={clsx(
+                "mt-1 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm",
+                getStatusColor(lead.status, lead.rating)
+              )}>
+                {getStatusLabel(lead.status, lead.rating)}
               </span>
               <p className="text-slate-500 text-sm mt-2 font-medium text-center italic">
                 {lead.source || "Sin origen definido"}
@@ -125,13 +170,38 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
         />
       </div>
 
+      {/* Interest Rating (Emojis) */}
+      <div className="px-4 py-2 mb-4">
+        <h3 className="text-slate-900 text-[10px] font-black uppercase tracking-widest px-1 pb-3 opacity-40">Nivel de Interés</h3>
+        <div className="bg-white rounded-2xl p-4 border border-primary/5 shadow-sm flex justify-around items-center">
+          {[
+            { id: 'FRIO', icon: Meh, color: lead.rating === 'FRIO' ? 'text-slate-500 scale-125 bg-slate-50 shadow-inner translate-y-[-2px]' : 'text-slate-300 opacity-40 grayscale', label: 'Frío' },
+            { id: 'INTERESADO', icon: Smile, color: lead.rating === 'INTERESADO' ? 'text-orange-400 scale-125 bg-orange-50 shadow-inner translate-y-[-2px]' : 'text-slate-300 opacity-40 grayscale', label: 'Interés' },
+            { id: 'VENTA', icon: Laugh, color: lead.rating === 'VENTA' ? 'text-green-500 scale-125 bg-green-50 shadow-inner translate-y-[-2px]' : 'text-slate-300 opacity-40 grayscale', label: 'Venta' }
+          ].map((item) => (
+            <button
+              key={item.id}
+              onClick={() => handleRatingUpdate(item.id)}
+              disabled={updatingRating}
+              className={clsx(
+                "flex flex-col items-center gap-2 transition-all p-3 rounded-2xl",
+                item.color
+              )}
+            >
+              <item.icon size={32} />
+              <span className="text-[10px] font-black uppercase tracking-wider">{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Form Information */}
       <div className="px-4 py-2">
         <h3 className="text-slate-900 text-[10px] font-black uppercase tracking-widest px-1 pb-3 opacity-40">Datos del Formulario</h3>
         <div className="bg-white rounded-2xl overflow-hidden border border-primary/5 shadow-sm">
           <InfoRow label="Nombre Completo" value={`${lead.firstName} ${lead.lastName}`} icon={UserIcon} />
           <InfoRow label="Teléfono" value={lead.phone} icon={Smartphone} />
-          <InfoRow label="Terreno de interés" value={lead.interests || "General"} icon={Landscape} border={false} />
+          <InfoRow label="Proyecto de Interés" value={lead.interests || "General"} icon={Landscape} border={false} />
         </div>
       </div>
 
