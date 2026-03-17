@@ -4,7 +4,7 @@ import {
   ArrowLeft, MoreVertical, Phone, MessageSquare, 
   Mail, User as UserIcon, Smartphone, Map as MapIcon, 
   Edit3, Save, ChevronRight, Tent as Landscape,
-  Meh, Smile, Laugh, Megaphone, ExternalLink
+  Meh, Smile, Laugh, Megaphone, ExternalLink, History
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -24,6 +24,7 @@ interface Lead {
   adId?: string;
   adName?: string;
   formId?: string;
+  lastActivity?: string;
 }
 
 export default function LeadDetailPage({ params }: { params: { id: string } }) {
@@ -107,6 +108,44 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
     return status === 'NEW' ? 'Nuevo Lead' : status;
   };
 
+  const handleInteraction = async (type: "WHATSAPP" | "PHONE") => {
+    if (!lead) return;
+
+    const now = new Date();
+    const timeStr = now.toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit' }) + 
+                  ' a las ' + 
+                  now.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
+    
+    const activity = `${type === "WHATSAPP" ? "WhatsApp" : "Llamada"} el ${timeStr}`;
+
+    // Update status to CONTACTED if it was NEW
+    const newStatus = lead.status === "NEW" ? "CONTACTED" : lead.status;
+
+    try {
+      // Optimistic update
+      setLead({ ...lead, status: newStatus });
+
+      // Action first
+      if (type === "WHATSAPP") {
+        window.open(`https://wa.me/${lead.phone.replace(/\D/g,'')}`);
+      } else {
+        window.open(`tel:${lead.phone}`);
+      }
+
+      // API call in background
+      await fetch(`/api/leads/${lead.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          status: newStatus,
+          lastActivity: activity 
+        }),
+      });
+    } catch (error) {
+      console.error("Error tracking interaction:", error);
+    }
+  };
+
   return (
     <div className="relative flex h-auto min-h-screen w-full flex-col bg-[#f6f8f8] overflow-x-hidden pb-24">
       {/* Header */}
@@ -156,13 +195,13 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
           icon={Phone} 
           label="Llamar Ahora" 
           bgColor="bg-[#4CAF50]" 
-          onClick={() => window.open(`tel:${lead.phone}`)}
+          onClick={() => handleInteraction("PHONE")}
         />
         <ContactButton 
           icon={MessageSquare} 
           label="WhatsApp" 
           bgColor="bg-[#25D366]" 
-          onClick={() => window.open(`https://wa.me/${lead.phone.replace(/\D/g,'')}`)}
+          onClick={() => handleInteraction("WHATSAPP")}
         />
         <ContactButton 
           icon={Mail} 
@@ -209,6 +248,7 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
             value={lead.source?.toUpperCase() === "META" ? (lead.adName || lead.adId || "General") : (lead.interests || "General")} 
             icon={Landscape} 
           />
+          <InfoRow label="Última Interacción" value={lead.lastActivity || "Sin registros"} icon={History} border={false} />
           
           {(lead.adId || lead.adName) && (
             <div className="border-t border-primary/5 bg-slate-50/50 p-4 flex justify-between items-center group cursor-pointer hover:bg-slate-50 transition-colors"
