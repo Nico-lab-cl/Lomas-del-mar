@@ -63,7 +63,7 @@ export default function NewLeadPage() {
             icon={User} 
             placeholder="Ej. Juan" 
             value={formData.firstName}
-            onChange={(val) => setFormData({...formData, firstName: val})}
+            onChange={(val: string) => setFormData({...formData, firstName: val})}
           />
           
           <FormField 
@@ -71,7 +71,7 @@ export default function NewLeadPage() {
             icon={User} 
             placeholder="Ej. Pérez" 
             value={formData.lastName}
-            onChange={(val) => setFormData({...formData, lastName: val})}
+            onChange={(val: string) => setFormData({...formData, lastName: val})}
           />
 
           <FormField 
@@ -80,7 +80,7 @@ export default function NewLeadPage() {
             type="email"
             placeholder="ejemplo@correo.com" 
             value={formData.email}
-            onChange={(val) => setFormData({...formData, email: val})}
+            onChange={(val: string) => setFormData({...formData, email: val})}
           />
 
           <FormField 
@@ -89,7 +89,7 @@ export default function NewLeadPage() {
             type="tel"
             placeholder="+56 9 ..." 
             value={formData.phone}
-            onChange={(val) => setFormData({...formData, phone: val})}
+            onChange={(val: string) => setFormData({...formData, phone: val})}
           />
 
           <div className="space-y-2">
@@ -129,7 +129,16 @@ export default function NewLeadPage() {
   );
 }
 
-function FormField({ label, icon: Icon, placeholder, type = "text", value, onChange }: any) {
+interface FormFieldProps {
+  label: string;
+  icon: any;
+  placeholder: string;
+  type?: string;
+  value: string;
+  onChange: (val: string) => void;
+}
+
+function FormField({ label, icon: Icon, placeholder, type = "text", value, onChange }: FormFieldProps) {
   return (
     <div className="space-y-2">
       <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">{label}</label>

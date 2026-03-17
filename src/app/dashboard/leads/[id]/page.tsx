@@ -174,7 +174,14 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
   );
 }
 
-function ContactButton({ icon: Icon, label, bgColor, onClick }: any) {
+interface ContactButtonProps {
+  icon: any;
+  label: string;
+  bgColor: string;
+  onClick: () => void;
+}
+
+function ContactButton({ icon: Icon, label, bgColor, onClick }: ContactButtonProps) {
   return (
     <button 
       onClick={onClick}
@@ -192,7 +199,14 @@ function ContactButton({ icon: Icon, label, bgColor, onClick }: any) {
   );
 }
 
-function InfoRow({ label, value, icon: Icon, border = true }: any) {
+interface InfoRowProps {
+  label: string;
+  value: string;
+  icon: any;
+  border?: boolean;
+}
+
+function InfoRow({ label, value, icon: Icon, border = true }: InfoRowProps) {
   return (
     <div className={clsx(
       "flex justify-between items-center p-4",
