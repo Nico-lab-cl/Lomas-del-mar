@@ -299,15 +299,15 @@ function DashboardContent() {
               setIsStatusDropdownOpen(false);
               setIsRatingDropdownOpen(false);
             }}
-            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[10px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95"
+            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[10px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95 shadow-sm"
           >
             <Calendar size={12} className="text-primary" />
-            {dateFilters.find(f => f.id === dateFilter)?.name || "Periodo"}
+            {dateFilter === "TODOS" ? "Periodos" : dateFilters.find(f => f.id === dateFilter)?.name}
             <ChevronDown size={12} className={clsx("transition-transform", isPeriodDropdownOpen && "rotate-180")} />
           </button>
 
           {isPeriodDropdownOpen && (
-            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
               {dateFilters.map((f) => (
                 <button
                   key={f.id}
@@ -332,15 +332,15 @@ function DashboardContent() {
               setIsStatusDropdownOpen(false);
               setIsPeriodDropdownOpen(false);
             }}
-            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[10px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95"
+            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[10px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95 shadow-sm"
           >
             {activeRating === "TODOS" ? <Filter size={12} /> : React.createElement(ratingFilters.find(f => f.id === activeRating)?.icon || Meh, { size: 12, className: ratingFilters.find(f => f.id === activeRating)?.color })}
-            {ratingFilters.find(f => f.id === activeRating)?.name || "Interés"}
+            {activeRating === "TODOS" ? "Intereses" : ratingFilters.find(f => f.id === activeRating)?.name}
             <ChevronDown size={12} className={clsx("transition-transform", isRatingDropdownOpen && "rotate-180")} />
           </button>
 
           {isRatingDropdownOpen && (
-            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
               {ratingFilters.map((f) => (
                 <button
                   key={f.id}
@@ -366,15 +366,15 @@ function DashboardContent() {
               setIsPeriodDropdownOpen(false);
               setIsRatingDropdownOpen(false);
             }}
-            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[10px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95"
+            className="flex items-center gap-2 bg-white border border-slate-200 px-4 py-2.5 rounded-2xl text-[10px] font-black text-slate-600 hover:bg-slate-50 transition-all active:scale-95 shadow-sm"
           >
-            <div className={clsx("w-2 h-2 rounded-full", statusFilters.find(f => f.id === activeStatus)?.color)} />
-            {statusFilters.find(f => f.id === activeStatus)?.name || "Estado"}
+            <div className={clsx("w-2 h-2 rounded-full", activeStatus === "TODOS" ? "bg-slate-300" : statusFilters.find(f => f.id === activeStatus)?.color)} />
+            {activeStatus === "TODOS" ? "Estados" : statusFilters.find(f => f.id === activeStatus)?.name}
             <ChevronDown size={12} className={clsx("transition-transform", isStatusDropdownOpen && "rotate-180")} />
           </button>
 
           {isStatusDropdownOpen && (
-            <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute top-full right-0 mt-2 w-48 bg-white border border-slate-100 rounded-2xl shadow-2xl p-2 z-[100] animate-in fade-in slide-in-from-top-2 duration-200">
               {statusFilters.map((f) => (
                 <button
                   key={f.id}
