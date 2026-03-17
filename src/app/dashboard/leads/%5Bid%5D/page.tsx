@@ -220,12 +220,13 @@ function LeadDetailContent() {
       <div className="px-6 py-6 space-y-6">
         {/* Contact info card */}
         <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col gap-6">
+          <InfoRow icon={User} label="Nombre Completo" value={`${lead.firstName} ${lead.lastName}`} />
           <InfoRow icon={Phone} label="Teléfono" value={lead.phone || 'No registrado'} />
-          <InfoRow icon={Mail} label="Email" value={lead.email || 'No registrado'} />
+          <InfoRow icon={Mail} label="Correo Electrónico" value={lead.email || 'No registrado'} />
           {lead.city && (
              <InfoRow icon={MapPin} label="Ciudad" value={lead.city} />
           )}
-          <InfoRow icon={Globe} label="Fuente" value={lead.source || 'Web Aliminspa'} />
+          <InfoRow icon={Globe} label="Proyecto de Interés" value={lead.source || 'General'} />
           <InfoRow 
             icon={CheckCircle2} 
             label="Estado" 
