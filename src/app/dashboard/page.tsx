@@ -161,7 +161,7 @@ function DashboardContent() {
 
   const projects = [
     { id: "TODOS", name: "Todos los Proyectos", icon: LayoutGrid },
-    { id: "CAMPANAS", name: "Campañas Meta", icon: Megaphone },
+    { id: "META", name: "Campañas Meta", icon: Megaphone },
     { id: "web aliminspa.cl", name: "web aliminspa.cl", icon: Globe },
     { id: "lomasdelmar", name: "Lomas del Mar", icon: LayoutGrid },
   ];
