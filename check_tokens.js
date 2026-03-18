@@ -6,16 +6,17 @@ process.env.DATABASE_URL = databaseUrl;
 const prisma = new PrismaClient();
 
 async function main() {
-  const count = await prisma.lead.count({
-    where: {
-      assignedToId: null,
-      OR: [
-        { source: { contains: 'META', mode: 'insensitive' } },
-        { source: { contains: 'WEB', mode: 'insensitive' } }
-      ]
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      fcmToken: true
     }
   });
-  console.log(`Leads sin asignar (Meta/Web): ${count}`);
+  console.log("Estado de Tokens FCM:");
+  users.forEach(u => {
+    console.log(`- ${u.name}: ${u.fcmToken ? '✅ Registrado' : '❌ Sin Token (Debe aceptar permisos)'}`);
+  });
 }
 
 main().catch(console.error).finally(() => prisma.$disconnect());
