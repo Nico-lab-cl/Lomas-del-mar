@@ -30,13 +30,26 @@ export async function GET(req: Request) {
 
     // Si no tenemos las variables individuales, intentar con el JSON del service account
     if (!privateKey && process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+      let serviceAccount;
       try {
-        const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+        // Intentar decodificar como base64 primero
+        const decoded = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_KEY, 'base64').toString('utf-8');
+        serviceAccount = JSON.parse(decoded);
+      } catch (e) {
+        // Fallback: tratar como JSON crudo
+        try {
+          serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+        } catch (parseErr: any) {
+          (envDiag as any).jsonParseError = parseErr.message;
+        }
+      }
+
+      if (serviceAccount) {
         try {
           admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
           });
-          (envDiag as any).initMethod = "SERVICE_ACCOUNT_KEY JSON";
+          (envDiag as any).initMethod = "SERVICE_ACCOUNT_KEY JSON (Base64/Raw)";
         } catch (err: any) {
           return NextResponse.json({
             success: false,
@@ -45,8 +58,6 @@ export async function GET(req: Request) {
             envDiag,
           }, { status: 500 });
         }
-      } catch (parseErr: any) {
-        (envDiag as any).jsonParseError = parseErr.message;
       }
     }
 
