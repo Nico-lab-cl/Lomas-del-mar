@@ -180,12 +180,38 @@ export async function POST(req: Request) {
       });
     }
 
+    // Check if lead exists to determine if we should auto-assign
+    const existingLead = await (prisma as any).lead.findUnique({
+      where: { email: leadData.email },
+      select: { id: true, assignedToId: true }
+    });
+
+    let assignedToId = null;
+    if (!existingLead) {
+      // New lead! Auto-assign using Round Robin
+      const { getNextAdvisorId } = await import("@/lib/assignment");
+      assignedToId = await getNextAdvisorId();
+      leadData.assignedToId = assignedToId;
+    }
+
     const lead = await (prisma as any).lead.upsert({
       where: { email: leadData.email },
       update: leadData,
       create: leadData,
     });
     
+    // Trigger notification if it's a new assignment
+    if (!existingLead && assignedToId) {
+      const { createNotification } = await import("@/lib/notifications");
+      await createNotification({
+        userId: assignedToId,
+        title: "Nuevo Lead Asignado (Auto) 🤖",
+        body: `Se te ha asignado un nuevo lead de ${leadData.source}: ${leadData.firstName} ${leadData.lastName || ''}`,
+        leadId: lead.id,
+        type: "ASSIGNMENT",
+      });
+    }
+
     return NextResponse.json(lead);
   } catch (error) {
     console.error("Error creating lead:", error);
