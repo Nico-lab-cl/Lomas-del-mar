@@ -10,9 +10,20 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+// Ensure we only initialize if we have the required config to prevent white/black screens
+const isConfigValid = 
+  firebaseConfig.apiKey && 
+  firebaseConfig.projectId && 
+  firebaseConfig.appId;
 
-export const msg = typeof window !== 'undefined' ? getMessaging(app) : null;
+let app;
+if (isConfigValid) {
+  app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+} else {
+  console.warn("Firebase client configuration is missing. Notifications might not work.");
+}
+
+export const msg = (typeof window !== 'undefined' && app) ? getMessaging(app) : null;
 
 export const requestForToken = async () => {
   if (!msg) return null;
