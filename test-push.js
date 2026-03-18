@@ -40,25 +40,17 @@ async function run() {
     }
   }
 
-  // 2. Preparar mensaje Android nativo
+  // 2. Preparar mensaje Android nativo Data-Only
   console.log('🔄 Enviando notificación Push...');
   const message = {
-    notification: {
-      title: 'Notificación de Prueba 🚀',
-      body: '¡Hola Nico! Si estás leyendo esto y tu teléfono vibró, las notificaciones nativas funcionan perfecto. 🎉',
-    },
     data: {
+      title: 'Notificación de Prueba 🚀',
+      body: '¡Hola Nico! Si estás leyendo esto y tu teléfono vibró con la app abierta, TODO ESTÁ PERFECTO. 🎉',
       leadId: '',
       type: 'test',
     },
     android: {
       priority: 'high',
-      notification: {
-        channelId: 'crm_leads_channel',
-        sound: 'default',
-        defaultVibrateTimings: true,
-        notificationCount: 1,
-      },
     },
     token: TOKEN_FCM,
   };

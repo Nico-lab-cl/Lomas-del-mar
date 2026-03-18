@@ -33,23 +33,18 @@ export async function createNotification({
     });
 
     if ((user as any)?.fcmToken) {
+      // Usamos un payload 'Data-Only' para forzar a Android a ejecutar SIEMPRE
+      // MyFirebaseMessagingService.onMessageReceived, ya sea en background o foreground.
+      // Esto garantiza que siempre vibre y suene con nuestro canal personalizado.
       const message = {
-        notification: {
-          title,
-          body,
-        },
         data: {
+          title: title,
+          body: body,
           leadId: leadId || "",
           type: type,
         },
         android: {
           priority: "high" as const,
-          notification: {
-            channelId: "crm_leads_channel",
-            sound: "default",
-            defaultVibrateTimings: true,
-            notificationCount: 1,
-          },
         },
         token: (user as any).fcmToken,
       };
