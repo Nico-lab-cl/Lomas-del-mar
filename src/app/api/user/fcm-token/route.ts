@@ -16,7 +16,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Token is required" }, { status: 400 });
     }
 
-    await prisma.user.update({
+    await (prisma as any).user.update({
       where: { id: userId },
       data: { fcmToken: token },
     });

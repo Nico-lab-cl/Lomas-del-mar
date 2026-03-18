@@ -32,7 +32,7 @@ export async function createNotification({
       select: { fcmToken: true },
     });
 
-    if (user?.fcmToken) {
+    if ((user as any)?.fcmToken) {
       const message = {
         notification: {
           title,
@@ -42,7 +42,7 @@ export async function createNotification({
           leadId: leadId || "",
           type: type,
         },
-        token: user.fcmToken,
+        token: (user as any).fcmToken,
       };
 
       try {
@@ -52,7 +52,7 @@ export async function createNotification({
         console.error("Error sending FCM message:", fcmError);
         // If token is invalid, we might want to clear it
         if ((fcmError as any).code === 'messaging/registration-token-not-registered') {
-          await prisma.user.update({
+          await (prisma as any).user.update({
             where: { id: userId },
             data: { fcmToken: null }
           });

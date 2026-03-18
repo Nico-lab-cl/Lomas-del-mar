@@ -10,7 +10,7 @@ export async function GET(req: Request) {
   const userId = (session.user as any).id;
 
   try {
-    const notifications = await prisma.notification.findMany({
+    const notifications = await (prisma as any).notification.findMany({
       where: { userId },
       orderBy: { createdAt: "desc" },
       take: 50, // Limit to last 50
@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   const userId = (session.user as any).id;
 
   try {
-    await prisma.notification.updateMany({
+    await (prisma as any).notification.updateMany({
       where: { userId, read: false },
       data: { read: true },
     });
