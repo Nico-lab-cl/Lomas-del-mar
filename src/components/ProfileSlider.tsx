@@ -182,17 +182,18 @@ export default function ProfileSlider({ isOpen, onClose }: ProfileSliderProps) {
               <MenuButton 
                 icon={Bell} 
                 label="Notificaciones Push" 
-                badge="Ajustes" 
-                onClick={() => {
+                badge="Diagnóstico" 
+                onClick={async () => {
                   try {
-                    // Check if AndroidBridge exists (injected by WebView)
+                    // Try to open native settings, but also fetch current token for debugging
                     if (typeof window !== "undefined" && (window as any).AndroidBridge && typeof (window as any).AndroidBridge.openNotificationSettings === "function") {
+                      alert("App nativa detectada. Presiona OK para abrir los ajustes nativos.");
                       (window as any).AndroidBridge.openNotificationSettings();
                     } else {
-                      alert("Ajustes de notificaciones solo disponibles en la App Android.");
+                      alert("Estas en el navegador web (no en la App Android). Las notificaciones V2 son EXCLUSIVAS de la App de Android. Instala la APK para que funcionen.");
                     }
                   } catch (e) {
-                    console.error("AndroidBridge error:", e);
+                    console.error(e);
                   }
                 }}
               />
