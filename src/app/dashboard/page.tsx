@@ -53,30 +53,44 @@ export default function DashboardPage() {
 function DashboardContent() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   
-  // State
+  // Read initial state from URL params (persistence!)
   const [leads, setLeads] = useState<Lead[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeProject, setActiveProject] = useState("TODOS");
-  const [dateFilter, setDateFilter] = useState("TODOS");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [activeStatus, setActiveStatus] = useState("TODOS");
-  const [activeRating, setActiveRating] = useState("TODOS");
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
+  const [activeProject, setActiveProject] = useState(searchParams.get("project") || "TODOS");
+  const [dateFilter, setDateFilter] = useState(searchParams.get("date") || "TODOS");
+  const [currentPage, setCurrentPage] = useState(Number(searchParams.get("page")) || 1);
+  const [activeStatus, setActiveStatus] = useState(searchParams.get("status") || "TODOS");
+  const [activeRating, setActiveRating] = useState(searchParams.get("rating") || "TODOS");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isVisitsActive, setIsVisitsActive] = useState(false);
+  const [isVisitsActive, setIsVisitsActive] = useState(searchParams.get("menu") === "visits");
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
   const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false);
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
   const [isRatingDropdownOpen, setIsRatingDropdownOpen] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
+  // Sync state → URL (so "Back" button restores position)
+  const syncUrlParams = useCallback((page: number, q: string, project: string, date: string, statusF: string, ratingF: string, visits: boolean) => {
+    const params = new URLSearchParams();
+    if (page > 1) params.set("page", String(page));
+    if (q) params.set("q", q);
+    if (project !== "TODOS") params.set("project", project);
+    if (date !== "TODOS") params.set("date", date);
+    if (statusF !== "TODOS") params.set("status", statusF);
+    if (ratingF !== "TODOS") params.set("rating", ratingF);
+    if (visits) params.set("menu", "visits");
+    const qs = params.toString();
+    router.replace(`/dashboard${qs ? `?${qs}` : ""}`, { scroll: false });
+  }, [router]);
+
   // Helper to fetch leads with all current filters
   const fetchLeads = useCallback(async (page: number, q: string, project: string, dateRange: string, statusFilter: string, ratingFilter: string, visitsOnly: boolean) => {
     setLoading(true);
     try {
-      // Optimizamos búsqueda: quitamos espacios extras y normalizamos
       const normalizedQuery = q.trim().replace(/\s+/g, ' ');
 
       let url = `/api/leads?page=${page}&limit=10`;
@@ -114,8 +128,6 @@ function DashboardContent() {
     }
   }, []);
 
-  const searchParams = useSearchParams();
-
   useEffect(() => {
     const menu = searchParams.get("menu");
     if (menu === "profile") {
@@ -124,9 +136,6 @@ function DashboardContent() {
     } else if (menu === "visits") {
       setIsVisitsActive(true);
       setIsProfileOpen(false);
-    } else {
-      setIsVisitsActive(false);
-      setIsProfileOpen(false);
     }
   }, [searchParams]);
 
@@ -134,13 +143,16 @@ function DashboardContent() {
     if (status === "unauthenticated") {
       router.push("/login");
     } else if (status === "authenticated") {
+      // Sync URL with current state
+      syncUrlParams(currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive);
+
       const delayDebounceFn = setTimeout(() => {
         fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive);
       }, 500);
 
       return () => clearTimeout(delayDebounceFn);
     }
-  }, [status, router, currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive, fetchLeads]);
+  }, [status, router, currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive, fetchLeads, syncUrlParams]);
 
   const getDateRange = (filter: string) => {
     const now = new Date();
@@ -493,31 +505,66 @@ function DashboardContent() {
             )}
 
             {/* Pagination Controls */}
-            {pagination && pagination.pages > 1 && (
-              <div className="flex items-center justify-between pt-6 pb-2">
-                <button
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                  disabled={currentPage === 1}
-                  className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
-                >
-                  <ChevronLeft size={20} />
-                </button>
+            {pagination && pagination.pages > 1 && (() => {
+              // Build page numbers to display (max 5 visible)
+              const totalPages = pagination.pages;
+              const pages: (number | string)[] = [];
+              
+              if (totalPages <= 7) {
+                for (let i = 1; i <= totalPages; i++) pages.push(i);
+              } else {
+                pages.push(1);
+                if (currentPage > 3) pages.push("...");
+                
+                const start = Math.max(2, currentPage - 1);
+                const end = Math.min(totalPages - 1, currentPage + 1);
+                for (let i = start; i <= end; i++) pages.push(i);
+                
+                if (currentPage < totalPages - 2) pages.push("...");
+                pages.push(totalPages);
+              }
 
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-black text-slate-400 uppercase tracking-widest">
-                    Página <span className="text-primary">{currentPage}</span> de {pagination.pages}
-                  </span>
+              return (
+                <div className="flex items-center justify-center gap-1.5 pt-6 pb-2">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                    disabled={currentPage === 1}
+                    className="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
+                  >
+                    <ChevronLeft size={16} />
+                  </button>
+
+                  {pages.map((p, idx) => 
+                    typeof p === "string" ? (
+                      <span key={`ellipsis-${idx}`} className="w-9 h-9 flex items-center justify-center text-[10px] font-bold text-slate-300">
+                        ···
+                      </span>
+                    ) : (
+                      <button
+                        key={p}
+                        onClick={() => setCurrentPage(p)}
+                        className={clsx(
+                          "w-9 h-9 flex items-center justify-center rounded-xl text-[11px] font-black transition-all active:scale-95",
+                          currentPage === p
+                            ? "bg-primary text-white shadow-lg shadow-primary/20"
+                            : "bg-white border border-slate-200 text-slate-500 hover:bg-slate-50"
+                        )}
+                      >
+                        {p}
+                      </button>
+                    )
+                  )}
+
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(pagination.pages, prev + 1))}
+                    disabled={currentPage === pagination.pages}
+                    className="w-9 h-9 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
+                  >
+                    <ChevronRight size={16} />
+                  </button>
                 </div>
-
-                <button
-                  onClick={() => setCurrentPage(prev => Math.min(pagination.pages, prev + 1))}
-                  disabled={currentPage === pagination.pages}
-                  className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
-                >
-                  <ChevronRight size={20} />
-                </button>
-              </div>
-            )}
+              );
+            })()}
           </>
         )}
       </main>
