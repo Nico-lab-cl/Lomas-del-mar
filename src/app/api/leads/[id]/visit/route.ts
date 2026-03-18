@@ -11,17 +11,20 @@ export async function POST(
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { interests, notes } = await req.json();
+    const { visitProject, lote, etapa, visitDate } = await req.json();
     
-    // In a real app we might create a separate Visit record, 
-    // but for now we update the lead's status and tracking fields
     const updatedLead = await (prisma as any).lead.update({
       where: { id: params.id },
       data: {
         visited: true,
-        interests: interests || undefined,
-        notes: notes ? notes : undefined,
-        lastActivity: "Visita registrada",
+        visitProject: visitProject || undefined,
+        lote: lote || undefined,
+        etapa: etapa || undefined,
+        visitDate: visitDate ? new Date(visitDate) : undefined,
+        interests: visitProject || undefined,
+        notes: `Visita programada: ${visitProject} - Lote ${lote}, Etapa ${etapa}`,
+        lastActivity: "Visita programada",
+        status: "VISITA",
       } as any,
     });
 

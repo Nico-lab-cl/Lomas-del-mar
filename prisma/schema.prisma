@@ -44,6 +44,10 @@ model Lead {
   assignedTo   User?     @relation("AssignedLeads", fields: [assignedToId], references: [id])
   notes        String?
   visited      Boolean   @default(false)
+  visitDate    DateTime?
+  visitProject String?
+  lote         String?
+  etapa        String?
   interests    String?
   rating       String?   @default("FRIO")
   lastNoteAt   DateTime?
