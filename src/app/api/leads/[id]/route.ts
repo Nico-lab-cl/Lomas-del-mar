@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { createNotification } from "@/lib/notifications";
 
 export async function GET(
   req: Request,
@@ -42,10 +43,22 @@ export async function PATCH(
       },
       include: {
         assignedTo: {
-          select: { name: true, image: true },
+          select: { id: true, name: true, image: true },
         },
       },
     });
+
+    // TRIGGER NOTIFICATION if assignedToId changed
+    if (data.assignedToId) {
+      await createNotification({
+        userId: data.assignedToId,
+        title: "Nuevo Lead Asignado 👤",
+        body: `Se te ha asignado el lead: ${updatedLead.firstName} ${updatedLead.lastName || ''}`,
+        leadId: updatedLead.id,
+        type: "ASSIGNMENT",
+      });
+    }
+
     return NextResponse.json(updatedLead);
   } catch (error) {
     return NextResponse.json({ error: "Error updating lead" }, { status: 500 });

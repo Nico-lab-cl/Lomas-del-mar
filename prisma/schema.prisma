@@ -8,16 +8,18 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  username  String   @unique
-  password  String
-  name      String?
-  image     String?
-  phone     String?
-  role      Role     @default(ASESOR)
-  leads     Lead[]   @relation("AssignedLeads")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String         @id @default(uuid())
+  username      String         @unique
+  password      String
+  name          String?
+  image         String?
+  phone         String?
+  role          Role           @default(ASESOR)
+  fcmToken      String?
+  leads         Lead[]         @relation("AssignedLeads")
+  notifications Notification[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 enum Role {
@@ -58,4 +60,16 @@ model Lead {
 
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  body      String
+  type      String   @default("INFO")
+  leadId    String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
 }

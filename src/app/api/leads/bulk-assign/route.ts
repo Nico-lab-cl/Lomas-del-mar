@@ -54,6 +54,17 @@ export async function POST(req: Request) {
       totalUpdated += result.count;
     }
 
+    // TRIGGER NOTIFICATION for bulk assignment
+    if (totalUpdated > 0) {
+      const { createNotification } = await import("@/lib/notifications");
+      await createNotification({
+        userId: assignedToId,
+        title: "Carga Masiva de Leads 📦",
+        body: `Se te han asignado ${totalUpdated} nuevos leads masivamente.`,
+        type: "ASSIGNMENT",
+      });
+    }
+
     return NextResponse.json({
       success: true,
       message: `${totalUpdated} leads asignados a ${targetUser.name}`,

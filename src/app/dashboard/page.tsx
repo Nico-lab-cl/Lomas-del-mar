@@ -13,6 +13,7 @@ import {
 import clsx from "clsx";
 import Image from "next/image";
 import ProfileSlider from "@/components/ProfileSlider";
+import NotificationBell from "@/components/NotificationBell";
 
 interface Lead {
   id: string;
@@ -241,10 +242,7 @@ function DashboardContent() {
                />
                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             </div>
-            <button className="p-2 text-slate-400 hover:text-primary transition-colors relative">
-               <Bell size={22} />
-               <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-pulse" />
-            </button>
+            <NotificationBell />
           </div>
         </div>
 
