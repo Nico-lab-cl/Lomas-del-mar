@@ -182,18 +182,43 @@ export default function ProfileSlider({ isOpen, onClose }: ProfileSliderProps) {
               <MenuButton 
                 icon={Bell} 
                 label="Notificaciones Push" 
-                badge="Diagnóstico" 
+                badge="Sincronizar" 
                 onClick={async () => {
                   try {
-                    // Try to open native settings, but also fetch current token for debugging
-                    if (typeof window !== "undefined" && (window as any).AndroidBridge && typeof (window as any).AndroidBridge.openNotificationSettings === "function") {
-                      alert("App nativa detectada. Presiona OK para abrir los ajustes nativos.");
-                      (window as any).AndroidBridge.openNotificationSettings();
+                    if (typeof window !== "undefined" && (window as any).AndroidBridge) {
+                      const bridge = (window as any).AndroidBridge;
+                      
+                      // 1. Get Token from Android
+                      if (typeof bridge.getFcmToken === "function") {
+                        const token = bridge.getFcmToken();
+                        if (token) {
+                          // 2. Save it to Database explicitly
+                          const res = await fetch("/api/user/fcm-token", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ token })
+                          });
+                          
+                          if (res.ok) {
+                            alert("¡Dispositivo registrado exitosamente en la Base de Datos! Las notificaciones ya deberían funcionar.");
+                          } else {
+                            alert("Error guardando el token en el servidor: " + res.status);
+                          }
+                        } else {
+                          alert("Firebase aún está generando el token. Cierra la app y vuelve a abrirla en unos segundos.");
+                        }
+                      }
+                      
+                      // 3. Open settings as a bonus
+                      if (typeof bridge.openNotificationSettings === "function") {
+                        bridge.openNotificationSettings();
+                      }
                     } else {
-                      alert("Estas en el navegador web (no en la App Android). Las notificaciones V2 son EXCLUSIVAS de la App de Android. Instala la APK para que funcionen.");
+                      alert("Estás en el navegador web. Instala y usa la App de Android para activar las notificaciones nativas.");
                     }
                   } catch (e) {
                     console.error(e);
+                    alert("Error sinconizando: " + e);
                   }
                 }}
               />
