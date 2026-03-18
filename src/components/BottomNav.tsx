@@ -36,7 +36,8 @@ export default function BottomNav() {
         <div className="flex justify-between items-end">
           <div className="flex-1 flex justify-center">
             {navItems.filter(item => item.side === "left").map((item) => {
-              const isActive = pathname === item.href || (item.label === "LEADS" && pathname === "/dashboard" && !window.location.search.includes("menu="));
+              const isWindowDefined = typeof window !== 'undefined';
+              const isActive = pathname === item.href || (item.label === "LEADS" && pathname === "/dashboard" && isWindowDefined && !window.location.search.includes("menu="));
               return (
                 <Link
                   key={item.label}
@@ -57,7 +58,8 @@ export default function BottomNav() {
 
           <div className="flex-1 flex justify-around">
             {navItems.filter(item => item.side === "right").map((item) => {
-              const isActive = window.location.search.includes(`menu=${item.href.split('=')[1]}`);
+              const isWindowDefined = typeof window !== 'undefined';
+              const isActive = isWindowDefined && window.location.search.includes(`menu=${item.href.split('=')[1]}`);
               return (
                 <Link
                   key={item.label}
