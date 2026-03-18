@@ -276,19 +276,21 @@ function DashboardContent() {
 
             {isProjectDropdownOpen && (
               <div className="absolute top-full right-0 mt-2 w-56 bg-white border border-slate-100 rounded-3xl shadow-2xl p-3 z-[200] animate-in fade-in slide-in-from-top-2 duration-200">
-                {projects.map((p) => (
-                  <button
-                    key={p.id}
-                    onClick={() => { setActiveProject(p.id); setIsProjectDropdownOpen(false); setCurrentPage(1); }}
-                    className={clsx(
-                      "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-xs font-bold transition-all",
-                      activeProject === p.id ? "bg-primary/5 text-primary" : "text-slate-500 hover:bg-slate-50"
-                    )}
-                  >
-                    <p.icon size={16} />
-                    {p.name}
-                  </button>
-                ))}
+                {projects
+                  .filter(p => p.id !== "UNASSIGNED" || (session as any)?.user?.role === "ADMIN")
+                  .map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => { setActiveProject(p.id); setIsProjectDropdownOpen(false); setCurrentPage(1); }}
+                      className={clsx(
+                        "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left text-xs font-bold transition-all",
+                        activeProject === p.id ? "bg-primary/5 text-primary" : "text-slate-500 hover:bg-slate-50"
+                      )}
+                    >
+                      <p.icon size={16} />
+                      {p.name}
+                    </button>
+                  ))}
               </div>
             )}
           </div>
