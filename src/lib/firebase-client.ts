@@ -29,7 +29,7 @@ export const requestForToken = async () => {
   if (!msg) return null;
   try {
     const currentToken = await getToken(msg, {
-      vapidKey: "YOUR_VAPID_KEY_IF_NEEDED" // Optional: required if using a specific key
+      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY
     });
     if (currentToken) {
       console.log('Current token for client: ', currentToken);
