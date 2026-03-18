@@ -14,6 +14,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import ProfileSlider from "@/components/ProfileSlider";
 import NotificationBell from "@/components/NotificationBell";
+import NotificationBanner from "@/components/NotificationBanner";
 
 interface Lead {
   id: string;
@@ -286,6 +287,8 @@ function DashboardContent() {
           </div>
         </div>
       </header>
+      
+      <NotificationBanner />
 
       {/* Dropdown Filters Row */}
       <div className="py-2 px-6 flex items-center gap-2 relative z-[80] overflow-visible">
