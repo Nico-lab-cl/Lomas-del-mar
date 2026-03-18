@@ -179,7 +179,23 @@ export default function ProfileSlider({ isOpen, onClose }: ProfileSliderProps) {
                 onClick={() => setIsEditing(true)}
               />
               <MenuButton icon={Shield} label="Seguridad & Privacidad" />
-              <MenuButton icon={Bell} label="Notificaciones Push" badge="On" />
+              <MenuButton 
+                icon={Bell} 
+                label="Notificaciones Push" 
+                badge="Ajustes" 
+                onClick={() => {
+                  try {
+                    // Check if AndroidBridge exists (injected by WebView)
+                    if (typeof window !== "undefined" && (window as any).AndroidBridge && typeof (window as any).AndroidBridge.openNotificationSettings === "function") {
+                      (window as any).AndroidBridge.openNotificationSettings();
+                    } else {
+                      alert("Ajustes de notificaciones solo disponibles en la App Android.");
+                    }
+                  } catch (e) {
+                    console.error("AndroidBridge error:", e);
+                  }
+                }}
+              />
 
               <div className="h-px bg-slate-100 my-4" />
 
