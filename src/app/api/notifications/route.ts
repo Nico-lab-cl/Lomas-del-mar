@@ -7,7 +7,7 @@ export async function GET(req: Request) {
   const session = await getServerSession(authOptions as any);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const userId = (session.user as any).id;
+  const userId = (session as any).user?.id;
 
   try {
     const notifications = await (prisma as any).notification.findMany({
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
   const session = await getServerSession(authOptions as any);
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const userId = (session.user as any).id;
+  const userId = (session as any).user?.id;
 
   try {
     await (prisma as any).notification.updateMany({
