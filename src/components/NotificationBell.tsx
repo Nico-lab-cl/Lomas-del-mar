@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bell, Clock, User, CheckCheck } from 'lucide-react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 import { requestForToken, onMessageListener } from '@/lib/firebase-client';
 
@@ -12,11 +13,13 @@ interface Notification {
   body: string;
   type: string;
   read: boolean;
+  leadId?: string;
   createdAt: string;
 }
 
 export default function NotificationBell() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -124,11 +127,17 @@ export default function NotificationBell() {
                 <p className="text-xs font-bold text-slate-400">No tienes notificaciones aún</p>
               </div>
             ) : (
-              notifications.map((n) => (
+                  notifications.map((n) => (
                 <div 
                   key={n.id}
+                  onClick={() => {
+                    if (n.leadId) {
+                      router.push(`/dashboard/leads/${n.leadId}`);
+                      setIsOpen(false);
+                    }
+                  }}
                   className={clsx(
-                    "p-4 border-b border-slate-50 flex gap-3 transition-colors hover:bg-slate-50 cursor-pointer",
+                    "p-4 border-b border-slate-50 flex gap-3 transition-colors hover:bg-slate-100 cursor-pointer active:bg-slate-200",
                     !n.read && "bg-primary/5"
                   )}
                 >
