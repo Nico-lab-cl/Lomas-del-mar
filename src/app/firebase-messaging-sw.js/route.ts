@@ -22,6 +22,7 @@ export async function GET() {
       const notificationOptions = {
         body: payload.notification.body,
         icon: '/logo-alimin.png',
+        vibrate: [200, 100, 200],
         data: payload.data
       };
 
