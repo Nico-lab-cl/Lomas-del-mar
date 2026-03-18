@@ -79,12 +79,11 @@ export async function GET(req: Request) {
   // Role-based filtering and specialized 'unassigned' view
   const userSession = session as any;
   if (userSession?.user) {
-    if (userSession.user.role === "ADMIN") {
-      if (unassigned) {
-        where.assignedToId = null;
-      }
-    } else {
-      // Non-admins only see theirs
+    if (unassigned) {
+      // Anyone can see unassigned leads if specifically filtering for them
+      where.assignedToId = null;
+    } else if (userSession.user.role !== "ADMIN") {
+      // Non-admins only see theirs by default
       where.assignedToId = userSession.user.id;
     }
   }
