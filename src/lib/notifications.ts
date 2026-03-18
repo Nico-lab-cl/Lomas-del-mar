@@ -42,6 +42,15 @@ export async function createNotification({
           leadId: leadId || "",
           type: type,
         },
+        android: {
+          priority: "high" as const,
+          notification: {
+            channelId: "crm_leads_channel",
+            sound: "default",
+            defaultVibrateTimings: true,
+            notificationCount: 1,
+          },
+        },
         token: (user as any).fcmToken,
       };
 
