@@ -23,6 +23,7 @@ export async function GET(req: Request) {
   const visited = searchParams.get("visited");
   const rating = searchParams.get("rating");
   const search = searchParams.get("q");
+  const unassigned = searchParams.get("unassigned") === "true";
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
 
@@ -75,10 +76,17 @@ export async function GET(req: Request) {
     if (endDate) where.createdAt.lte = new Date(endDate);
   }
 
-  // Role-based filtering
+  // Role-based filtering and specialized 'unassigned' view
   const userSession = session as any;
-  if (userSession?.user && userSession.user.role !== "ADMIN") {
-     where.assignedToId = userSession.user.id;
+  if (userSession?.user) {
+    if (userSession.user.role === "ADMIN") {
+      if (unassigned) {
+        where.assignedToId = null;
+      }
+    } else {
+      // Non-admins only see theirs
+      where.assignedToId = userSession.user.id;
+    }
   }
 
   try {

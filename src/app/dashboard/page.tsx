@@ -8,7 +8,7 @@ import {
   ChevronRight, Phone, MessageSquare, Clock,
   MoreVertical, Share2, Mail, ChevronLeft, ChevronDown,
   LayoutGrid, Globe, Megaphone, Calendar,
-  Meh, Smile, Laugh
+  Meh, Smile, Laugh, UserMinus
 } from "lucide-react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -81,7 +81,13 @@ function DashboardContent() {
 
       let url = `/api/leads?page=${page}&limit=10`;
       if (normalizedQuery) url += `&q=${encodeURIComponent(normalizedQuery)}`;
-      if (project !== "TODOS") url += `&source=${encodeURIComponent(project)}`;
+      
+      if (project === "UNASSIGNED") {
+        url += `&unassigned=true`;
+      } else if (project !== "TODOS") {
+        url += `&source=${encodeURIComponent(project)}`;
+      }
+      
       if (statusFilter !== "TODOS") url += `&status=${encodeURIComponent(statusFilter)}`;
       if (ratingFilter !== "TODOS") url += `&rating=${encodeURIComponent(ratingFilter)}`;
       if (visitsOnly) url += `&visited=true`;
@@ -170,6 +176,7 @@ function DashboardContent() {
 
   const projects = [
     { id: "TODOS", name: "Todos los Proyectos", icon: LayoutGrid },
+    { id: "UNASSIGNED", name: "Sin Asignar", icon: UserMinus },
     { id: "META", name: "Campañas Meta", icon: Megaphone },
     { id: "web aliminspa.cl", name: "web aliminspa.cl", icon: Globe },
     { id: "lomasdelmar", name: "Lomas del Mar", icon: LayoutGrid },
