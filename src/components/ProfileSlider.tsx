@@ -67,17 +67,19 @@ export default function ProfileSlider({ isOpen, onClose }: ProfileSliderProps) {
     <>
       <div
         className={clsx(
-          "fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300 z-[300]",
+          "fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300",
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         )}
+        style={{ zIndex: 99990 }}
         onClick={onClose}
       />
 
       <div
         className={clsx(
-          "fixed top-0 right-0 h-full w-[85%] max-w-[400px] bg-white z-[310] shadow-2xl transition-transform duration-500 ease-out flex flex-col",
+          "fixed top-0 right-0 h-full w-[85%] max-w-[400px] bg-white shadow-2xl transition-transform duration-500 ease-out flex flex-col",
           isOpen ? "translate-x-0" : "translate-x-full"
         )}
+        style={{ zIndex: 99999 }}
       >
         {/* Header */}
         <div className="bg-primary px-6 pt-12 pb-8 text-white relative">

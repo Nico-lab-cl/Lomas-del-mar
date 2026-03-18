@@ -15,18 +15,24 @@ export default function BottomNav() {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto z-[150]">
-      {/* Center FAB */}
-      <div className="absolute left-1/2 -top-6 -translate-x-1/2 z-10">
+    <>
+      {/* Center FAB - fixed independently to prevent clipping */}
+      <div 
+        className="fixed bottom-8 left-1/2 -translate-x-1/2"
+        style={{ zIndex: 99991 }}
+      >
         <Link
           href="/dashboard/leads/new"
-          className="w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center border-4 border-[#F5F7F9] active:scale-95 transition-all"
+          className="w-14 h-14 bg-primary text-white rounded-full shadow-[0_10px_25px_-5px_rgba(16,123,122,0.5)] flex items-center justify-center border-4 border-[#F5F7F9] active:scale-95 transition-all"
         >
           <Plus size={28} strokeWidth={3} />
         </Link>
       </div>
 
-      <nav className="bg-white border-t border-slate-100 py-2 px-2 shadow-[0_-4px_12px_rgba(0,0,0,0.03)] relative z-0">
+      <nav 
+        className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-white border-t border-slate-100 py-2 px-2 shadow-[0_-4px_12px_rgba(0,0,0,0.03)]"
+        style={{ zIndex: 99990 }}
+      >
         <div className="flex justify-between items-end">
           <div className="flex-1 flex justify-center">
             {navItems.filter(item => item.side === "left").map((item) => {
@@ -69,6 +75,6 @@ export default function BottomNav() {
           </div>
         </div>
       </nav>
-    </div>
+    </>
   );
 }
