@@ -26,26 +26,41 @@ if (isConfigValid) {
 export const msg = (typeof window !== 'undefined' && app) ? getMessaging(app) : null;
 
 export const requestForToken = async () => {
-  if (!msg) return null;
+  if (!msg) {
+    console.warn('Firebase messaging not initialized');
+    return null;
+  }
   try {
+    // CRITICAL: Must explicitly request permission first
+    const permission = await Notification.requestPermission();
+    console.log('Notification permission:', permission);
+    
+    if (permission !== 'granted') {
+      console.warn('Notification permission denied by user');
+      return null;
+    }
+
     const currentToken = await getToken(msg, {
       vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY
     });
     if (currentToken) {
-      console.log('Current token for client: ', currentToken);
-      // Send the token to your server and update the UI if necessary
-      await fetch('/api/user/fcm-token', {
+      console.log('FCM token obtained successfully');
+      // Save token to server
+      const res = await fetch('/api/user/fcm-token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: currentToken }),
       });
+      if (!res.ok) {
+        console.error('Failed to save FCM token to server:', await res.text());
+      }
       return currentToken;
     } else {
-      console.log('No registration token available. Request permission to generate one.');
+      console.warn('No FCM token received. Check VAPID key configuration.');
       return null;
     }
   } catch (err) {
-    console.log('An error occurred while retrieving token. ', err);
+    console.error('Error requesting FCM token:', err);
     return null;
   }
 };
