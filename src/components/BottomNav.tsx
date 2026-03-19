@@ -1,6 +1,6 @@
 "use client";
 
-import { Users, UserCircle, LayoutGrid, Plus, PenTool, FileText } from "lucide-react";
+import { Users, UserCircle, LayoutGrid, Plus, PenTool } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import clsx from "clsx";
@@ -83,8 +83,8 @@ export default function BottomNav() {
                 isVisitsActive ? "text-[#D4AF37] scale-110" : "text-slate-400 opacity-60"
               )}
             >
-              <FileText size={24} strokeWidth={isVisitsActive ? 2.5 : 2} />
-              <span className="text-[10px] font-bold tracking-wider">CONTRATO</span>
+              <LayoutGrid size={24} strokeWidth={isVisitsActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold tracking-wider">VISITAS</span>
             </button>
 
             <button
