@@ -7,7 +7,7 @@ import {
   Plus, Search, Filter, Bell, User as UserIcon, 
   ChevronRight, Phone, MessageSquare, Clock,
   MoreVertical, Share2, Mail, ChevronLeft, ChevronDown,
-  LayoutGrid, Globe, Megaphone, Calendar,
+  LayoutGrid, Globe, Megaphone, Calendar, MapPin,
   Meh, Smile, Laugh, UserMinus
 } from "lucide-react";
 import clsx from "clsx";
@@ -73,6 +73,15 @@ function DashboardContent() {
   const [isRatingDropdownOpen, setIsRatingDropdownOpen] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
+  // Calendar state for Visitas view
+  const [calendarMonth, setCalendarMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
+  const [visits, setVisits] = useState<any[]>([]);
+  const [selectedDay, setSelectedDay] = useState<number | null>(null);
+  const [loadingVisits, setLoadingVisits] = useState(false);
+
   // Sync state → URL (so "Back" button restores position)
   const syncUrlParams = useCallback((page: number, q: string, project: string, date: string, statusF: string, ratingF: string, visits: boolean) => {
     const params = new URLSearchParams();
@@ -127,6 +136,30 @@ function DashboardContent() {
       setLoading(false);
     }
   }, []);
+
+  // Fetch visits for calendar
+  const fetchVisits = useCallback(async (month: string) => {
+    setLoadingVisits(true);
+    try {
+      const res = await fetch(`/api/leads/visits?month=${month}`);
+      if (res.ok) {
+        const data = await res.json();
+        setVisits(data.visits || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch visits');
+    } finally {
+      setLoadingVisits(false);
+    }
+  }, []);
+
+  // Fetch visits when calendar month changes or visits tab is active
+  useEffect(() => {
+    if (isVisitsActive && status === 'authenticated') {
+      fetchVisits(calendarMonth);
+      setSelectedDay(null);
+    }
+  }, [isVisitsActive, calendarMonth, status, fetchVisits]);
 
   useEffect(() => {
     const menu = searchParams.get("menu");
@@ -268,15 +301,16 @@ function DashboardContent() {
 
         <div className="flex items-end justify-between mb-4 relative z-[60]">
           <div className="flex flex-col gap-1">
-            <h2 className="text-3xl font-black text-primary">{isVisitsActive ? "Visitas de Terrenos" : "Mis Leads"}</h2>
+            <h2 className="text-3xl font-black text-primary">{isVisitsActive ? "Calendario de Visitas" : "Mis Leads"}</h2>
             <div className="flex items-center gap-2">
                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">
-                 {pagination?.total || 0} {isVisitsActive ? "VISITAS ENCONTRADAS" : "REGISTROS ENCONTRADOS"}
+                 {isVisitsActive ? `${visits.length} VISITAS ESTE MES` : `${pagination?.total || 0} REGISTROS ENCONTRADOS`}
                </span>
             </div>
           </div>
           
-          {/* Project Dropdown Selector */}
+          {/* Project Dropdown Selector - only for leads view */}
+          {!isVisitsActive && (
           <div className="relative">
             <button 
               onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
@@ -306,11 +340,214 @@ function DashboardContent() {
               </div>
             )}
           </div>
+          )}
         </div>
       </header>
       
       <NotificationBanner />
 
+      {isVisitsActive ? (
+        /* ============ CALENDAR VIEW ============ */
+        <main className="flex-1 px-4 pb-12 min-h-[500px]">
+          {/* Month Navigator */}
+          <div className="flex items-center justify-between py-4 px-2">
+            <button
+              onClick={() => {
+                const [y, m] = calendarMonth.split('-').map(Number);
+                const prev = new Date(y, m - 2, 1);
+                setCalendarMonth(`${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, '0')}`);
+              }}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-500 active:scale-95 transition-all shadow-sm"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <h3 className="text-lg font-black text-slate-800 uppercase tracking-wider">
+              {(() => {
+                const [y, m] = calendarMonth.split('-').map(Number);
+                const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                return `${monthNames[m - 1]} ${y}`;
+              })()}
+            </h3>
+            <button
+              onClick={() => {
+                const [y, m] = calendarMonth.split('-').map(Number);
+                const next = new Date(y, m, 1);
+                setCalendarMonth(`${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}`);
+              }}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-500 active:scale-95 transition-all shadow-sm"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+
+          {loadingVisits ? (
+            <div className="flex flex-col items-center py-20 opacity-30">
+              <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4" />
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Cargando visitas...</p>
+            </div>
+          ) : (
+            <>
+              {/* Calendar Grid */}
+              <div className="bg-white rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden">
+                {/* Weekday headers */}
+                <div className="grid grid-cols-7 border-b border-slate-100">
+                  {['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'].map(day => (
+                    <div key={day} className="text-center py-3 text-[9px] font-black text-slate-400 tracking-widest">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Calendar days */}
+                <div className="grid grid-cols-7">
+                  {(() => {
+                    const [y, m] = calendarMonth.split('-').map(Number);
+                    const firstDay = new Date(y, m - 1, 1);
+                    const lastDay = new Date(y, m, 0);
+                    const daysInMonth = lastDay.getDate();
+                    // getDay() returns 0 for Sunday. We want Monday=0
+                    let startDow = firstDay.getDay() - 1;
+                    if (startDow < 0) startDow = 6;
+
+                    const today = new Date();
+                    const isCurrentMonth = today.getFullYear() === y && today.getMonth() === m - 1;
+
+                    // Build visit count per day
+                    const visitsByDay: Record<number, number> = {};
+                    visits.forEach((v: any) => {
+                      if (v.visitDate) {
+                        const d = new Date(v.visitDate).getDate();
+                        visitsByDay[d] = (visitsByDay[d] || 0) + 1;
+                      }
+                    });
+
+                    const cells = [];
+                    // Empty cells before first day
+                    for (let i = 0; i < startDow; i++) {
+                      cells.push(<div key={`empty-${i}`} className="py-2" />);
+                    }
+
+                    for (let day = 1; day <= daysInMonth; day++) {
+                      const hasVisits = visitsByDay[day] > 0;
+                      const visitCount = visitsByDay[day] || 0;
+                      const isToday = isCurrentMonth && today.getDate() === day;
+                      const isSelected = selectedDay === day;
+
+                      cells.push(
+                        <button
+                          key={day}
+                          onClick={() => setSelectedDay(isSelected ? null : day)}
+                          className={clsx(
+                            "relative flex flex-col items-center justify-center py-2.5 transition-all active:scale-90",
+                            isSelected && "bg-primary/10 rounded-xl",
+                            isToday && !isSelected && "bg-[#D4AF37]/5 rounded-xl"
+                          )}
+                        >
+                          <span className={clsx(
+                            "text-sm font-black w-8 h-8 flex items-center justify-center rounded-full transition-all",
+                            isSelected ? "bg-primary text-white shadow-md shadow-primary/30" :
+                            isToday ? "bg-[#D4AF37] text-white shadow-md shadow-[#D4AF37]/30" :
+                            hasVisits ? "text-slate-800" : "text-slate-400"
+                          )}>
+                            {day}
+                          </span>
+                          {hasVisits && (
+                            <div className="flex gap-0.5 mt-1">
+                              {Array.from({ length: Math.min(visitCount, 3) }).map((_, i) => (
+                                <div key={i} className={clsx(
+                                  "w-1.5 h-1.5 rounded-full",
+                                  isSelected ? "bg-primary" : "bg-[#D4AF37]"
+                                )} />
+                              ))}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    }
+
+                    return cells;
+                  })()}
+                </div>
+              </div>
+
+              {/* Visit cards for selected day */}
+              {selectedDay !== null && (
+                <div className="mt-6 space-y-3">
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">
+                    Visitas del {selectedDay} de {(() => {
+                      const m = parseInt(calendarMonth.split('-')[1]);
+                      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                      return monthNames[m - 1];
+                    })()}
+                  </h4>
+                  {visits
+                    .filter((v: any) => v.visitDate && new Date(v.visitDate).getDate() === selectedDay)
+                    .map((visit: any, idx: number) => (
+                      <div
+                        key={visit.id}
+                        onClick={() => router.push(`/dashboard/leads/${visit.id}`)}
+                        className="bg-white rounded-2xl border border-slate-100 p-4 shadow-md shadow-slate-100/50 cursor-pointer active:scale-[0.98] transition-all animate-in fade-in slide-in-from-bottom-2 duration-300"
+                        style={{ animationDelay: `${idx * 80}ms` }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
+                            <Calendar size={20} className="text-primary" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h5 className="text-sm font-black text-slate-800 truncate">
+                              {visit.firstName} {visit.lastName}
+                            </h5>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-[10px] font-bold text-primary flex items-center gap-1">
+                                <Clock size={10} />
+                                {new Date(visit.visitDate).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                              {visit.visitProject && (
+                                <span className="text-[10px] font-bold text-slate-500 flex items-center gap-1 truncate">
+                                  <MapPin size={10} />
+                                  {visit.visitProject}
+                                </span>
+                              )}
+                            </div>
+                            {(visit.lote || visit.etapa) && (
+                              <p className="text-[10px] font-bold text-slate-400 mt-1">
+                                {visit.lote && `Lote ${visit.lote}`}{visit.lote && visit.etapa && ' — '}{visit.etapa}
+                              </p>
+                            )}
+                          </div>
+                          <div className="w-8 h-8 bg-primary/5 rounded-full flex items-center justify-center text-primary flex-shrink-0">
+                            <ChevronRight size={14} />
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  }
+                  {visits.filter((v: any) => v.visitDate && new Date(v.visitDate).getDate() === selectedDay).length === 0 && (
+                    <div className="py-10 text-center">
+                      <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <Calendar className="text-slate-300" size={24} />
+                      </div>
+                      <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Sin visitas este día</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* No visits at all */}
+              {visits.length === 0 && selectedDay === null && (
+                <div className="py-14 text-center">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Calendar className="text-slate-300" size={32} />
+                  </div>
+                  <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">No hay visitas programadas este mes</p>
+                </div>
+              )}
+            </>
+          )}
+        </main>
+      ) : (
+        /* ============ LEADS VIEW ============ */
+        <>
       {/* Dropdown Filters Row */}
       <div className="py-2 px-6 flex items-center gap-2 relative z-[80] overflow-visible">
         {/* Period Dropdown */}
@@ -506,7 +743,6 @@ function DashboardContent() {
 
             {/* Pagination Controls */}
             {pagination && pagination.pages > 1 && (() => {
-              // Build page numbers to display (max 5 visible)
               const totalPages = pagination.pages;
               const pages: (number | string)[] = [];
               
@@ -568,7 +804,8 @@ function DashboardContent() {
           </>
         )}
       </main>
-
+        </>
+      )}
 
     </div>
   );

@@ -2,17 +2,29 @@
 
 import { Users, UserCircle, LayoutGrid, Plus } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import clsx from "clsx";
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const navItems = [
-    { label: "LEADS", icon: Users, href: "/dashboard", side: "left" },
-    { label: "VISITAS", icon: LayoutGrid, href: "/dashboard?menu=visits", side: "right" },
-    { label: "PERFIL", icon: UserCircle, href: "/dashboard?menu=profile", side: "right" },
-  ];
+  const currentMenu = searchParams.get("menu");
+
+  const isLeadsActive = pathname === "/dashboard" && !currentMenu;
+  const isVisitsActive = currentMenu === "visits";
+  const isProfileActive = currentMenu === "profile";
+
+  const handleNav = (target: "leads" | "visits" | "profile") => {
+    if (target === "leads") {
+      router.push("/dashboard");
+    } else if (target === "visits") {
+      router.push("/dashboard?menu=visits");
+    } else {
+      router.push("/dashboard?menu=profile");
+    }
+  };
 
   return (
     <>
@@ -35,45 +47,42 @@ export default function BottomNav() {
       >
         <div className="flex justify-between items-end">
           <div className="flex-1 flex justify-center">
-            {navItems.filter(item => item.side === "left").map((item) => {
-              const isWindowDefined = typeof window !== 'undefined';
-              const isActive = pathname === item.href || (item.label === "LEADS" && pathname === "/dashboard" && isWindowDefined && !window.location.search.includes("menu="));
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={clsx(
-                    "flex flex-col items-center gap-1 transition-all rounded-xl p-2",
-                    isActive ? "text-[#D4AF37] scale-110" : "text-slate-400 opacity-60"
-                  )}
-                >
-                  <item.icon size={24} strokeWidth={isActive ? 2.5 : 2} />
-                  <span className="text-[10px] font-bold tracking-wider">{item.label}</span>
-                </Link>
-              );
-            })}
+            <button
+              onClick={() => handleNav("leads")}
+              className={clsx(
+                "flex flex-col items-center gap-1 transition-all rounded-xl p-2",
+                isLeadsActive ? "text-[#D4AF37] scale-110" : "text-slate-400 opacity-60"
+              )}
+            >
+              <Users size={24} strokeWidth={isLeadsActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold tracking-wider">LEADS</span>
+            </button>
           </div>
 
           <div className="w-16 flex-shrink-0" /> {/* Spacer for FAB */}
 
           <div className="flex-1 flex justify-around">
-            {navItems.filter(item => item.side === "right").map((item) => {
-              const isWindowDefined = typeof window !== 'undefined';
-              const isActive = isWindowDefined && window.location.search.includes(`menu=${item.href.split('=')[1]}`);
-              return (
-                <Link
-                  key={item.label}
-                  href={item.href}
-                  className={clsx(
-                    "flex flex-col items-center gap-1 transition-all rounded-xl p-2",
-                    isActive ? "text-[#D4AF37] scale-110" : "text-slate-400 opacity-60"
-                  )}
-                >
-                  <item.icon size={24} strokeWidth={isActive ? 2.5 : 2} />
-                  <span className="text-[10px] font-bold tracking-wider">{item.label}</span>
-                </Link>
-              );
-            })}
+            <button
+              onClick={() => handleNav("visits")}
+              className={clsx(
+                "flex flex-col items-center gap-1 transition-all rounded-xl p-2",
+                isVisitsActive ? "text-[#D4AF37] scale-110" : "text-slate-400 opacity-60"
+              )}
+            >
+              <LayoutGrid size={24} strokeWidth={isVisitsActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold tracking-wider">VISITAS</span>
+            </button>
+
+            <button
+              onClick={() => handleNav("profile")}
+              className={clsx(
+                "flex flex-col items-center gap-1 transition-all rounded-xl p-2",
+                isProfileActive ? "text-[#D4AF37] scale-110" : "text-slate-400 opacity-60"
+              )}
+            >
+              <UserCircle size={24} strokeWidth={isProfileActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold tracking-wider">PERFIL</span>
+            </button>
           </div>
         </div>
       </nav>
