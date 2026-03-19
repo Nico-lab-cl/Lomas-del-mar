@@ -7,6 +7,13 @@ ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "visited" BOOLEAN DEFAULT false;
 ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "interests" TEXT;
 ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "lastNoteAt" TIMESTAMP;
 
+-- Nuevos campos para Firma
+ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "signingStatus" TEXT;
+ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "signingDate" TIMESTAMP(3);
+ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "signingProject" TEXT;
+ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "signingLote" TEXT;
+ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "signingEtapa" TEXT;
+
 -- 2. Actualizar tabla User (por si acaso faltan estas columnas del perfil)
 ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "image" TEXT;
 ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "phone" TEXT;

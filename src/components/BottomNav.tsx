@@ -1,6 +1,6 @@
 "use client";
 
-import { Users, UserCircle, LayoutGrid, Plus, PenTool } from "lucide-react";
+import { Users, UserCircle, LayoutGrid, Plus, PenTool, FileText } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import clsx from "clsx";
@@ -66,17 +66,6 @@ export default function BottomNav() {
 
           <div className="flex-1 flex justify-around">
             <button
-              onClick={() => handleNav("visits")}
-              className={clsx(
-                "flex flex-col items-center gap-1 transition-all rounded-xl p-2",
-                isVisitsActive ? "text-[#D4AF37] scale-110" : "text-slate-400 opacity-60"
-              )}
-            >
-              <LayoutGrid size={24} strokeWidth={isVisitsActive ? 2.5 : 2} />
-              <span className="text-[10px] font-bold tracking-wider">VISITAS</span>
-            </button>
-
-            <button
               onClick={() => handleNav("signings")}
               className={clsx(
                 "flex flex-col items-center gap-1 transition-all rounded-xl p-2",
@@ -85,6 +74,17 @@ export default function BottomNav() {
             >
               <PenTool size={24} strokeWidth={isSigningsActive ? 2.5 : 2} />
               <span className="text-[10px] font-bold tracking-wider">FIRMA</span>
+            </button>
+
+            <button
+              onClick={() => handleNav("visits")}
+              className={clsx(
+                "flex flex-col items-center gap-1 transition-all rounded-xl p-2",
+                isVisitsActive ? "text-[#D4AF37] scale-110" : "text-slate-400 opacity-60"
+              )}
+            >
+              <FileText size={24} strokeWidth={isVisitsActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold tracking-wider">CONTRATO</span>
             </button>
 
             <button

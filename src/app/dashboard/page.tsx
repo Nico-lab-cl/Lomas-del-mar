@@ -8,7 +8,7 @@ import {
   ChevronRight, Phone, MessageSquare, Clock,
   MoreVertical, Share2, Mail, ChevronLeft, ChevronDown,
   LayoutGrid, Globe, Megaphone, Calendar, MapPin,
-  Meh, Smile, Laugh, UserMinus, PenTool
+  Meh, Smile, Laugh, UserMinus, PenTool, FileText
 } from "lucide-react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -346,11 +346,11 @@ function DashboardContent() {
         <div className="flex items-end justify-between mb-4 relative z-[60]">
           <div className="flex flex-col gap-1">
             <h2 className="text-3xl font-black text-primary">
-              {isVisitsActive ? "Calendario de Visitas" : isSigningsActive ? "Calendario de Firmas" : "Mis Leads"}
+              {isVisitsActive ? "Compromisos de Contrato" : isSigningsActive ? "Calendario de Firmas" : "Mis Leads"}
             </h2>
             <div className="flex items-center gap-2">
                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">
-                 {isVisitsActive ? `${visits.length} VISITAS ESTE MES` : isSigningsActive ? `${signings.length} COMPROMISOS ESTE MES` : `${pagination?.total || 0} REGISTROS ENCONTRADOS`}
+                 {isVisitsActive ? `${visits.length} CONTRATOS ESTE MES` : isSigningsActive ? `${signings.length} COMPROMISOS ESTE MES` : `${pagination?.total || 0} REGISTROS ENCONTRADOS`}
                </span>
             </div>
           </div>
