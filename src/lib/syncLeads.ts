@@ -44,6 +44,7 @@ export async function syncExternalLeads() {
             utmCampaign: ext.utmCampaign,
             utmContent: ext.utmContent,
             utmTerm: ext.utmTerm,
+            createdAt: new Date(ext.createdAt),
           },
           create: {
             email: ext.email.toLowerCase(),

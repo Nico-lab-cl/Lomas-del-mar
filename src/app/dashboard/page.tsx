@@ -724,12 +724,12 @@ function DashboardContent() {
                     <div className="flex items-start justify-between mb-1">
                       <h3 className="text-sm font-black text-slate-800 truncate">{lead.firstName} {lead.lastName}</h3>
                       <span className="text-[9px] font-black text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded leading-none">
-                        {new Date(lead.updatedAt).toLocaleDateString()}
+                        {new Date(lead.createdAt).toLocaleDateString()}
                       </span>
                     </div>
                     
                     <div className="flex items-center gap-3 text-slate-500 text-[10px] font-bold">
-                      <span className="flex items-center gap-1"><Clock size={10} />{new Date(lead.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                      <span className="flex items-center gap-1"><Clock size={10} />{new Date(lead.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                       <span className="flex items-center gap-1 text-primary/70 uppercase tracking-tighter truncate max-w-[100px]">
                         <Share2 size={10} />{lead.source || 'WEB'}
                       </span>

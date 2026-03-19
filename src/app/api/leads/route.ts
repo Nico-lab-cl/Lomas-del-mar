@@ -71,13 +71,10 @@ export async function GET(req: Request) {
   }
 
   if (startDate || endDate) {
-    const start = startDate ? new Date(startDate) : undefined;
-    const end = endDate ? new Date(endDate) : undefined;
-    
-    where.OR = [
-      { createdAt: { gte: start, lte: end } },
-      { updatedAt: { gte: start, lte: end } }
-    ];
+    where.createdAt = {
+      gte: startDate ? new Date(startDate) : undefined,
+      lte: endDate ? new Date(endDate) : undefined,
+    };
   }
 
   // Role-based filtering and specialized 'unassigned' view
@@ -99,7 +96,7 @@ export async function GET(req: Request) {
         where,
         skip,
         take: limit,
-        orderBy: { updatedAt: "desc" },
+        orderBy: { createdAt: "desc" },
         include: {
           assignedTo: {
             select: {
@@ -214,7 +211,10 @@ export async function POST(req: Request) {
 
     const lead = await (prisma as any).lead.upsert({
       where: { email: leadData.email },
-      update: leadData,
+      update: {
+        ...leadData,
+        createdAt: new Date(), // Arrival time!
+      },
       create: leadData,
     });
     
