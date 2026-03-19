@@ -231,8 +231,12 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(lead);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error creating lead:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ 
+      error: "Internal Server Error", 
+      details: error?.message || String(error),
+      meta: error?.meta
+    }, { status: 500 });
   }
 }
