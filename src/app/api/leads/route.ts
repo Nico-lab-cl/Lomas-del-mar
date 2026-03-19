@@ -195,8 +195,14 @@ export async function POST(req: Request) {
     });
 
     let assignedToId = null;
-    if (!existingLead) {
-      // New lead! Auto-assign using Round Robin
+    const userSession = session as any;
+
+    if (userSession?.user?.id && userSession.user.role === "ASESOR") {
+      // If an advisor is creating the lead, assign it to them directly
+      assignedToId = userSession.user.id;
+      leadData.assignedToId = assignedToId;
+    } else if (!existingLead) {
+      // New lead from external or admin! Auto-assign using Round Robin
       const { getNextAdvisorId } = await import("@/lib/assignment");
       assignedToId = await getNextAdvisorId();
       leadData.assignedToId = assignedToId;
