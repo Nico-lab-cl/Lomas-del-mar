@@ -189,23 +189,33 @@ function DashboardContent() {
 
   const getDateRange = (filter: string) => {
     const now = new Date();
+    // Start of current day (00:00:00 local)
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    // Start of tomorrow (00:00:00 local)
+    const tomorrowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    // Start of yesterday (00:00:00 local)
+    const yesterdayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+
     let start: string | null = null;
     let end: string | null = null;
 
     if (filter === "HOY") {
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      start = today.toISOString();
+      start = todayStart.toISOString();
+      end = tomorrowStart.toISOString();
     } else if (filter === "AYER") {
-      const yesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-      const endOfYesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      start = yesterday.toISOString();
-      end = endOfYesterday.toISOString();
+      start = yesterdayStart.toISOString();
+      end = todayStart.toISOString();
     } else if (filter === "ESTA SEMANA") {
-      const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
-      start = startOfWeek.toISOString();
+      // Adjusted for Monday start (standard in Chile)
+      const day = now.getDay();
+      const diff = now.getDate() - (day === 0 ? 6 : day - 1);
+      const monday = new Date(now.getFullYear(), now.getMonth(), diff);
+      start = monday.toISOString();
+      end = tomorrowStart.toISOString();
     } else if (filter === "30 DIAS") {
       const thirtyDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 30);
       start = thirtyDaysAgo.toISOString();
+      end = tomorrowStart.toISOString();
     }
 
     return { start, end };
