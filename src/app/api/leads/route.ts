@@ -71,9 +71,13 @@ export async function GET(req: Request) {
   }
 
   if (startDate || endDate) {
-    where.createdAt = {};
-    if (startDate) where.createdAt.gte = new Date(startDate);
-    if (endDate) where.createdAt.lte = new Date(endDate);
+    const start = startDate ? new Date(startDate) : undefined;
+    const end = endDate ? new Date(endDate) : undefined;
+    
+    where.OR = [
+      { createdAt: { gte: start, lte: end } },
+      { updatedAt: { gte: start, lte: end } }
+    ];
   }
 
   // Role-based filtering and specialized 'unassigned' view
@@ -95,7 +99,7 @@ export async function GET(req: Request) {
         where,
         skip,
         take: limit,
-        orderBy: { createdAt: "desc" },
+        orderBy: { updatedAt: "desc" },
         include: {
           assignedTo: {
             select: {
