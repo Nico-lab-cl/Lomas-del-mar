@@ -1,6 +1,6 @@
 "use client";
 
-import { Users, UserCircle, LayoutGrid, Plus } from "lucide-react";
+import { Users, UserCircle, LayoutGrid, Plus, PenTool } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import clsx from "clsx";
@@ -14,13 +14,16 @@ export default function BottomNav() {
 
   const isLeadsActive = pathname === "/dashboard" && !currentMenu;
   const isVisitsActive = currentMenu === "visits";
+  const isSigningsActive = currentMenu === "signings";
   const isProfileActive = currentMenu === "profile";
 
-  const handleNav = (target: "leads" | "visits" | "profile") => {
+  const handleNav = (target: "leads" | "visits" | "signings" | "profile") => {
     if (target === "leads") {
       router.push("/dashboard");
     } else if (target === "visits") {
       router.push("/dashboard?menu=visits");
+    } else if (target === "signings") {
+      router.push("/dashboard?menu=signings");
     } else {
       router.push("/dashboard?menu=profile");
     }
@@ -71,6 +74,17 @@ export default function BottomNav() {
             >
               <LayoutGrid size={24} strokeWidth={isVisitsActive ? 2.5 : 2} />
               <span className="text-[10px] font-bold tracking-wider">VISITAS</span>
+            </button>
+
+            <button
+              onClick={() => handleNav("signings")}
+              className={clsx(
+                "flex flex-col items-center gap-1 transition-all rounded-xl p-2",
+                isSigningsActive ? "text-[#D4AF37] scale-110" : "text-slate-400 opacity-60"
+              )}
+            >
+              <PenTool size={24} strokeWidth={isSigningsActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold tracking-wider">FIRMA</span>
             </button>
 
             <button

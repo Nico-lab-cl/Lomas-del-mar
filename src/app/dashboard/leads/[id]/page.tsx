@@ -6,7 +6,7 @@ import {
   Mail, User as UserIcon, Smartphone, Map as MapIcon, 
   Edit3, Save, ChevronRight, Tent as Landscape,
   Meh, Smile, Laugh, Megaphone, ExternalLink, History,
-  ChevronDown, UserCheck
+  ChevronDown, UserCheck, PenTool
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -414,14 +414,22 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      {/* Bottom Actions for Visita */}
-      <div className="px-4 pb-8">
+      {/* Bottom Actions for Visita & Firma */}
+      <div className="px-4 pb-8 space-y-4">
          <button 
            onClick={() => router.push(`/dashboard/leads/${lead.id}/visit`)}
            className="w-full bg-primary text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-3"
          >
            <MapIcon size={20} />
            Registrar Visita al Terreno
+         </button>
+
+         <button 
+           onClick={() => router.push(`/dashboard/leads/${lead.id}/signing`)}
+           className="w-full bg-[#D4AF37] text-white py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-[#D4AF37]/20 active:scale-[0.98] transition-all flex items-center justify-center gap-3"
+         >
+           <PenTool size={20} />
+           Registrar Estado de Firma
          </button>
       </div>
     </div>

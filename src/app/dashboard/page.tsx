@@ -8,7 +8,7 @@ import {
   ChevronRight, Phone, MessageSquare, Clock,
   MoreVertical, Share2, Mail, ChevronLeft, ChevronDown,
   LayoutGrid, Globe, Megaphone, Calendar, MapPin,
-  Meh, Smile, Laugh, UserMinus
+  Meh, Smile, Laugh, UserMinus, PenTool
 } from "lucide-react";
 import clsx from "clsx";
 import Image from "next/image";
@@ -68,6 +68,7 @@ function DashboardContent() {
   const [activeRating, setActiveRating] = useState(searchParams.get("rating") || "TODOS");
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isVisitsActive, setIsVisitsActive] = useState(searchParams.get("menu") === "visits");
+  const [isSigningsActive, setIsSigningsActive] = useState(searchParams.get("menu") === "signings");
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
   const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false);
   const [isStatusDropdownOpen, setIsStatusDropdownOpen] = useState(false);
@@ -80,11 +81,13 @@ function DashboardContent() {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   });
   const [visits, setVisits] = useState<any[]>([]);
+  const [signings, setSignings] = useState<any[]>([]);
   const [selectedDay, setSelectedDay] = useState<number | null>(null);
   const [loadingVisits, setLoadingVisits] = useState(false);
+  const [loadingSignings, setLoadingSignings] = useState(false);
 
   // Sync state → URL (so "Back" button restores position)
-  const syncUrlParams = useCallback((page: number, q: string, project: string, date: string, statusF: string, ratingF: string, visits: boolean) => {
+  const syncUrlParams = useCallback((page: number, q: string, project: string, date: string, statusF: string, ratingF: string, visits: boolean, signings: boolean) => {
     const params = new URLSearchParams();
     if (page > 1) params.set("page", String(page));
     if (q) params.set("q", q);
@@ -93,6 +96,7 @@ function DashboardContent() {
     if (statusF !== "TODOS") params.set("status", statusF);
     if (ratingF !== "TODOS") params.set("rating", ratingF);
     if (visits) params.set("menu", "visits");
+    if (signings) params.set("menu", "signings");
     const qs = params.toString();
     router.replace(`/dashboard${qs ? `?${qs}` : ""}`, { scroll: false });
   }, [router]);
@@ -154,21 +158,48 @@ function DashboardContent() {
     }
   }, []);
 
-  // Fetch visits when calendar month changes or visits tab is active
-  useEffect(() => {
-    if (isVisitsActive && status === 'authenticated') {
-      fetchVisits(calendarMonth);
-      setSelectedDay(null);
+  // Fetch signings for calendar
+  const fetchSignings = useCallback(async (month: string) => {
+    setLoadingSignings(true);
+    try {
+      const res = await fetch(`/api/leads/signings?month=${month}`);
+      if (res.ok) {
+        const data = await res.json();
+        setSignings(data.signings || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch signings');
+    } finally {
+      setLoadingSignings(false);
     }
-  }, [isVisitsActive, calendarMonth, status, fetchVisits]);
+  }, []);
+
+  // Fetch data when calendar month changes or tabs change
+  useEffect(() => {
+    if (status === 'authenticated') {
+      if (isVisitsActive) {
+        fetchVisits(calendarMonth);
+        setSelectedDay(null);
+      } else if (isSigningsActive) {
+        fetchSignings(calendarMonth);
+        setSelectedDay(null);
+      }
+    }
+  }, [isVisitsActive, isSigningsActive, calendarMonth, status, fetchVisits, fetchSignings]);
 
   useEffect(() => {
     const menu = searchParams.get("menu");
     if (menu === "profile") {
       setIsProfileOpen(true);
       setIsVisitsActive(false);
+      setIsSigningsActive(false);
     } else if (menu === "visits") {
       setIsVisitsActive(true);
+      setIsSigningsActive(false);
+      setIsProfileOpen(false);
+    } else if (menu === "signings") {
+      setIsSigningsActive(true);
+      setIsVisitsActive(false);
       setIsProfileOpen(false);
     }
   }, [searchParams]);
@@ -178,15 +209,17 @@ function DashboardContent() {
       router.push("/login");
     } else if (status === "authenticated") {
       // Sync URL with current state
-      syncUrlParams(currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive);
+      syncUrlParams(currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive, isSigningsActive);
 
       const delayDebounceFn = setTimeout(() => {
-        fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive);
+        if (!isVisitsActive && !isSigningsActive) {
+          fetchLeads(currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, false);
+        }
       }, 500);
 
       return () => clearTimeout(delayDebounceFn);
     }
-  }, [status, router, currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive, fetchLeads, syncUrlParams]);
+  }, [status, router, currentPage, searchTerm, activeProject, dateFilter, activeStatus, activeRating, isVisitsActive, isSigningsActive, fetchLeads, syncUrlParams]);
 
   const getDateRange = (filter: string) => {
     const now = new Date();
@@ -312,16 +345,18 @@ function DashboardContent() {
 
         <div className="flex items-end justify-between mb-4 relative z-[60]">
           <div className="flex flex-col gap-1">
-            <h2 className="text-3xl font-black text-primary">{isVisitsActive ? "Calendario de Visitas" : "Mis Leads"}</h2>
+            <h2 className="text-3xl font-black text-primary">
+              {isVisitsActive ? "Calendario de Visitas" : isSigningsActive ? "Calendario de Firmas" : "Mis Leads"}
+            </h2>
             <div className="flex items-center gap-2">
                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none">
-                 {isVisitsActive ? `${visits.length} VISITAS ESTE MES` : `${pagination?.total || 0} REGISTROS ENCONTRADOS`}
+                 {isVisitsActive ? `${visits.length} VISITAS ESTE MES` : isSigningsActive ? `${signings.length} COMPROMISOS ESTE MES` : `${pagination?.total || 0} REGISTROS ENCONTRADOS`}
                </span>
             </div>
           </div>
           
           {/* Project Dropdown Selector - only for leads view */}
-          {!isVisitsActive && (
+          {!isVisitsActive && !isSigningsActive && (
           <div className="relative">
             <button 
               onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
@@ -551,6 +586,214 @@ function DashboardContent() {
                     <Calendar className="text-slate-300" size={32} />
                   </div>
                   <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">No hay visitas programadas este mes</p>
+                </div>
+              )}
+            </>
+          )}
+        </main>
+      ) : isSigningsActive ? (
+        /* ============ SIGNINGS VIEW ============ */
+        <main className="flex-1 px-4 pb-12 min-h-[500px]">
+          {/* Month Navigator */}
+          <div className="flex items-center justify-between py-4 px-2">
+            <button
+              onClick={() => {
+                const [y, m] = calendarMonth.split('-').map(Number);
+                const prev = new Date(y, m - 2, 1);
+                setCalendarMonth(`${prev.getFullYear()}-${String(prev.getMonth() + 1).padStart(2, '0')}`);
+              }}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-500 active:scale-95 transition-all shadow-sm"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <h3 className="text-lg font-black text-slate-800 uppercase tracking-wider">
+              {(() => {
+                const [y, m] = calendarMonth.split('-').map(Number);
+                const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                return `${monthNames[m - 1]} ${y}`;
+              })()}
+            </h3>
+            <button
+              onClick={() => {
+                const [y, m] = calendarMonth.split('-').map(Number);
+                const next = new Date(y, m, 1);
+                setCalendarMonth(`${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, '0')}`);
+              }}
+              className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-500 active:scale-95 transition-all shadow-sm"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+
+          {loadingSignings ? (
+            <div className="flex flex-col items-center py-20 opacity-30">
+              <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin mb-4" />
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Cargando compromisos...</p>
+            </div>
+          ) : (
+            <>
+              {/* Calendar Grid */}
+              <div className="bg-white rounded-3xl shadow-lg shadow-slate-200/50 border border-slate-100 overflow-hidden">
+                {/* Weekday headers */}
+                <div className="grid grid-cols-7 border-b border-slate-100">
+                  {['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM'].map(day => (
+                    <div key={day} className="text-center py-3 text-[9px] font-black text-slate-400 tracking-widest">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Calendar days */}
+                <div className="grid grid-cols-7">
+                  {(() => {
+                    const [y, m] = calendarMonth.split('-').map(Number);
+                    const firstDay = new Date(y, m - 1, 1);
+                    const lastDay = new Date(y, m, 0);
+                    const daysInMonth = lastDay.getDate();
+                    let startDow = firstDay.getDay() - 1;
+                    if (startDow < 0) startDow = 6;
+
+                    const today = new Date();
+                    const isCurrentMonth = today.getFullYear() === y && today.getMonth() === m - 1;
+
+                    const signingsByDay: Record<number, number> = {};
+                    signings.forEach((s: any) => {
+                      if (s.signingDate) {
+                        const d = new Date(s.signingDate).getDate();
+                        signingsByDay[d] = (signingsByDay[d] || 0) + 1;
+                      }
+                    });
+
+                    const cells = [];
+                    for (let i = 0; i < startDow; i++) {
+                      cells.push(<div key={`empty-${i}`} className="py-2" />);
+                    }
+
+                    for (let day = 1; day <= daysInMonth; day++) {
+                      const hasSignings = signingsByDay[day] > 0;
+                      const count = signingsByDay[day] || 0;
+                      const isToday = isCurrentMonth && today.getDate() === day;
+                      const isSelected = selectedDay === day;
+
+                      cells.push(
+                        <button
+                          key={day}
+                          onClick={() => setSelectedDay(isSelected ? null : day)}
+                          className={clsx(
+                            "relative flex flex-col items-center justify-center py-2.5 transition-all active:scale-90",
+                            isSelected && "bg-primary/10 rounded-xl",
+                            isToday && !isSelected && "bg-[#D4AF37]/5 rounded-xl"
+                          )}
+                        >
+                          <span className={clsx(
+                            "text-sm font-black w-8 h-8 flex items-center justify-center rounded-full transition-all",
+                            isSelected ? "bg-primary text-white shadow-md shadow-primary/30" :
+                            isToday ? "bg-[#D4AF37] text-white shadow-md shadow-[#D4AF37]/30" :
+                            hasSignings ? "text-slate-800" : "text-slate-400"
+                          )}>
+                            {day}
+                          </span>
+                          {hasSignings && (
+                            <div className="flex gap-0.5 mt-1">
+                              {Array.from({ length: Math.min(count, 3) }).map((_, i) => (
+                                <div key={i} className={clsx(
+                                  "w-1.5 h-1.5 rounded-full",
+                                  isSelected ? "bg-primary" : "bg-blue-500"
+                                )} />
+                              ))}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    }
+                    return cells;
+                  })()}
+                </div>
+              </div>
+
+              {/* Signing cards for selected day */}
+              {selectedDay !== null && (
+                <div className="mt-6 space-y-3">
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">
+                    Compromisos del {selectedDay} de {(() => {
+                      const m = parseInt(calendarMonth.split('-')[1]);
+                      const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+                      return monthNames[m - 1];
+                    })()}
+                  </h4>
+                  {signings
+                    .filter((s: any) => s.signingDate && new Date(s.signingDate).getDate() === selectedDay)
+                    .map((signing: any, idx: number) => (
+                      <div
+                        key={signing.id}
+                        onClick={() => router.push(`/dashboard/leads/${signing.id}`)}
+                        className="bg-white rounded-2xl border border-slate-100 p-4 shadow-md shadow-slate-100/50 cursor-pointer active:scale-[0.98] transition-all animate-in fade-in slide-in-from-bottom-2 duration-300"
+                        style={{ animationDelay: `${idx * 80}ms` }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={clsx(
+                            "w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0",
+                            signing.signingStatus === "FIRMÓ" ? "bg-green-100" : signing.signingStatus === "NO FIRMÓ" ? "bg-red-100" : "bg-blue-100"
+                          )}>
+                            <PenTool size={20} className={clsx(
+                                signing.signingStatus === "FIRMÓ" ? "text-green-600" : signing.signingStatus === "NO FIRMÓ" ? "text-red-600" : "text-blue-600"
+                            )} />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                                <h5 className="text-sm font-black text-slate-800 truncate">
+                                {signing.firstName} {signing.lastName}
+                                </h5>
+                                <span className={clsx(
+                                    "text-[8px] font-black px-1.5 py-0.5 rounded-full",
+                                    signing.signingStatus === "FIRMÓ" ? "bg-green-50 text-green-600" : signing.signingStatus === "NO FIRMÓ" ? "bg-red-50 text-red-600" : "bg-blue-50 text-blue-600"
+                                )}>
+                                    {signing.signingStatus || "PENDIENTE"}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-[10px] font-bold text-primary flex items-center gap-1">
+                                <Clock size={10} />
+                                {new Date(signing.signingDate).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                              {signing.signingProject && (
+                                <span className="text-[10px] font-bold text-slate-500 flex items-center gap-1 truncate">
+                                  <MapPin size={10} />
+                                  {signing.signingProject}
+                                </span>
+                              )}
+                            </div>
+                            {(signing.signingLote || signing.signingEtapa) && (
+                              <p className="text-[10px] font-bold text-slate-400 mt-1">
+                                {signing.signingLote && `Lote ${signing.signingLote}`}{signing.signingLote && signing.signingEtapa && ' — '}{signing.signingEtapa}
+                              </p>
+                            )}
+                          </div>
+                          <div className="w-8 h-8 bg-primary/5 rounded-full flex items-center justify-center text-primary flex-shrink-0">
+                            <ChevronRight size={14} />
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  }
+                  {signings.filter((s: any) => s.signingDate && new Date(s.signingDate).getDate() === selectedDay).length === 0 && (
+                    <div className="py-10 text-center">
+                      <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <PenTool className="text-slate-300" size={24} />
+                      </div>
+                      <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Sin compromisos este día</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* No signings at all */}
+              {signings.length === 0 && selectedDay === null && (
+                <div className="py-14 text-center">
+                  <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <PenTool className="text-slate-300" size={32} />
+                  </div>
+                  <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">No hay compromisos de firma este mes</p>
                 </div>
               )}
             </>

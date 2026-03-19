@@ -52,6 +52,13 @@ model Lead {
   rating       String?   @default("FRIO")
   lastNoteAt   DateTime?
   
+  // Signing parameters
+  signingStatus  String?
+  signingDate    DateTime?
+  signingProject String?
+  signingLote    String?
+  signingEtapa   String?
+
   // UTM Parameters for web leads
   utmSource    String?
   utmMedium    String?
