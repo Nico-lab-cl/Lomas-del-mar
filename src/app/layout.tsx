@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import AuthProvider from "@/components/AuthProvider";
-
+import { Suspense } from "react";
 import BottomNav from "@/components/BottomNav";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -23,7 +23,9 @@ export default function RootLayout({
         <div className="mobile-container overflow-x-hidden">
           <AuthProvider>
             <main className="flex-1 pb-20">{children}</main>
-            <BottomNav />
+            <Suspense fallback={null}>
+              <BottomNav />
+            </Suspense>
           </AuthProvider>
         </div>
       </body>
