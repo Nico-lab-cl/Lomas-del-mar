@@ -4,7 +4,7 @@ import fs from "fs";
 const prisma = new PrismaClient();
 
 async function main() {
-  const data = {
+  const data: any = {
     "field_data": [
       {
         "name": "email",
