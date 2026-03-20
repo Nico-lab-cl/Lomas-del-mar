@@ -38,7 +38,7 @@ export default function InboxPage() {
 
     if (activeTab === "all") return true;
     if (activeTab === "facebook") return conv.platform === "facebook" && lastMsgType === "DIRECT";
-    if (activeTab === "instagram") return conv.platform === "instagram";
+    if (activeTab === "instagram") return conv.platform === "instagram" && lastMsgType === "DIRECT";
     if (activeTab === "comments") return lastMsgType === "COMMENT";
     
     return true;

@@ -43,14 +43,25 @@ export async function POST(req: Request) {
           }
         }
 
-        // --- 2. PROCESAR COMENTARIOS (Feed FB) ---
+        // --- 2. PROCESAR COMENTARIOS (Feed FB / IG Comments) ---
         if (entry.changes) {
           for (const change of entry.changes) {
+            // Comentarios de Facebook
             if (change.field === "feed" && change.value.item === "comment" && change.value.verb === "add") {
               const psid = change.value.from.id;
               const text = change.value.message;
               const platform = "facebook";
               const commentId = change.value.comment_id;
+              
+              await handleIncomingMessage(psid, text, platform, "COMMENT", commentId);
+            }
+            
+            // Comentarios de Instagram
+            if (change.field === "comments") {
+              const psid = change.value.from.id;
+              const text = change.value.text;
+              const platform = "instagram";
+              const commentId = change.value.id;
               
               await handleIncomingMessage(psid, text, platform, "COMMENT", commentId);
             }
