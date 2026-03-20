@@ -10,6 +10,7 @@ export default function InboxPage() {
   const [conversations, setConversations] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState<"all" | "facebook" | "instagram" | "comments">("all");
 
   useEffect(() => {
     fetchConversations();
@@ -29,30 +30,65 @@ export default function InboxPage() {
 
   const filteredConversations = conversations.filter(conv => {
     const leadName = conv.lead ? `${conv.lead.firstName} ${conv.lead.lastName}` : "Usuario Meta";
-    return leadName.toLowerCase().includes(search.toLowerCase()) || conv.psid.includes(search);
+    const matchesSearch = leadName.toLowerCase().includes(search.toLowerCase()) || conv.psid.includes(search);
+    
+    if (!matchesSearch) return false;
+    
+    const lastMsgType = conv.messages[0]?.sourceType || "DIRECT";
+
+    if (activeTab === "all") return true;
+    if (activeTab === "facebook") return conv.platform === "facebook" && lastMsgType === "DIRECT";
+    if (activeTab === "instagram") return conv.platform === "instagram";
+    if (activeTab === "comments") return lastMsgType === "COMMENT";
+    
+    return true;
   });
 
   return (
     <div className="flex flex-col h-screen bg-[#F5F7F9]">
       {/* Header */}
-      <header className="bg-white px-6 pt-8 pb-4 border-b border-slate-100 flex flex-col gap-4">
+      <header className="bg-white px-6 pt-6 pb-2 border-b border-slate-100 flex flex-col gap-4 sticky top-0 z-20">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-black text-slate-800 tracking-tight">Bandeja de Entrada</h1>
-          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-            <MessageSquare size={20} />
+          <h1 className="text-xl font-black text-slate-800 tracking-tight">Bandeja de Entrada</h1>
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full bg-green-500`}></div>
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">En Vivo</span>
           </div>
         </div>
 
         {/* Search Bar */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
           <input 
             type="text" 
-            placeholder="Buscar por nombre o ID..." 
-            className="w-full bg-slate-100 border-none rounded-2xl py-3 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none"
+            placeholder="Buscar..." 
+            className="w-full bg-slate-100 border-none rounded-xl py-2 pl-9 pr-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+        </div>
+
+        {/* Tabs */}
+        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+          {[
+            { id: "all", label: "Todos" },
+            { id: "facebook", label: "FB" },
+            { id: "instagram", label: "IG" },
+            { id: "comments", label: "Muros" }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`
+                px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap
+                ${activeTab === tab.id 
+                  ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                  : "bg-slate-100 text-slate-400 hover:bg-slate-200"}
+              `}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </header>
 

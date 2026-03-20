@@ -28,13 +28,14 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    if (body.object === "page") {
+    if (body.object === "page" || body.object === "instagram") {
       for (const entry of body.entry) {
         // --- 1. PROCESAR MENSAJES DIRECTOS (Messenger / IG DM) ---
         if (entry.messaging) {
           for (const webhookEvent of entry.messaging) {
             const psid = webhookEvent.sender.id;
-            const platform = "facebook"; // Simplificado por ahora
+            // Si el objeto es 'instagram' o el ID de entrada coincide con Instagram
+            const platform = body.object === "instagram" ? "instagram" : "facebook";
             
             if (webhookEvent.message && webhookEvent.message.text) {
               await handleIncomingMessage(psid, webhookEvent.message.text, platform, "DIRECT", webhookEvent.message.mid);
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
           }
         }
 
-        // --- 2. PROCESAR COMENTARIOS (Feed) ---
+        // --- 2. PROCESAR COMENTARIOS (Feed FB) ---
         if (entry.changes) {
           for (const change of entry.changes) {
             if (change.field === "feed" && change.value.item === "comment" && change.value.verb === "add") {
