@@ -146,6 +146,23 @@ export default function InboxPage() {
                   <p className="text-sm text-slate-500 truncate">
                     {conv.messages[0] ? conv.messages[0].text : "Sin mensajes"}
                   </p>
+                  {conv.messages[0]?.postContent && (
+                    <div className="mt-1 flex items-center gap-1.5 opacity-60">
+                      <div className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-[10px] font-black uppercase tracking-widest text-slate-500">
+                        Contexto
+                      </div>
+                      <span className="text-[10px] text-slate-400 truncate max-w-[150px]">
+                        {(() => {
+                          try {
+                            const content = JSON.parse(conv.messages[0].postContent);
+                            return content.text || "Publicación con imagen";
+                          } catch (e) {
+                            return "Ver publicación...";
+                          }
+                        })()}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <ChevronRight size={18} className="text-slate-300" />

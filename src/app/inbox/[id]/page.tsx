@@ -136,11 +136,41 @@ export default function ChatDetailPage({ params }: { params: { id: string } }) {
                   : "bg-white text-slate-800 rounded-tl-none border border-slate-100 text-[15px]"}
               `}>
                 {msg.sourceType === "COMMENT" && !isMe && (
-                   <div className="text-[10px] font-black uppercase text-pink-500 mb-1 flex items-center gap-1">
+                   <div className="text-[10px] font-black uppercase text-pink-500 mb-2 flex items-center gap-1">
                       <MessageCircle size={10} /> Comentario Público
                    </div>
                 )}
-                {msg.text}
+                
+                {msg.postContent && !isMe && (
+                  <div className="mb-3 p-2 bg-slate-50 rounded-xl border border-slate-100 flex gap-3 overflow-hidden group hover:bg-white transition-colors">
+                    {(() => {
+                      try {
+                        const content = JSON.parse(msg.postContent);
+                        return (
+                          <>
+                            {content.image && (
+                              <div className="w-12 h-12 rounded-lg bg-slate-200 flex-shrink-0 overflow-hidden border border-slate-100 shadow-inner">
+                                <img src={content.image} alt="Post" className="w-full h-full object-cover" />
+                              </div>
+                            )}
+                            <div className="flex-1 min-w-0">
+                               <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">En respuesta a:</p>
+                               <p className="text-[11px] text-slate-600 line-clamp-2 italic leading-snug">
+                                 {content.text || "Publicación con imagen y sin texto"}
+                               </p>
+                            </div>
+                          </>
+                        );
+                      } catch (e) {
+                        return null;
+                      }
+                    })()}
+                  </div>
+                )}
+                
+                <div className="leading-relaxed">
+                  {msg.text}
+                </div>
               </div>
               
               {/* Meta Info */}

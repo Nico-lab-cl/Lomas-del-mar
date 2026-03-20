@@ -99,6 +99,8 @@ model Message {
   senderType     String       // "meta" or "advisor"
   sourceType     String       @default("DIRECT") // "DIRECT" o "COMMENT"
   sourceId       String?      // ID del mensaje o comentario en Meta
+  postId         String?      // ID de la publicación original
+  postContent    String?      // Resumen o URL de imagen de la publicación (contexto)
   createdAt      DateTime     @default(now())
 }
 

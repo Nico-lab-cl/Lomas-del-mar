@@ -38,6 +38,7 @@ export async function POST(req: Request) {
             const platform = body.object === "instagram" ? "instagram" : "facebook";
             
             if (webhookEvent.message && webhookEvent.message.text) {
+              console.log(`[DIRECT] Full PSID from ${platform}: ${psid}`);
               await handleIncomingMessage(psid, webhookEvent.message.text, platform, "DIRECT", webhookEvent.message.mid);
             }
           }
@@ -52,8 +53,12 @@ export async function POST(req: Request) {
               const text = change.value.message;
               const platform = "facebook";
               const commentId = change.value.comment_id;
+              const postId = change.value.post_id;
               
-              await handleIncomingMessage(psid, text, platform, "COMMENT", commentId);
+              console.log(`[COMMENT] FB Post ID: ${postId}, Full PSID: ${psid}`);
+              const postContent = await fetchPostContent(postId, "facebook");
+
+              await handleIncomingMessage(psid, text, platform, "COMMENT", commentId, postId, postContent);
             }
             
             // Comentarios de Instagram
@@ -62,8 +67,12 @@ export async function POST(req: Request) {
               const text = change.value.text;
               const platform = "instagram";
               const commentId = change.value.id;
+              const mediaId = change.value.media?.id;
               
-              await handleIncomingMessage(psid, text, platform, "COMMENT", commentId);
+              console.log(`[COMMENT] IG Media ID: ${mediaId}, Full PSID: ${psid}`);
+              const postContent = await fetchPostContent(mediaId, "instagram");
+
+              await handleIncomingMessage(psid, text, platform, "COMMENT", commentId, mediaId, postContent);
             }
           }
         }
@@ -99,13 +108,33 @@ async function fetchMetaProfile(psid: string, platform: string) {
   }
 }
 
-async function handleIncomingMessage(psid: string, text: string, platform: string, sourceType: string, sourceId: string) {
+async function fetchPostContent(id: string, platform: string) {
+  if (!id) return null;
+  const token = process.env.META_PAGE_ACCESS_TOKEN;
+  try {
+    const fields = platform === "facebook" ? "message,full_picture" : "caption,media_url";
+    const res = await fetch(`https://graph.facebook.com/v21.0/${id}?fields=${fields}&access_token=${token}`);
+    const data = await res.json();
+    
+    if (data.error) return null;
+
+    return JSON.stringify({
+      text: platform === "facebook" ? data.message : data.caption,
+      image: platform === "facebook" ? data.full_picture : data.media_url
+    });
+  } catch (error) {
+    return null;
+  }
+}
+
+async function handleIncomingMessage(psid: string, text: string, platform: string, sourceType: string, sourceId: string, postId?: string, postContent?: string | null) {
   // 1. Buscar o crear la conversación por PSID
   let conversation = await (prisma as any).conversation.findUnique({
     where: { psid }
   });
 
   if (!conversation) {
+    console.log(`Buscando perfil para PSID nuevo: ${psid}`);
     const profile = await fetchMetaProfile(psid, platform);
     conversation = await (prisma as any).conversation.create({
       data: {
@@ -117,6 +146,7 @@ async function handleIncomingMessage(psid: string, text: string, platform: strin
     });
   } else if (!conversation.metaName || !conversation.metaImage) {
     // Si ya existe pero le falta el nombre o imagen, intentamos actualizarlo
+    console.log(`Actualizando perfil para PSID existente: ${psid}`);
     const profile = await fetchMetaProfile(psid, platform);
     if (profile) {
       conversation = await (prisma as any).conversation.update({
@@ -134,6 +164,8 @@ async function handleIncomingMessage(psid: string, text: string, platform: strin
       senderType: "meta",
       sourceType,
       sourceId,
+      postId,
+      postContent,
     }
   });
 
