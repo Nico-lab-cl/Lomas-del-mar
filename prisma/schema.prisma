@@ -71,6 +71,31 @@ model Lead {
 
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+  
+  conversations Conversation[]
+}
+
+model Conversation {
+  id        String    @id @default(uuid())
+  psid      String    @unique // Page-Scoped ID from Meta
+  platform  String    // "facebook" or "instagram"
+  leadId    String?
+  lead      Lead?     @relation(fields: [leadId], references: [id])
+  messages  Message[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  text           String
+  senderId       String?      // If sent by an advisor (User.id)
+  senderType     String       // "meta" or "advisor"
+  sourceType     String       @default("DIRECT") // "DIRECT" o "COMMENT"
+  sourceId       String?      // ID del mensaje o comentario en Meta
+  createdAt      DateTime     @default(now())
 }
 
 model Notification {
