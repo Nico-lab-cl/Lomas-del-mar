@@ -28,16 +28,31 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    // Verificamos que sea un evento de 'page' (Messenger/IG)
     if (body.object === "page") {
       for (const entry of body.entry) {
-        // Recorremos los eventos de mensajería
-        for (const webhookEvent of entry.messaging) {
-          const psid = webhookEvent.sender.id; // ID del usuario que envía
-          const platform = entry.id === webhookEvent.recipient.id ? "facebook" : "instagram";
-          
-          if (webhookEvent.message) {
-            await handleIncomingMessage(psid, webhookEvent.message.text, platform);
+        // --- 1. PROCESAR MENSAJES DIRECTOS (Messenger / IG DM) ---
+        if (entry.messaging) {
+          for (const webhookEvent of entry.messaging) {
+            const psid = webhookEvent.sender.id;
+            const platform = "facebook"; // Simplificado por ahora
+            
+            if (webhookEvent.message && webhookEvent.message.text) {
+              await handleIncomingMessage(psid, webhookEvent.message.text, platform, "DIRECT", webhookEvent.message.mid);
+            }
+          }
+        }
+
+        // --- 2. PROCESAR COMENTARIOS (Feed) ---
+        if (entry.changes) {
+          for (const change of entry.changes) {
+            if (change.field === "feed" && change.value.item === "comment" && change.value.verb === "add") {
+              const psid = change.value.from.id;
+              const text = change.value.message;
+              const platform = "facebook";
+              const commentId = change.value.comment_id;
+              
+              await handleIncomingMessage(psid, text, platform, "COMMENT", commentId);
+            }
           }
         }
       }
@@ -51,31 +66,31 @@ export async function POST(req: Request) {
   }
 }
 
-/**
- * Lógica para guardar el mensaje y vincular al Lead
- */
-async function handleIncomingMessage(psid: string, text: string, platform: string) {
-  // 1. Buscar o crear la conversación
-  const conversation = await (prisma as any).conversation.upsert({
-    where: { psid },
-    update: { updatedAt: new Date() },
-    create: {
-      psid,
-      platform,
-      // Aquí podrías implementar lógica para buscar un lead por perfil de FB si tienes acceso
-    }
+async function handleIncomingMessage(psid: string, text: string, platform: string, sourceType: string, sourceId: string) {
+  // 1. Buscar o crear la conversación por PSID
+  let conversation = await (prisma as any).conversation.findUnique({
+    where: { psid }
   });
 
-  // 2. Guardar el mensaje
+  if (!conversation) {
+    conversation = await (prisma as any).conversation.create({
+      data: {
+        psid,
+        platform,
+      }
+    });
+  }
+
+  // 2. Guardar el mensaje/comentario
   await (prisma as any).message.create({
     data: {
       conversationId: conversation.id,
       text,
       senderType: "meta",
+      sourceType,
+      sourceId,
     }
   });
 
-  console.log(`Mensaje guardado para PSID ${psid}: ${text}`);
-  
-  // TODO: Trigger push notification para los asesores
+  console.log(`[${sourceType}] Guardado de ${psid}: ${text}`);
 }

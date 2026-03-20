@@ -1,0 +1,10 @@
+{
+  "success": false,
+  "name": "PrismaClientKnownRequestError",
+  "code": "P2021",
+  "meta": {
+    "modelName": "Lead",
+    "table": "public.Lead"
+  },
+  "message": "\nInvalid `prisma.lead.findUnique()` invocation in\nC:\\Users\\pc\\OneDrive\\Desktop\\CRM-Alimin\\crm-asesores-web\\scripts\\test_lead.ts:81:44\n\n  78 }\n  79 \n  80 try {\n→ 81   const existingLead = await prisma.lead.findUnique(\nThe table `public.Lead` does not exist in the current database."
+}

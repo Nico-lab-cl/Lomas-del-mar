@@ -1,6 +1,6 @@
 "use client";
 
-import { Users, UserCircle, LayoutGrid, Plus, PenTool } from "lucide-react";
+import { Users, UserCircle, LayoutGrid, Plus, PenTool, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import clsx from "clsx";
@@ -15,15 +15,18 @@ export default function BottomNav() {
   const isLeadsActive = pathname === "/dashboard" && !currentMenu;
   const isVisitsActive = currentMenu === "visits";
   const isSigningsActive = currentMenu === "signings";
+  const isInboxActive = pathname === "/inbox";
   const isProfileActive = currentMenu === "profile";
 
-  const handleNav = (target: "leads" | "visits" | "signings" | "profile") => {
+  const handleNav = (target: "leads" | "visits" | "signings" | "profile" | "inbox") => {
     if (target === "leads") {
       router.push("/dashboard");
     } else if (target === "visits") {
       router.push("/dashboard?menu=visits");
     } else if (target === "signings") {
       router.push("/dashboard?menu=signings");
+    } else if (target === "inbox") {
+      router.push("/inbox");
     } else {
       router.push("/dashboard?menu=profile");
     }
@@ -85,6 +88,17 @@ export default function BottomNav() {
             >
               <LayoutGrid size={24} strokeWidth={isVisitsActive ? 2.5 : 2} />
               <span className="text-[10px] font-bold tracking-wider">VISITAS</span>
+            </button>
+
+            <button
+              onClick={() => handleNav("inbox")}
+              className={clsx(
+                "flex flex-col items-center gap-1 transition-all rounded-xl p-2",
+                isInboxActive ? "text-[#D4AF37] scale-110" : "text-slate-400 opacity-60"
+              )}
+            >
+              <MessageSquare size={24} strokeWidth={isInboxActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold tracking-wider">MENSAJES</span>
             </button>
 
             <button

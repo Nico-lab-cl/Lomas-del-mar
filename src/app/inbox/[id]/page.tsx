@@ -1,0 +1,169 @@
+"use client";
+
+import { useEffect, useState, useRef } from "react";
+import { ArrowLeft, Send, User, Facebook, Instagram, ShieldCheck, MessageCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+
+export default function ChatDetailPage({ params }: { params: { id: string } }) {
+  const [conversation, setConversation] = useState<any>(null);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [inputText, setInputText] = useState("");
+  const [sending, setSending] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    fetchChat();
+    const interval = setInterval(fetchChat, 5000); // Polling cada 5 seg
+    return () => clearInterval(interval);
+  }, [params.id]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const fetchChat = async () => {
+    try {
+      const res = await fetch(`/api/messages/conversations/${params.id}`);
+      const data = await res.json();
+      setConversation(data);
+      setMessages(data.messages || []);
+    } catch (error) {
+      console.error("Error loading chat", error);
+    }
+  };
+
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inputText.trim() || sending) return;
+
+    setSending(true);
+    try {
+      // Usamos el sourceType del último mensaje recibido para responder
+      const lastMetaMessage = [...messages].reverse().find(m => m.senderType === "meta");
+      const sourceType = lastMetaMessage?.sourceType || "DIRECT";
+      const sourceId = lastMetaMessage?.sourceId;
+
+      const res = await fetch("/api/messages/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversationId: params.id,
+          text: inputText,
+          sourceType,
+          sourceId,
+        }),
+      });
+
+      if (res.ok) {
+        setInputText("");
+        fetchChat();
+      }
+    } catch (error) {
+      console.error("Error sending message", error);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  if (!conversation) return <div className="p-8 text-center text-slate-400">Cargando chat...</div>;
+
+  const leadName = conversation.lead ? `${conversation.lead.firstName} ${conversation.lead.lastName}` : `Usuario Meta (${conversation.psid.slice(-4)})`;
+
+  return (
+    <div className="flex flex-col h-screen bg-[#F5F7F9]">
+      {/* Header */}
+      <header className="bg-white px-4 py-4 border-b border-slate-100 flex items-center gap-3 sticky top-0 z-10 shadow-sm">
+        <button onClick={() => router.back()} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
+          <ArrowLeft size={20} className="text-slate-600" />
+        </button>
+        
+        <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 relative">
+          <User size={20} />
+          <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-white shadow-sm flex items-center justify-center ring-2 ring-white">
+            {conversation.platform === "facebook" ? (
+                <Facebook size={10} className="text-[#1877F2]" fill="currentColor" />
+            ) : (
+                <Instagram size={10} className="text-[#E4405F]" />
+            )}
+          </div>
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <h2 className="font-bold text-slate-800 truncate leading-tight">{leadName}</h2>
+          <div className="flex items-center gap-1">
+             <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">En Línea</span>
+          </div>
+        </div>
+      </header>
+
+      {/* Messages List */}
+      <div 
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-opacity-5"
+      >
+        {messages.map((msg, i) => {
+          const isMe = msg.senderType === "advisor";
+          return (
+            <div key={msg.id} className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
+              {/* Message Bubble */}
+              <div className={`
+                max-w-[85%] px-4 py-3 rounded-2xl text-sm shadow-sm
+                ${isMe 
+                  ? "bg-primary text-white rounded-tr-none" 
+                  : "bg-white text-slate-800 rounded-tl-none border border-slate-100 text-[15px]"}
+              `}>
+                {msg.sourceType === "COMMENT" && !isMe && (
+                   <div className="text-[10px] font-black uppercase text-pink-500 mb-1 flex items-center gap-1">
+                      <MessageCircle size={10} /> Comentario Público
+                   </div>
+                )}
+                {msg.text}
+              </div>
+              
+              {/* Meta Info */}
+              <div className="mt-1 flex items-center gap-2 px-1">
+                <span className="text-[9px] font-bold text-slate-400 uppercase">
+                   {format(new Date(msg.createdAt), "HH:mm", { locale: es })}
+                </span>
+                {isMe && (
+                  <div className="flex items-center gap-1 text-[9px] font-black text-primary uppercase">
+                    <ShieldCheck size={10} /> {msg.sender?.name || "Asesor"}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Input Bar */}
+      <form 
+        onSubmit={handleSend}
+        className="p-4 bg-white border-t border-slate-100 flex gap-2 items-center pb-8"
+      >
+        <div className="flex-1 relative">
+          <input 
+            type="text"
+            placeholder="Escribe tu respuesta..."
+            className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all outline-none"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+          />
+        </div>
+        <button 
+          type="submit"
+          disabled={!inputText.trim() || sending}
+          className="w-12 h-12 bg-primary text-white rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 active:scale-95 transition-all disabled:opacity-50"
+        >
+          <Send size={20} />
+        </button>
+      </form>
+    </div>
+  );
+}
