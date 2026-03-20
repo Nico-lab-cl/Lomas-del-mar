@@ -3,13 +3,15 @@
 
 -- 1. Crear tabla Conversation
 CREATE TABLE IF NOT EXISTS "Conversation" (
-    "id" TEXT PRIMARY KEY,
-    "psid" TEXT UNIQUE NOT NULL,
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "psid" TEXT NOT NULL UNIQUE,
     "platform" TEXT NOT NULL,
+    "metaName" TEXT,
+    "metaImage" TEXT,
     "leadId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    CONSTRAINT "Conversation_leadId_fkey" FOREIGN KEY ("leadId") REFERENCES "Lead"("id") ON DELETE SET NULL ON UPDATE CASCADE
+    FOREIGN KEY ("leadId") REFERENCES "Lead"("id") ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- 2. Crear tabla Message
