@@ -108,9 +108,20 @@ export default function ChatDetailPage({ params }: { params: { id: string } }) {
         className="flex-1 overflow-y-auto p-4 flex flex-col gap-4 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-opacity-5"
       >
         {messages.map((msg, i) => {
+          if (!msg) return null;
           const isMe = msg.senderType === "advisor";
+          
+          let formattedTime = "";
+          try {
+            if (msg.createdAt) {
+               formattedTime = format(new Date(msg.createdAt), "HH:mm", { locale: es });
+            }
+          } catch (e) {
+            console.error("Error formatting date", e);
+          }
+
           return (
-            <div key={msg.id} className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
+            <div key={msg.id || i} className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
               {/* Message Bubble */}
               <div className={`
                 max-w-[85%] px-4 py-3 rounded-2xl text-sm shadow-sm
@@ -129,7 +140,7 @@ export default function ChatDetailPage({ params }: { params: { id: string } }) {
               {/* Meta Info */}
               <div className="mt-1 flex items-center gap-2 px-1">
                 <span className="text-[9px] font-bold text-slate-400 uppercase">
-                   {format(new Date(msg.createdAt), "HH:mm", { locale: es })}
+                   {formattedTime}
                 </span>
                 {isMe && (
                   <div className="flex items-center gap-1 text-[9px] font-black text-primary uppercase">
