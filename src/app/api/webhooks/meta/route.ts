@@ -74,7 +74,7 @@ async function fetchMetaProfile(psid: string, platform: string) {
     const data = await res.json();
     
     if (data.error) {
-      console.error("Meta API error:", data.error);
+      console.error("Meta API error detail:", JSON.stringify(data.error, null, 2));
       return null;
     }
 

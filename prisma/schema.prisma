@@ -17,6 +17,7 @@ model User {
   role          Role           @default(ASESOR)
   fcmToken      String?
   leads         Lead[]         @relation("AssignedLeads")
+  messages      Message[]      // Relación con mensajes enviados
   notifications Notification[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
@@ -94,6 +95,7 @@ model Message {
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   text           String
   senderId       String?      // If sent by an advisor (User.id)
+  sender         User?        @relation(fields: [senderId], references: [id])
   senderType     String       // "meta" or "advisor"
   sourceType     String       @default("DIRECT") // "DIRECT" o "COMMENT"
   sourceId       String?      // ID del mensaje o comentario en Meta
