@@ -49,12 +49,14 @@ export async function POST(req: Request) {
           for (const change of entry.changes) {
             // Comentarios de Facebook
             if (change.field === "feed" && change.value.item === "comment" && change.value.verb === "add") {
-              const psid = change.value.from.id;
-              const text = change.value.message;
+              const psid = change.value.from?.id;
+              const text = change.value.message || ""; // Asegurar que siempre hay texto
               const platform = "facebook";
               const commentId = change.value.comment_id;
               const postId = change.value.post_id;
               
+              if (!psid) continue;
+
               console.log(`[COMMENT] FB Post ID: ${postId}, Full PSID: ${psid}`);
               const postContent = await fetchPostContent(postId, "facebook");
 
@@ -63,12 +65,14 @@ export async function POST(req: Request) {
             
             // Comentarios de Instagram
             if (change.field === "comments") {
-              const psid = change.value.from.id;
-              const text = change.value.text;
+              const psid = change.value.from?.id;
+              const text = change.value.text || ""; // Asegurar que siempre hay texto
               const platform = "instagram";
               const commentId = change.value.id;
               const mediaId = change.value.media?.id;
               
+              if (!psid) continue;
+
               console.log(`[COMMENT] IG Media ID: ${mediaId}, Full PSID: ${psid}`);
               const postContent = await fetchPostContent(mediaId, "instagram");
 
@@ -160,7 +164,7 @@ async function handleIncomingMessage(psid: string, text: string, platform: strin
   await (prisma as any).message.create({
     data: {
       conversationId: conversation.id,
-      text,
+      text: text || "", // Fallback extra
       senderType: "meta",
       sourceType,
       sourceId,
