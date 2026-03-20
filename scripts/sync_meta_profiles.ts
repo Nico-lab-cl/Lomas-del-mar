@@ -1,58 +1,51 @@
-import { PrismaClient } from '@prisma/client';
-import axios from 'axios';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import { PrismaClient } from "@prisma/client";
+import axios from "axios";
 
 const prisma = new PrismaClient();
 const META_TOKEN = process.env.META_PAGE_ACCESS_TOKEN;
 
-async function fetchMetaProfile(psid: string, platform: string) {
-  try {
-    const fields = platform === "facebook" ? "first_name,last_name,profile_pic" : "name,profile_pic";
-    const res = await axios.get(`https://graph.facebook.com/v21.0/${psid}?fields=${fields}&access_token=${META_TOKEN}`);
-    const data = res.data;
-    
-    return {
-      name: platform === "facebook" ? `${data.first_name || ""} ${data.last_name || ""}`.trim() : data.name,
-      image: data.profile_pic
-    };
-  } catch (error: any) {
-    console.error(`Error fetching profile for ${psid}:`, error.response?.data || error.message);
-    return null;
-  }
-}
+async function syncProfiles() {
+  console.log("Starting Meta Profile Sync...");
 
-async function main() {
-  console.log("🚀 Iniciando sincronización de perfiles Meta...");
-  
-  if (!META_TOKEN || META_TOKEN === "your_token_here") {
-    console.error("❌ Error: No se ha configurado META_PAGE_ACCESS_TOKEN en el .env");
-    return;
-  }
+  const conversations = await prisma.conversation.findMany({
+    where: {
+      metaName: null,
+      psid: { not: "" }
+    }
+  });
 
-  const conversations = await (prisma as any).conversation.findMany();
-  console.log(`Buscando perfiles para ${conversations.length} conversaciones...`);
+  console.log(`Found ${conversations.length} conversations missing names.`);
 
   for (const conv of conversations) {
-    console.log(`Sincronizando ${conv.psid} (${conv.platform})...`);
-    const profile = await fetchMetaProfile(conv.psid, conv.platform);
-    
-    if (profile) {
-      await (prisma as any).conversation.update({
-        where: { id: conv.id },
-        data: {
-          metaName: profile.name,
-          metaImage: profile.image
-        }
-      });
-      console.log(`✅ Actualizado: ${profile.name}`);
+    try {
+      console.log(`Fetching profile for PSID: ${conv.psid} (${conv.platform})`);
+      
+      const fields = "first_name,last_name,profile_pic,name,username";
+      const url = `https://graph.facebook.com/v21.0/${conv.psid}?fields=${fields}&access_token=${META_TOKEN}`;
+      
+      const res = await axios.get(url);
+      const data = res.data;
+
+      const name = data.name || data.username || (data.first_name ? `${data.first_name} ${data.last_name}` : null);
+      const image = data.profile_pic || data.profile_picture?.data?.url || null;
+
+      if (name) {
+        await prisma.conversation.update({
+          where: { id: conv.id },
+          data: { metaName: name, metaImage: image }
+        });
+        console.log(`✅ Updated: ${name}`);
+      } else {
+        console.log(`⚠️ No name found for ${conv.psid}`);
+      }
+    } catch (error: any) {
+      console.log(`❌ Error for ${conv.psid}: ${error.response?.data?.error?.message || error.message}`);
     }
   }
 
-  console.log("✨ Sincronización completada.");
+  console.log("Sync complete!");
 }
 
-main()
+syncProfiles()
   .catch(e => console.error(e))
-  .finally(async () => await prisma.$disconnect());
+  .finally(() => prisma.$disconnect());

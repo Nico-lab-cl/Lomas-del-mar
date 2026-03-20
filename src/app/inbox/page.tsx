@@ -136,14 +136,22 @@ export default function InboxPage() {
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-baseline mb-0.5">
-                    <h3 className="font-bold text-slate-800 truncate text-[15px]">
+                    <h3 className="font-bold text-slate-800 truncate text-[15px] flex items-center gap-2">
                       {conv.lead ? `${conv.lead.firstName} ${conv.lead.lastName}` : (conv.metaName || `Usuario Meta (${conv.psid.slice(-4)})`)}
+                      {conv.messages[0]?.senderType === "advisor" && (
+                        <span className="bg-slate-100 text-slate-400 text-[8px] px-1 rounded uppercase font-black">Tú</span>
+                      )}
                     </h3>
                     <span className="text-[10px] font-medium text-slate-400 whitespace-nowrap">
                       {conv.messages[0] ? formatDistanceToNow(new Date(conv.messages[0].createdAt), { addSuffix: true, locale: es }) : ""}
                     </span>
                   </div>
-                  <p className="text-sm text-slate-500 truncate">
+                  <p className="text-sm text-slate-500 truncate flex items-center gap-1">
+                    {conv.messages[0]?.senderType === "meta" ? (
+                      <span className="text-primary font-black text-[9px] uppercase tracking-tighter opacity-70 flex-shrink-0">Cliente:</span>
+                    ) : (
+                      <span className="text-slate-400 font-black text-[9px] uppercase tracking-tighter opacity-70 flex-shrink-0">Página:</span>
+                    )}
                     {conv.messages[0] ? conv.messages[0].text : "Sin mensajes"}
                   </p>
                   {conv.messages[0]?.postContent && (
