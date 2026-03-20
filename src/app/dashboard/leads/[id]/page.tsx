@@ -6,8 +6,9 @@ import {
   Mail, User as UserIcon, Smartphone, Map as MapIcon, 
   Edit3, Save, ChevronRight, Tent as Landscape,
   Meh, Smile, Laugh, Megaphone, ExternalLink, History,
-  ChevronDown, UserCheck, PenTool
+  ChevronDown, UserCheck, PenTool, X
 } from "lucide-react";
+import { getAdVideoUrl } from "@/lib/adVideos";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import clsx from "clsx";
@@ -48,8 +49,10 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
   const [users, setUsers] = useState<UserOption[]>([]);
   const [isAssignDropdownOpen, setIsAssignDropdownOpen] = useState(false);
   const [assigningLead, setAssigningLead] = useState(false);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   const isAdmin = (session?.user as any)?.role === "ADMIN";
+  const videoUrl = getAdVideoUrl(lead?.adName);
 
   useEffect(() => {
     fetch(`/api/leads/${params.id}`)
@@ -299,7 +302,13 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
           
           {(lead.adId || lead.adName) && (
             <div className="border-t border-primary/5 bg-slate-50/50 p-4 flex justify-between items-center group cursor-pointer hover:bg-slate-50 transition-colors"
-                 onClick={() => lead.adId && window.open(`https://www.facebook.com/ads/library/?id=${lead.adId}`)}>
+                 onClick={() => {
+                   if (videoUrl) {
+                     setIsVideoModalOpen(true);
+                   } else if (lead.adId) {
+                     window.open(`https://www.facebook.com/ads/library/?id=${lead.adId}`);
+                   }
+                 }}>
               <div className="flex flex-col">
                 <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Anuncio de Meta</p>
                 <p className="text-slate-900 text-sm font-bold mt-0.5 truncate max-w-[200px]">
@@ -308,8 +317,8 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
               </div>
               <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest bg-primary/10 px-3 py-1.5 rounded-lg group-hover:bg-primary/20 transition-all">
                 <Megaphone size={14} />
-                <span>Ver Anuncio</span>
-                <ExternalLink size={12} />
+                <span>{videoUrl ? "Ver Video" : "Ver Anuncio"}</span>
+                {videoUrl ? <Landscape size={12} /> : <ExternalLink size={12} />}
               </div>
             </div>
           )}
@@ -432,6 +441,52 @@ export default function LeadDetailPage({ params }: { params: { id: string } }) {
            Registrar Estado de Firma
          </button>
       </div>
+
+      {/* Video Modal */}
+      {isVideoModalOpen && videoUrl && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 animate-in fade-in duration-300">
+          <div className="relative w-full max-w-lg aspect-[9/16] bg-slate-900 rounded-3xl overflow-hidden shadow-2xl flex flex-col">
+            {/* Modal Header */}
+            <div className="absolute top-0 inset-x-0 p-6 flex justify-between items-start z-10 bg-gradient-to-b from-black/60 to-transparent">
+              <div className="flex flex-col">
+                <p className="text-white/60 text-[10px] font-black uppercase tracking-widest">Previsualización de Anuncio</p>
+                <h3 className="text-white text-sm font-bold leading-tight mt-1 truncate max-w-[250px]">{lead.adName}</h3>
+              </div>
+              <button 
+                onClick={() => setIsVideoModalOpen(false)}
+                className="bg-white/10 hover:bg-white/20 text-white p-2 rounded-full transition-colors backdrop-blur-md"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            {/* Video Player */}
+            <div className="flex-1 flex items-center justify-center relative bg-black">
+              <video 
+                src={videoUrl} 
+                controls 
+                autoPlay 
+                className="w-full h-full object-contain"
+              >
+                Tu navegador no soporta el elemento de video.
+              </video>
+            </div>
+
+            {/* Modal Footer (Ads Library Fallback) */}
+            {lead.adId && (
+              <div className="p-6 bg-slate-900 border-t border-white/10">
+                <button 
+                  onClick={() => window.open(`https://www.facebook.com/ads/library/?id=${lead.adId}`)}
+                  className="w-full bg-white/5 hover:bg-white/10 text-white/60 hover:text-white py-3 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
+                >
+                  <ExternalLink size={14} />
+                  Ver en Biblioteca de Anuncios
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
