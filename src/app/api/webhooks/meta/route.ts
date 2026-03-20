@@ -50,33 +50,35 @@ export async function POST(req: Request) {
             // Comentarios de Facebook
             if (change.field === "feed" && change.value.item === "comment" && change.value.verb === "add") {
               const psid = change.value.from?.id;
-              const text = change.value.message || ""; // Asegurar que siempre hay texto
+              const text = change.value.message || "";
               const platform = "facebook";
               const commentId = change.value.comment_id;
               const postId = change.value.post_id;
+              const providedName = change.value.from?.name; // <--- Meta suele enviar el nombre en el Feed de FB!
               
               if (!psid) continue;
 
-              console.log(`[COMMENT] FB Post ID: ${postId}, Full PSID: ${psid}`);
+              console.log(`[COMMENT] FB Post ID: ${postId}, Full PSID: ${psid}, Provided Name: ${providedName}`);
               const postContent = await fetchPostContent(postId, "facebook");
 
-              await handleIncomingMessage(psid, text, platform, "COMMENT", commentId, postId, postContent);
+              await handleIncomingMessage(psid, text, platform, "COMMENT", commentId, postId, postContent, providedName);
             }
             
             // Comentarios de Instagram
             if (change.field === "comments") {
               const psid = change.value.from?.id;
-              const text = change.value.text || ""; // Asegurar que siempre hay texto
+              const text = change.value.text || "";
               const platform = "instagram";
               const commentId = change.value.id;
               const mediaId = change.value.media?.id;
+              const providedName = change.value.from?.username; // En IG suele venir el username
               
               if (!psid) continue;
 
-              console.log(`[COMMENT] IG Media ID: ${mediaId}, Full PSID: ${psid}`);
+              console.log(`[COMMENT] IG Media ID: ${mediaId}, Full PSID: ${psid}, Provided Name: ${providedName}`);
               const postContent = await fetchPostContent(mediaId, "instagram");
 
-              await handleIncomingMessage(psid, text, platform, "COMMENT", commentId, mediaId, postContent);
+              await handleIncomingMessage(psid, text, platform, "COMMENT", commentId, mediaId, postContent, providedName);
             }
           }
         }
@@ -131,31 +133,52 @@ async function fetchPostContent(id: string, platform: string) {
   }
 }
 
-async function handleIncomingMessage(psid: string, text: string, platform: string, sourceType: string, sourceId: string, postId?: string, postContent?: string | null) {
+async function handleIncomingMessage(psid: string, text: string, platform: string, sourceType: string, sourceId: string, postId?: string, postContent?: string | null, providedName?: string) {
   // 1. Buscar o crear la conversación por PSID
   let conversation = await (prisma as any).conversation.findUnique({
     where: { psid }
   });
 
   if (!conversation) {
-    console.log(`Buscando perfil para PSID nuevo: ${psid}`);
-    const profile = await fetchMetaProfile(psid, platform);
+    console.log(`Buscando perfil para PSID nuevo: ${psid} (Nombre proveído: ${providedName || "Ninguno"})`);
+    let metaName = providedName;
+    let metaImage = null;
+
+    // Si no tenemos nombre, intentamos traerlo de la API
+    if (!metaName) {
+      const profile = await fetchMetaProfile(psid, platform);
+      if (profile) {
+        metaName = profile.name;
+        metaImage = profile.image;
+      }
+    }
+
     conversation = await (prisma as any).conversation.create({
       data: {
         psid,
         platform,
-        metaName: profile?.name,
-        metaImage: profile?.image,
+        metaName: metaName || null,
+        metaImage: metaImage || null,
       }
     });
-  } else if (!conversation.metaName || !conversation.metaImage) {
-    // Si ya existe pero le falta el nombre o imagen, intentamos actualizarlo
+  } else if (!conversation.metaName) {
+    // Si ya existe pero le falta el nombre, intentamos actualizarlo
     console.log(`Actualizando perfil para PSID existente: ${psid}`);
-    const profile = await fetchMetaProfile(psid, platform);
-    if (profile) {
+    let metaName = providedName;
+    let metaImage = null;
+
+    if (!metaName) {
+      const profile = await fetchMetaProfile(psid, platform);
+      if (profile) {
+        metaName = profile.name;
+        metaImage = profile.image;
+      }
+    }
+
+    if (metaName) {
       conversation = await (prisma as any).conversation.update({
         where: { id: conversation.id },
-        data: { metaName: profile.name, metaImage: profile.image }
+        data: { metaName, metaImage: metaImage || conversation.metaImage }
       });
     }
   }
