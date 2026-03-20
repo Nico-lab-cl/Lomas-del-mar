@@ -11,6 +11,8 @@ export default function InboxPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<"all" | "facebook" | "instagram" | "comments">("all");
+  const [syncResult, setSyncResult] = useState<any>(null);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     fetchConversations();
@@ -25,6 +27,20 @@ export default function InboxPage() {
       console.error("Error loading conversations", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSyncProfiles = async () => {
+    setSyncing(true);
+    try {
+      const res = await fetch("/api/messages/sync-profiles");
+      const data = await res.json();
+      setSyncResult(data);
+      fetchConversations();
+    } catch (error) {
+      console.error("Error syncing profiles", error);
+    } finally {
+      setSyncing(false);
     }
   };
 
@@ -49,12 +65,40 @@ export default function InboxPage() {
       {/* Header */}
       <header className="bg-white px-6 pt-6 pb-2 border-b border-slate-100 flex flex-col gap-4 sticky top-0 z-20">
         <div className="flex justify-between items-center">
-          <h1 className="text-xl font-black text-slate-800 tracking-tight">Bandeja de Entrada</h1>
-          <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full bg-green-500`}></div>
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">En Vivo</span>
+          <div>
+            <h1 className="text-xl font-black text-slate-800 tracking-tight">Bandeja de Entrada</h1>
+            <div className="flex items-center gap-2 mt-0.5">
+              <div className={`w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse`}></div>
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">En Vivo</span>
+            </div>
           </div>
+          <button 
+            onClick={handleSyncProfiles}
+            disabled={syncing}
+            className={`
+              px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all 
+              ${syncing ? "bg-slate-100 text-slate-400" : "bg-primary/10 text-primary hover:bg-primary/20"}
+            `}
+          >
+            {syncing ? "Sincronizando..." : "Sincronizar Nombres"}
+          </button>
         </div>
+
+        {syncResult && (
+          <div className={`p-3 rounded-xl text-[11px] mb-2 shadow-sm border ${syncResult.updated > 0 ? "bg-green-50 border-green-100 text-green-700" : "bg-slate-50 border-slate-100 text-slate-600"}`}>
+            <div className="flex justify-between items-center">
+              <span>
+                <b>Sincronización terminada:</b> {syncResult.updated} nombres arreglados de {syncResult.processed} pendientes.
+              </span>
+              <button onClick={() => setSyncResult(null)} className="font-bold opacity-50 px-2">X</button>
+            </div>
+            {syncResult.details.some((d: any) => d.status === "error") && (
+              <div className="mt-2 text-[10px] opacity-70 p-2 bg-white/50 rounded-lg">
+                <b>Nota:</b> Algunos nombres fallaron. Esto suele pasar si el app está en <b>Modo Desarrollo</b> o el token no tiene permisos de perfil.
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Search Bar */}
         <div className="relative">
