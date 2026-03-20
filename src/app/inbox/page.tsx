@@ -69,23 +69,24 @@ export default function InboxPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
           {[
-            { id: "all", label: "Todos" },
-            { id: "facebook", label: "FB" },
-            { id: "instagram", label: "IG" },
-            { id: "comments", label: "Muros" }
+            { id: "all", label: "Todos", icon: null },
+            { id: "facebook", label: "FB", icon: <Facebook size={14} fill="currentColor" /> },
+            { id: "instagram", label: "IG", icon: <Instagram size={14} /> },
+            { id: "comments", label: "Publicaciones", icon: null }
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`
-                px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap
+                px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap flex items-center gap-2
                 ${activeTab === tab.id 
-                  ? "bg-primary text-white shadow-lg shadow-primary/20" 
+                  ? "bg-primary text-white shadow-lg shadow-primary/20 scale-105" 
                   : "bg-slate-100 text-slate-400 hover:bg-slate-200"}
               `}
             >
+              {tab.icon}
               {tab.label}
             </button>
           ))}
