@@ -67,6 +67,27 @@ export async function POST(req: Request) {
   }
 }
 
+async function fetchMetaProfile(psid: string, platform: string) {
+  try {
+    const fields = platform === "facebook" ? "first_name,last_name,profile_pic" : "name,profile_pic";
+    const res = await fetch(`https://graph.facebook.com/v21.0/${psid}?fields=${fields}&access_token=${process.env.META_PAGE_ACCESS_TOKEN}`);
+    const data = await res.json();
+    
+    if (data.error) {
+      console.error("Meta API error:", data.error);
+      return null;
+    }
+
+    return {
+      name: platform === "facebook" ? `${data.first_name || ""} ${data.last_name || ""}`.trim() : data.name,
+      image: data.profile_pic
+    };
+  } catch (error) {
+    console.error("Error fetching Meta profile:", error);
+    return null;
+  }
+}
+
 async function handleIncomingMessage(psid: string, text: string, platform: string, sourceType: string, sourceId: string) {
   // 1. Buscar o crear la conversación por PSID
   let conversation = await (prisma as any).conversation.findUnique({
@@ -74,12 +95,24 @@ async function handleIncomingMessage(psid: string, text: string, platform: strin
   });
 
   if (!conversation) {
+    const profile = await fetchMetaProfile(psid, platform);
     conversation = await (prisma as any).conversation.create({
       data: {
         psid,
         platform,
+        metaName: profile?.name,
+        metaImage: profile?.image,
       }
     });
+  } else if (!conversation.metaName || !conversation.metaImage) {
+    // Si ya existe pero le falta el nombre o imagen, intentamos actualizarlo
+    const profile = await fetchMetaProfile(psid, platform);
+    if (profile) {
+      conversation = await (prisma as any).conversation.update({
+        where: { id: conversation.id },
+        data: { metaName: profile.name, metaImage: profile.image }
+      });
+    }
   }
 
   // 2. Guardar el mensaje/comentario
@@ -91,6 +124,12 @@ async function handleIncomingMessage(psid: string, text: string, platform: strin
       sourceType,
       sourceId,
     }
+  });
+
+  // 3. Actualizar el timestamp de la conversación para que suba en la lista
+  await (prisma as any).conversation.update({
+    where: { id: conversation.id },
+    data: { updatedAt: new Date() }
   });
 
   console.log(`[${sourceType}] Guardado de ${psid}: ${text}`);

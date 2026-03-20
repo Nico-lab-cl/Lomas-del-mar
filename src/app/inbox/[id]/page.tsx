@@ -82,8 +82,12 @@ export default function ChatDetailPage({ params }: { params: { id: string } }) {
           <ArrowLeft size={20} className="text-slate-600" />
         </button>
         
-        <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 relative">
-          <User size={20} />
+        <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 relative overflow-hidden flex-shrink-0">
+          {conversation.lead?.image || conversation.metaImage ? (
+              <img src={conversation.lead?.image || conversation.metaImage} alt="Avatar" className="w-full h-full object-cover rounded-xl" />
+          ) : (
+              <User size={20} />
+          )}
           <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-lg bg-white shadow-sm flex items-center justify-center ring-2 ring-white">
             {conversation.platform === "facebook" ? (
                 <Facebook size={10} className="text-[#1877F2]" fill="currentColor" />
@@ -94,7 +98,9 @@ export default function ChatDetailPage({ params }: { params: { id: string } }) {
         </div>
 
         <div className="flex-1 min-w-0">
-          <h2 className="font-bold text-slate-800 truncate leading-tight">{leadName}</h2>
+          <h2 className="font-bold text-slate-800 truncate leading-tight">
+            {conversation.lead ? `${conversation.lead.firstName} ${conversation.lead.lastName}` : (conversation.metaName || `Usuario Meta (${conversation.psid.slice(-4)})`)}
+          </h2>
           <div className="flex items-center gap-1">
              <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">En Línea</span>

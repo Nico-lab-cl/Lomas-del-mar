@@ -29,7 +29,7 @@ export default function InboxPage() {
   };
 
   const filteredConversations = conversations.filter(conv => {
-    const leadName = conv.lead ? `${conv.lead.firstName} ${conv.lead.lastName}` : "Usuario Meta";
+    const leadName = conv.lead ? `${conv.lead.firstName} ${conv.lead.lastName}` : (conv.metaName || "Usuario Meta");
     const matchesSearch = leadName.toLowerCase().includes(search.toLowerCase()) || conv.psid.includes(search);
     
     if (!matchesSearch) return false;
@@ -116,15 +116,15 @@ export default function InboxPage() {
                 className="flex items-center gap-4 p-4 bg-white hover:bg-slate-50 transition-colors active:bg-slate-100"
               >
                 {/* Avatar */}
-                <div className="relative">
-                  <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 overflow-hidden">
-                    {conv.lead?.image ? (
-                        <img src={conv.lead.image} alt="Avatar" className="w-full h-full object-cover" />
+                <div className="relative flex-shrink-0">
+                  <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 overflow-hidden shadow-inner font-black">
+                    {conv.lead?.image || conv.metaImage ? (
+                        <img src={conv.lead?.image || conv.metaImage} alt="Avatar" className="w-full h-full object-cover scale-110" />
                     ) : (
-                        <User size={24} />
+                        <div className="text-primary/20 scale-125"><User size={24} /></div>
                     )}
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-white shadow-sm flex items-center justify-center ring-2 ring-white">
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-lg bg-white shadow-sm flex items-center justify-center ring-2 ring-white z-10">
                     {conv.platform === "facebook" ? (
                         <Facebook size={12} className="text-[#1877F2]" fill="currentColor" />
                     ) : (
@@ -135,9 +135,9 @@ export default function InboxPage() {
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-baseline mb-1">
-                    <h3 className="font-bold text-slate-800 truncate">
-                      {conv.lead ? `${conv.lead.firstName} ${conv.lead.lastName}` : `Usuario Meta (${conv.psid.slice(-4)})`}
+                  <div className="flex justify-between items-baseline mb-0.5">
+                    <h3 className="font-bold text-slate-800 truncate text-[15px]">
+                      {conv.lead ? `${conv.lead.firstName} ${conv.lead.lastName}` : (conv.metaName || `Usuario Meta (${conv.psid.slice(-4)})`)}
                     </h3>
                     <span className="text-[10px] font-medium text-slate-400 whitespace-nowrap">
                       {conv.messages[0] ? formatDistanceToNow(new Date(conv.messages[0].createdAt), { addSuffix: true, locale: es }) : ""}

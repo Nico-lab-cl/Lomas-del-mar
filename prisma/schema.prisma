@@ -79,6 +79,8 @@ model Conversation {
   id        String    @id @default(uuid())
   psid      String    @unique // Page-Scoped ID from Meta
   platform  String    // "facebook" or "instagram"
+  metaName  String?   // Nombre real desde Meta
+  metaImage String?   // Foto de perfil desde Meta
   leadId    String?
   lead      Lead?     @relation(fields: [leadId], references: [id])
   messages  Message[]
